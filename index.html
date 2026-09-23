@@ -28,6 +28,9 @@
   }
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
+  /* stop Chrome's "Touch to Search" panel and long-press menus when tapping around */
+  body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  button, .chip { touch-action: manipulation; }
   html, body { background: var(--ground); }
   body {
     margin: 0;
