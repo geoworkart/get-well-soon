@@ -445,6 +445,15 @@
     `</span>`).join(" ");
   if (name) document.querySelectorAll(".pname").forEach((el) => (el.textContent = name));
 
+  /* Open counter (hits.sh). Opening the page once with ?me=1 stops your own phone from counting. */
+  let isMe = false;
+  try {
+    if (/[?&]me=1/.test(location.search)) localStorage.setItem("gw-me", "1");
+    isMe = localStorage.getItem("gw-me") === "1";
+  } catch (e) {}
+  const hit = (key) => { if (!isMe) { const i = new Image(); i.src = "https://hits.sh/geoworkart.github.io/" + key + ".svg"; } };
+  hit("get-well-soon");
+
   /* Soft sounds (made in the browser, kept quiet) */
   const AC = window.AudioContext || window.webkitAudioContext;
   let ctx = null, out = null, muted = false;
@@ -712,6 +721,7 @@
     rain();
     msg = `I said yes to the date${pickedDay ? " (" + pickedDay + ")" : ""}` + (tries ? `. Tried to press No ${tries} time${tries > 1 ? "s" : ""} 😅` : " on the first try ♥");
     $("tell").hidden = false;
+    hit("get-well-soon-yes");
   }
   $("copy").addEventListener("click", () => {
     const ok = () => { $("copied").textContent = "Copied. Paste it in our chat if you want ♥"; };
