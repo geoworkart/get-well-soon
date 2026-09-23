@@ -302,6 +302,16 @@
   .ticket dt { color: #D9C5E8; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; padding-top: 2px; }
   .ticket dd { margin: 0; font-weight: 700; }
 
+  .ml .chip { background: var(--night-2); border-color: #5A3A74; color: #fff; }
+  .ml .chip:hover { border-color: var(--butter); }
+  .ml .chip[aria-pressed="true"] { background: var(--butter); border-color: var(--butter); color: var(--night); }
+  .ml .q-title { color: #fff; }
+  .chip small { display: block; font-size: 11px; font-weight: 800; opacity: .75; letter-spacing: .04em; }
+  .confirm { display: grid; gap: 10px; }
+  .confirm .q-title { margin: 0; font-family: var(--display); font-size: 22px; }
+  .confirm-row { display: flex; align-items: center; gap: 14px; min-height: 64px; flex-wrap: wrap; }
+  #dyes, #dno { transition: transform .2s ease, font-size .2s ease, padding .2s ease; }
+
   /* ---------- final question ---------- */
   .ask { text-align: center; justify-items: center; }
   .ask .btn { justify-self: center; }
@@ -417,8 +427,8 @@
 <main class="wrap">
   <header>
     <span class="clinic">Emergency house call · Romania</span>
-    <h1 id="title" aria-label="Get well soon">Get well soon</h1>
-    <p class="sub">I heard a cold had the <b>nerve</b> to attack an officer. Unacceptable. Backup is on the way.</p>
+    <h1 id="title" aria-label="Get better fast. I miss you.">Get better fast. I miss you.</h1>
+    <p class="sub">Heard a cold attacked my favourite <b>officer</b>. Not on my watch. I can't play without you, so this is your treatment.</p>
     <p class="lang" lang="ro">Însănătoșire grabnică!</p>
   </header>
 
@@ -426,7 +436,7 @@
   <section class="station ml" aria-labelledby="m-h">
     <p class="tag">Your teammate is under attack</p>
     <h2 id="m-h">My favourite teammate is low HP</h2>
-    <p class="hint">A cold ganked you. I'm playing Angela, so first I attach to you with Heartguard, then I heal until you're full.</p>
+    <p class="hint">A cold ganked you. I'm on Angela. Attach first, then spam heal.</p>
     <div class="hero-card">
       <div class="avatar" id="avatar">♥</div>
       <div style="display:grid;gap:6px">
@@ -445,12 +455,12 @@
   <section class="station ml" aria-labelledby="d-h">
     <p class="tag">Draft pick</p>
     <h2 id="d-h">Pick the hero I play for you</h2>
-    <p class="hint">Choose wisely. Each one comes with a promise.</p>
+    <p class="hint">Pick one and I'll main it just for you.</p>
     <div class="draft" id="draft">
-      <button class="pick" data-hero="Angela" data-line="Heartguard on you, all game. I attach and I don't detach. Clingy? Maybe."><span class="face" style="background:linear-gradient(135deg,#FF8FAB,#C04A8A)">A</span><b>Angela</b><small>Support</small></button>
-      <button class="pick" data-hero="Estes" data-line="Unlimited heals. Zero cooldown on caring about you."><span class="face" style="background:linear-gradient(135deg,#7FD6C2,#2E7C8C)">E</span><b>Estes</b><small>Support</small></button>
-      <button class="pick" data-hero="Johnson" data-line="I turn into a car and drive to Romania. Soup in the passenger seat. You're next."><span class="face" style="background:linear-gradient(135deg,#F5C04A,#C0621C)">J</span><b>Johnson</b><small>Tank · has a car</small></button>
-      <button class="pick" data-hero="Tigreal" data-line="I tank every sneeze, every germ, every bad day. You just stay behind me."><span class="face" style="background:linear-gradient(135deg,#8FA8FF,#3A4FA8)">T</span><b>Tigreal</b><small>Tank</small></button>
+      <button class="pick" data-hero="Angela" data-line="Heartguard on you all game. Yes I'm clingy, deal with it."><span class="face" style="background:linear-gradient(135deg,#FF8FAB,#C04A8A)">A</span><b>Angela</b><small>Support</small></button>
+      <button class="pick" data-hero="Estes" data-line="Heals with no cooldown. Same as me thinking about you."><span class="face" style="background:linear-gradient(135deg,#7FD6C2,#2E7C8C)">E</span><b>Estes</b><small>Support</small></button>
+      <button class="pick" data-hero="Johnson" data-line="I turn into a car and drive to Romania. Soup in the passenger seat."><span class="face" style="background:linear-gradient(135deg,#F5C04A,#C0621C)">J</span><b>Johnson</b><small>Tank · has a car</small></button>
+      <button class="pick" data-hero="Tigreal" data-line="I tank every germ for you. You just stay behind me."><span class="face" style="background:linear-gradient(135deg,#8FA8FF,#3A4FA8)">T</span><b>Tigreal</b><small>Tank</small></button>
     </div>
     <p class="reveal" id="dreveal"></p>
   </section>
@@ -459,7 +469,7 @@
   <section class="station" aria-labelledby="g-h">
     <p class="tag">Clear the lane</p>
     <h2 id="g-h">Squash the cold minions</h2>
-    <p class="hint">Tap every germ. They've been bothering you and I take that personally. <span class="counter" id="gcount">0 / 7</span></p>
+    <p class="hint">Tap them all. They're bothering you and that's my job. <span class="counter" id="gcount">0 / 7</span></p>
     <div class="petri" id="petri"></div>
     <p class="reveal" id="greveal"></p>
   </section>
@@ -483,9 +493,9 @@
 
   <!-- Crush-o-meter -->
   <section class="station" aria-labelledby="c-h">
-    <p class="tag">Very scientific survey</p>
+    <p class="tag">Quick question</p>
     <h2 id="c-h">How much do you like your duo partner?</h2>
-    <p class="hint">Be honest. The meter can tell if you lie.</p>
+    <p class="hint">Be honest. It knows if you lie.</p>
     <div>
       <p class="meter-num" id="mnum">50%</p>
       <span class="rank" id="mrank">Unranked</span>
@@ -499,7 +509,7 @@
   <section class="station" aria-labelledby="x-h">
     <p class="tag">Loot drop</p>
     <h2 id="x-h">Emergency tissue supply</h2>
-    <p class="hint">Pull a tissue. Each one comes with a side of honesty.</p>
+    <p class="hint">Pull one. Each one has something I wanted to tell you.</p>
     <div class="tissue-stage" id="stage">
       <button class="box-t" id="tbox" aria-label="Pull a tissue"><span class="peek"></span><span class="lbl" id="left">20 left</span></button>
       <div class="note" id="note" aria-live="polite">Go on, pull one.</div>
@@ -510,7 +520,7 @@
   <section class="station" aria-labelledby="r-h">
     <p class="tag">Doctor's orders</p>
     <h2 id="r-h">Your official prescription</h2>
-    <p class="hint">Tick each one off. I'll know if you skip.</p>
+    <p class="hint">Tick them all. I'll know if you skip.</p>
     <div class="rx">
       <div class="rx-head"><span class="rxs">Rx</span><span class="who">Patient: <span class="pname">the cutest one</span></span></div>
       <ul>
@@ -524,56 +534,59 @@
     </div>
   </section>
 
-  <!-- Date planner -->
-  <section class="station" aria-labelledby="p-h">
-    <p class="tag">Post-match lobby</p>
-    <h2 id="p-h">Plan our date for when you're better</h2>
-    <p class="hint">You pick, I make it happen. No take-backs.</p>
-    <div class="q" data-q="where">
-      <span class="q-title">Where are we going?</span>
+  <!-- Duo date session -->
+  <section class="station ml" aria-labelledby="p-h">
+    <p class="tag">New event unlocked</p>
+    <h2 id="p-h">Duo date session</h2>
+    <p class="hint">When you feel better, we play. You pick when, I'll be online.</p>
+    <div class="q" data-q="day">
+      <span class="q-title">Which day?</span>
+      <div class="chips" id="days"></div>
+    </div>
+    <div class="q" data-q="time">
+      <span class="q-title">What time?</span>
       <div class="chips">
-        <button class="chip" aria-pressed="false">Coffee &amp; a long walk</button>
-        <button class="chip" aria-pressed="false">Pizza + a movie</button>
-        <button class="chip" aria-pressed="false">Ice cream, my treat</button>
-        <button class="chip" aria-pressed="false">All-night duo ranked on a call</button>
+        <button class="chip" aria-pressed="false">Morning</button>
+        <button class="chip" aria-pressed="false">After your shift</button>
+        <button class="chip" aria-pressed="false">Evening</button>
+        <button class="chip" aria-pressed="false">Late night (ranked hours)</button>
       </div>
     </div>
-    <div class="q" data-q="when">
-      <span class="q-title">When?</span>
+    <div class="q" data-q="mode">
+      <span class="q-title">Game mode?</span>
       <div class="chips">
-        <button class="chip" aria-pressed="false">The day you feel better</button>
-        <button class="chip" aria-pressed="false">This weekend</button>
-        <button class="chip" aria-pressed="false">Surprise me</button>
-        <button class="chip" aria-pressed="false">Tonight, video call, you in pajamas</button>
+        <button class="chip" aria-pressed="false">Classic, chill</button>
+        <button class="chip" aria-pressed="false">Ranked, I carry</button>
+        <button class="chip" aria-pressed="false">Brawl, just for fun</button>
+        <button class="chip" aria-pressed="false">1v1 mid, loser buys coffee</button>
       </div>
     </div>
-    <div class="q" data-q="pays">
-      <span class="q-title">Who pays?</span>
+    <div class="q" data-q="mic">
+      <span class="q-title">Mic on?</span>
       <div class="chips">
-        <button class="chip" aria-pressed="false">You, obviously</button>
-        <button class="chip" aria-pressed="false">Me, I'm feeling generous</button>
-        <button class="chip" aria-pressed="false">Loser of a 1v1 mid lane</button>
-      </div>
-    </div>
-    <div class="q" data-q="bring">
-      <span class="q-title">What should I bring?</span>
-      <div class="chips">
-        <button class="chip" aria-pressed="false">Flowers</button>
-        <button class="chip" aria-pressed="false">Chocolate</button>
-        <button class="chip" aria-pressed="false">Your hoodie back (no)</button>
-        <button class="chip" aria-pressed="false">Just you</button>
+        <button class="chip" aria-pressed="false">Mic on</button>
+        <button class="chip" aria-pressed="false">Mic + camera</button>
+        <button class="chip" aria-pressed="false">Chat only (boring)</button>
       </div>
     </div>
     <div class="ticket" id="ticket" hidden>
-      <div class="t-top"><span class="t-title">Date confirmed</span><span class="t-rank">Rank: Mythical Glory</span></div>
+      <div class="t-top"><span class="t-title">Duo session</span><span class="t-rank">Party of 2</span></div>
       <dl>
-        <dt>Where</dt><dd id="t-where"></dd>
-        <dt>When</dt><dd id="t-when"></dd>
-        <dt>Pays</dt><dd id="t-pays"></dd>
-        <dt>Bring</dt><dd id="t-bring"></dd>
+        <dt>Day</dt><dd id="t-day"></dd>
+        <dt>Time</dt><dd id="t-time"></dd>
+        <dt>Mode</dt><dd id="t-mode"></dd>
+        <dt>Mic</dt><dd id="t-mic"></dd>
       </dl>
     </div>
     <p class="reveal" id="preveal"></p>
+    <div class="confirm" id="confirm" hidden>
+      <p class="q-title">So… is it a date?</p>
+      <div class="confirm-row">
+        <button class="btn" id="dyes">Yes</button>
+        <button class="btn ghost" id="dno">No</button>
+      </div>
+      <p class="reveal" id="creveal2"></p>
+    </div>
   </section>
 
   <!-- Final question -->
@@ -600,7 +613,7 @@
       </div>
     </div>
     <ul class="stats" id="stats"></ul>
-    <p class="hint">Nothing gets sent on its own. If you want me to see how your match went, tap the button and paste it in our chat. I'd really like that.</p>
+    <p class="hint">Nothing gets sent by itself. If you want, copy it and send it to me. I want to see how you did.</p>
     <button class="btn" id="send">Copy my report</button>
     <p class="copied" id="copied" aria-live="polite"></p>
     <textarea class="fallback" id="fallback" readonly hidden aria-label="Your report"></textarea>
@@ -624,12 +637,13 @@
   /* ---------- Name from the link: .../#Anna (optional) ---------- */
   let name = "";
   try { name = decodeURIComponent(location.hash.slice(1)).replace(/[_~.+-]+/g, " ").replace(/[<>&"]/g, "").trim().slice(0, 24); } catch (e) {}
-  const display = name || "cutie";
-  const words = ["Get", "well", "soon,", display];
+  // [word, highlighted?]
+  const words = (name ? [[name + ",", true], ["get", false], ["better.", false]] : [["Get", false], ["better", false], ["fast.", false]])
+    .concat([["I", false], ["miss", true], ["you.", true]]);
   const title = $("title");
-  title.setAttribute("aria-label", words.join(" "));
-  title.innerHTML = words.map((w, wi) =>
-    `<span class="w${wi === 3 ? " name" : ""}" aria-hidden="true">` +
+  title.setAttribute("aria-label", words.map((w) => w[0]).join(" "));
+  title.innerHTML = words.map(([w, hl], wi) =>
+    `<span class="w${hl ? " name" : ""}" aria-hidden="true">` +
     [...w].map((c, i) => `<span class="l" style="animation-delay:${(wi * 5 + i) * 0.07}s">${c}</span>`).join("") +
     `</span>`).join(" ");
   if (name) {
@@ -675,7 +689,7 @@
   const EMBLEMS = [
     ["heal", "Savage Healer"], ["draft", "Draft Master"], ["germs", "Minion Slayer"],
     ["hot", "Too Hot to Handle"], ["meter", "Honest Answer"], ["tissues", "Loot Collector"],
-    ["rx", "Good Patient"], ["date", "Date Locked"], ["better", "Back in the Game"]
+    ["rx", "Good Patient"], ["date", "It's a Date"], ["better", "Back in the Game"]
   ];
   const got = new Set();
   $("emblems").innerHTML = EMBLEMS.map(([k, label], i) => `<span class="em" id="em-${k}" title="${label}">${i + 1}</span>`).join("");
@@ -690,18 +704,17 @@
       announce("MVP!", "All 9 emblems collected");
       $("mvpbadge").classList.remove("dim");
       $("mvptitle").textContent = `MVP: ${name ? "Officer " + name : "Officer Cutie"}`;
-      $("mvpsub").textContent = "Unlocked: legendary skin \"My Crush\". Only one copy exists.";
+      $("mvpsub").textContent = "You unlocked the skin \"My Crush\". Only one exists.";
       setTimeout(rain, 900);
     }
     renderReport();
   }
 
-  const DATE_KEYS = ["where", "when", "pays", "bring"];
   function reportLines() {
     const d = report.date;
-    const dateStr = DATE_KEYS.every((k) => d[k])
-      ? `${d.where}, ${d.when.toLowerCase()}. Pays: ${d.pays.toLowerCase()}. Bring: ${d.bring.toLowerCase()}`
-      : "not planned yet";
+    const dateStr = ["day", "time", "mode", "mic"].every((k) => d[k])
+      ? `${d.day}, ${d.time.toLowerCase()}, ${d.mode.toLowerCase()}, ${d.mic.toLowerCase()}. Said ${d.yes || "nothing yet"}`
+      : "not picked yet";
     const meterStr = report.meter === null ? "skipped (suspicious)" : `${report.meter}%${report.meterLow ? " (tried to go lower, got caught)" : ""}`;
     return [
       ["Emblems", `${got.size}/9${got.size === 9 ? " (MVP)" : ""}`],
@@ -712,7 +725,7 @@
       ["Crush-o-meter", meterStr],
       ["Tissues pulled", `${report.tissues}/20`],
       ["Prescription", `${report.rx}/5 taken`],
-      ["Our date", dateStr],
+      ["Duo date", dateStr],
       ["Feeling better?", report.better || "no answer yet"]
     ];
   }
@@ -723,7 +736,7 @@
 
   $("send").addEventListener("click", () => {
     const text = `My Get Well Legends match report ♥\n` + reportLines().map(([k, v]) => `${k}: ${v}`).join("\n");
-    const done = () => { $("copied").textContent = "Copied. Now paste it in our chat."; };
+    const done = () => { $("copied").textContent = "Copied! Now paste it in our chat."; };
     const fallback = () => {
       const t = $("fallback"); t.hidden = false; t.value = text; t.focus(); t.select();
       $("copied").textContent = "Copy this text and paste it in our chat.";
@@ -770,7 +783,7 @@
     $("shield").style.width = "30%";
     $("guard").disabled = true; $("guard").textContent = "Attached ♥";
     $("heal").disabled = false;
-    $("mreveal").textContent = "Heartguard attached. I'm not leaving your side. Now heal!";
+    $("mreveal").textContent = "Attached. Not leaving you. Now spam heal.";
     const [x, y] = center($("avatar")); hearts(x, y, 10, .6);
   });
   $("heal").addEventListener("click", () => {
@@ -783,7 +796,7 @@
     const [x, y] = center($("avatar")); hearts(x, y, 6, .6);
     if (hp >= 100) {
       announce("Savage", "The cold has been eliminated");
-      $("mreveal").textContent = "Victory. Now come back so I can stop carrying alone.";
+      $("mreveal").textContent = "GG. Now come back, I'm tired of carrying alone.";
       $("heal").textContent = "Full HP ♥"; $("heal").disabled = true;
       report.healed = true; hearts(x, y, 24);
       emblem("heal");
@@ -833,7 +846,7 @@
       if (report.germs === TOTAL) {
         setTimeout(() => {
           petri.innerHTML = '<div class="victory">Lane cleared.</div>';
-          $("greveal").textContent = "Honestly I get it. They just wanted to be close to you. So do I, but I'd wash my hands first.";
+          $("greveal").textContent = "They just wanted to be close to you. I get it, but they can wait in line.";
           const [cx, cy] = center(petri); hearts(cx, cy, 18);
           emblem("germs");
         }, 450);
@@ -853,9 +866,9 @@
   /* ---------- Thermometer ---------- */
   let measured = 0;
   const diagnoses = [
-    ["39.9", "Diagnosis: it's not a fever. You're just naturally this hot."],
-    ["41.2", "Measured again. Still dangerously cute. Science has no explanation."],
-    ["∞", "Thermometer broke. It couldn't handle you. Honestly, same."]
+    ["39.9", "Not a fever. You're just that hot."],
+    ["41.2", "Checked again. Still way too cute."],
+    ["∞", "Thermometer broke. Couldn't handle you. Same tbh."]
   ];
   $("measure").addEventListener("click", () => {
     const btn = $("measure"); btn.disabled = true;
@@ -886,16 +899,16 @@
   const meter = $("meter");
   let meterTimer;
   function rankFor(v) {
-    if (v >= 100) return ["Mythical Glory", "Mythical Glory. Okay, I'm screenshotting this."];
-    if (v >= 90) return ["Mythic", "Mythic! Stop, my face is red."];
-    if (v >= 75) return ["Legend", "Legend rank. I'm blushing a little."];
-    return ["Epic", "Epic. I can work with that. I'll climb."];
+    if (v >= 100) return ["Mythical Glory", "Mythical Glory. Screenshotting this rn."];
+    if (v >= 90) return ["Mythic", "Mythic?? Stop, I'm red."];
+    if (v >= 75) return ["Legend", "Legend. Ok I'm blushing."];
+    return ["Epic", "Epic. Fine, I'll climb."];
   }
   meter.addEventListener("input", () => {
     let v = +meter.value;
     if (v < 60) {
       meter.value = 60; v = 60; report.meterLow = true;
-      $("creveal").textContent = "Error: value too low. The meter doesn't go there. Try again.";
+      $("creveal").textContent = "Error: too low. The meter doesn't go there, sorry.";
     } else {
       $("creveal").textContent = rankFor(v)[1];
     }
@@ -936,7 +949,7 @@
     const n = $("note");
     const refresh = () => { n.classList.remove("fresh"); void n.offsetWidth; n.classList.add("fresh"); };
     if (report.tissues >= lines.length) {
-      n.textContent = "Out of tissues. Not out of compliments though. Those are unlimited.";
+      n.textContent = "Out of tissues. Still have compliments though, ask me.";
       refresh(); return;
     }
     const f = document.createElement("div");
@@ -966,38 +979,88 @@
     } else { stamp.classList.remove("on"); renderReport(); }
   }));
 
-  /* ---------- Date planner ---------- */
+  /* ---------- Duo date session ---------- */
+  const WD = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const MO = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const today = new Date();
+  const dayOpts = [["Right now", ""], ["Today", ""], ["Tomorrow", ""]];
+  for (let i = 2; i <= 6; i++) {
+    const d = new Date(today); d.setDate(today.getDate() + i);
+    dayOpts.push([WD[d.getDay()], `${d.getDate()} ${MO[d.getMonth()]}`]);
+  }
+  $("days").innerHTML = dayOpts.map(([a, b]) =>
+    `<button class="chip" aria-pressed="false" data-v="${b ? a + " " + b : a}">${a}${b ? `<small>${b}</small>` : ""}</button>`).join("");
+
   const reactions = {
-    "All-night duo ranked on a call": "Perfect. I carry, you get the MVP.",
-    "Tonight, video call, you in pajamas": "Pajamas are the dress code. Strictly enforced.",
-    "Loser of a 1v1 mid lane": "Deal. I might lose on purpose.",
-    "Your hoodie back (no)": "Correct answer: no. It's mine now.",
-    "Just you": "Easy. I was coming anyway.",
-    "Flowers": "Noted. Your favourite colour? Tell me in the chat.",
-    "Surprise me": "Oh, I will."
+    "Right now": "Right now? You're sick lol. Ok one game, then bed.",
+    "Today": "Today? Only if the fever's gone.",
+    "Tomorrow": "Tomorrow works. I'll be waiting in the lobby.",
+    "Late night (ranked hours)": "Ranked hours. My favourite.",
+    "After your shift": "After your shift. Officer gets off duty, I get online.",
+    "Ranked, I carry": "Don't worry, I'll carry. Maybe.",
+    "1v1 mid, loser buys coffee": "Deal. I might lose on purpose.",
+    "Mic + camera": "Camera on? Ok now I'm nervous.",
+    "Chat only (boring)": "Chat only? Really? I'll allow it. Once."
   };
+  const DATE_KEYS = ["day", "time", "mode", "mic"];
   document.querySelectorAll(".q").forEach((q) => {
     const key = q.dataset.q;
-    q.querySelectorAll(".chip").forEach((c) => c.addEventListener("click", () => {
+    q.addEventListener("click", (e) => {
+      const c = e.target.closest(".chip"); if (!c) return;
       q.querySelectorAll(".chip").forEach((x) => x.setAttribute("aria-pressed", "false"));
       c.setAttribute("aria-pressed", "true");
-      report.date[key] = c.textContent.trim();
+      const v = c.dataset.v || c.textContent.trim();
+      report.date[key] = v;
       const [x, y] = center(c); hearts(x, y, 4, .4);
-      $("preveal").textContent = reactions[report.date[key]] || "";
+      $("preveal").textContent = reactions[v] || "";
       if (DATE_KEYS.every((k) => report.date[k])) {
-        const t = $("ticket");
         for (const k of DATE_KEYS) $("t-" + k).textContent = report.date[k];
+        const t = $("ticket");
         if (t.hidden) {
-          t.hidden = false;
-          t.classList.add("fresh");
-          $("preveal").textContent = "It's official. Screenshot this, it's legally binding.";
-          const [tx, ty] = center(t); hearts(tx, ty, 20);
-          emblem("date");
-          return;
+          t.hidden = false; t.classList.add("fresh");
+          $("confirm").hidden = false;
+          const [tx, ty] = center(t); hearts(tx, ty, 16);
+          announce("Party ready", "2/2 players");
         }
       }
       renderReport();
-    }));
+    });
+  });
+
+  // "No" is not really an option
+  const dyes = $("dyes"), dno = $("dno");
+  const noSteps = ["Sure?", "Really?", "Misclick?", "Try again", "no", "…"];
+  const noJokes = [
+    "Nice try.",
+    "That button is lagging. 999 ms.",
+    "Error 404: No not found.",
+    "The No button went to get you soup.",
+    "It's getting smaller, notice that?",
+    "Ok the No button is gone. Only Yes left."
+  ];
+  let noTries = 0;
+  dno.addEventListener("click", () => {
+    noTries++;
+    const i = Math.min(noTries, noSteps.length) - 1;
+    $("creveal2").textContent = noJokes[i];
+    dyes.style.transform = `scale(${1 + noTries * 0.15})`;
+    dno.style.transform = `scale(${Math.max(0.35, 1 - noTries * 0.13)})`;
+    dno.textContent = noSteps[i];
+    if (noTries >= noSteps.length) {
+      dno.textContent = "Yes";
+      dno.classList.remove("ghost");
+      dno.style.transform = "scale(1)";
+      dno.onclick = () => dyes.click();
+    }
+  });
+  dyes.addEventListener("click", () => {
+    if (dyes.disabled) return;
+    report.date.yes = noTries ? `yes (tried No ${noTries} times)` : "yes, first try";
+    dyes.textContent = "It's a date ♥"; dyes.disabled = true; dno.hidden = true;
+    dyes.style.transform = "scale(1.1)";
+    $("creveal2").textContent = noTries ? "Knew it. See you in the lobby." : "First try? Ok I'm smiling. See you in the lobby.";
+    const [x, y] = center(dyes); hearts(x, y, 24);
+    emblem("date");
   });
 
   /* ---------- Final question ---------- */
@@ -1023,8 +1086,8 @@
   yes.addEventListener("click", finish);
   function finish() {
     report.better = dodges ? `yes (tried "not yet" ${dodges} times)` : "yes";
-    $("areveal").textContent = "Good. That's my favourite teammate. Now rest up, because I miss your face. And your voice in game. Te pup ♥";
-    $("hugs").textContent = "Prescribed: one big real hug, redeemable as soon as you're better.";
+    $("areveal").textContent = "Good. Now rest, I miss your voice in game. Te pup ♥";
+    $("hugs").textContent = "You owe me one real hug when you're better.";
     yes.textContent = "Yay ♥"; yes.disabled = true; no.hidden = true;
     yes.style.transform = "scale(1.15)";
     const [x, y] = center(yes); hearts(x, y, 26);
