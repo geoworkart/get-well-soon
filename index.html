@@ -368,6 +368,28 @@
   .heart { position: fixed; z-index: 80; pointer-events: none; width: 22px; height: 22px; animation: float var(--d, 2.4s) ease-out forwards; }
   .heart svg { width: 100%; height: 100%; display: block; }
 
+  /* sound toggle + shake */
+  .sound {
+    position: fixed; right: 14px; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); z-index: 60;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--night); color: var(--gold); border: 2px solid var(--gold);
+    font-size: 22px; display: grid; place-items: center;
+    box-shadow: 0 6px 16px rgba(36,16,54,.35);
+  }
+  .sound.off { color: #9C84B3; border-color: #5A3A74; }
+  .sound.off::after { content: ""; position: absolute; width: 30px; height: 3px; background: #9C84B3; transform: rotate(-45deg); border-radius: 2px; }
+  .sound-hint { font-size: 13px; color: #D9C5E8; margin: 0; }
+  .shake { animation: shake .4s ease; }
+  .big-shake { animation: shake .6s ease; }
+  .flash { position: fixed; inset: 0; z-index: 85; pointer-events: none; background: radial-gradient(circle, rgba(255,214,107,.55), rgba(232,53,109,.25) 60%, transparent); animation: flash .5s ease-out forwards; }
+  @keyframes shake {
+    0%,100% { transform: translate(0,0) }
+    20% { transform: translate(-6px, 2px) rotate(-.6deg) }
+    40% { transform: translate(5px, -3px) rotate(.5deg) }
+    60% { transform: translate(-4px, 3px) }
+    80% { transform: translate(3px, -1px) }
+  }
+  @keyframes flash { 0% { opacity: 1 } 100% { opacity: 0 } }
   @keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
   @keyframes pulse { 50% { opacity: .55 } }
   @keyframes wiggle { 0%,100% { transform: rotate(-8deg) scale(1) } 50% { transform: rotate(8deg) scale(1.06) } }
@@ -414,6 +436,7 @@
     <div class="bar"><i id="loadbar"></i></div>
     <p class="tip" id="tip">Tip: resting restores more HP than recalling.</p>
     <div class="tap" id="tap">Tap to enter the battle</div>
+    <p class="sound-hint">Sound on for the full effect (and switch off silent mode)</p>
   </div>
 </div>
 
@@ -559,6 +582,8 @@
   </footer>
 </main>
 
+<button class="sound" id="sound" aria-label="Sound on or off" hidden>♪</button>
+
 <div class="announce" id="announce" aria-live="polite"><span class="a-main" id="a-main"></span><span class="a-sub" id="a-sub"></span></div>
 
 <script>
@@ -605,6 +630,109 @@
   }
   const rain = () => { for (let i = 0; i < 6; i++) setTimeout(() => hearts(rand(20, innerWidth - 20), innerHeight + 10, 10, 1.6), i * 260); };
 
+  /* ---------- Sound (all generated in the browser, no files) ---------- */
+  const AC = window.AudioContext || window.webkitAudioContext;
+  let ctx = null, master = null, musicGain = null, musicTimer = null;
+  let muted = false;
+  try { muted = localStorage.getItem("gw-muted") === "1"; } catch (e) {}
+  function initAudio() {
+    if (!AC) return;
+    if (!ctx) {
+      ctx = new AC();
+      master = ctx.createGain(); master.gain.value = muted ? 0 : 0.7; master.connect(ctx.destination);
+      musicGain = ctx.createGain(); musicGain.gain.value = 0.16; musicGain.connect(master);
+    }
+    if (ctx.state === "suspended") ctx.resume();
+  }
+  function tone(freq, when = 0, dur = 0.2, type = "sine", vol = 0.25, slideTo = null, out = null) {
+    if (!ctx) return;
+    const t0 = ctx.currentTime + when;
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type;
+    o.frequency.setValueAtTime(freq, t0);
+    if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t0 + dur);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(vol, t0 + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g).connect(out || master);
+    o.start(t0); o.stop(t0 + dur + 0.05);
+  }
+  function noise(when = 0, dur = 0.3, vol = 0.2, from = 800, to = 3000) {
+    if (!ctx) return;
+    const t0 = ctx.currentTime + when;
+    const len = Math.floor(ctx.sampleRate * dur);
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+    const src = ctx.createBufferSource(); src.buffer = buf;
+    const f = ctx.createBiquadFilter(); f.type = "bandpass"; f.Q.value = 1.2;
+    f.frequency.setValueAtTime(from, t0); f.frequency.exponentialRampToValueAtTime(to, t0 + dur);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(vol, t0 + 0.03);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    src.connect(f).connect(g).connect(master);
+    src.start(t0); src.stop(t0 + dur + 0.05);
+  }
+  const N = (semi) => 440 * Math.pow(2, semi / 12); // semitones from A4
+  const sfx = {
+    click() { tone(1100, 0, 0.05, "sine", 0.12); },
+    pop() { tone(700, 0, 0.14, "triangle", 0.35, 110); noise(0, 0.08, 0.12, 2000, 600); },
+    swoosh() { noise(0, 0.35, 0.22, 400, 4000); },
+    kiss() { tone(500, 0, 0.12, "sine", 0.2, 1200); tone(1200, 0.1, 0.08, "sine", 0.12, 700); },
+    guard() { [0, 4, 7, 12, 16].forEach((s, i) => tone(N(3 + s), i * 0.06, 0.5, "sine", 0.14)); noise(0, 0.6, 0.05, 3000, 8000); },
+    heal(step) { const b = 3 + Math.min(step, 6) * 2; [0, 4, 7].forEach((s, i) => tone(N(b + s), i * 0.05, 0.35, "triangle", 0.2)); },
+    beep() { tone(1400, 0, 0.04, "square", 0.05); },
+    sizzle() { noise(0, 0.7, 0.18, 5000, 1500); tone(N(15), 0, 0.3, "sine", 0.2); tone(N(19), 0.12, 0.4, "sine", 0.2); },
+    stinger() { tone(N(-2), 0, 0.14, "sawtooth", 0.09); tone(N(5), 0.1, 0.3, "sawtooth", 0.1); tone(N(5 - 12), 0.1, 0.35, "square", 0.06); noise(0.1, 0.25, 0.08, 1500, 400); },
+    fanfare() { [0, 4, 7, 12].forEach((s, i) => tone(N(3 + s), i * 0.1, i === 3 ? 0.7 : 0.18, "triangle", 0.22)); tone(N(3 - 12), 0.3, 0.7, "sine", 0.18); },
+    error() { tone(180, 0, 0.14, "square", 0.12); tone(140, 0.15, 0.22, "square", 0.12); },
+    whoosh() { noise(0, 0.6, 0.25, 200, 5000); tone(N(-9), 0.1, 0.8, "sine", 0.18, N(3)); }
+  };
+  function sound(name, arg) { if (!ctx || muted) return; try { sfx[name](arg); } catch (e) {} }
+
+  // soft background loop: C - G - Am - F, pads + a little pluck melody
+  function startMusic() {
+    if (!ctx || musicTimer) return;
+    const chords = [[3, 7, 10], [-2, 2, 5], [0, 3, 7], [-4, 0, 3]];
+    const melody = [15, 14, 12, 10, 14, 12, 10, 7, 12, 10, 7, 5, 10, 12, 14, 15];
+    let bar = 0;
+    const playBar = () => {
+      if (muted) { bar++; return; }
+      const c = chords[bar % 4];
+      c.forEach((s) => tone(N(s - 12), 0, 2.3, "sine", 0.22, null, musicGain));
+      tone(N(c[0] - 24), 0, 2.3, "triangle", 0.2, null, musicGain);
+      for (let i = 0; i < 4; i++) {
+        const m = melody[(bar % 4) * 4 + i];
+        tone(N(m), i * 0.6, 0.45, "triangle", 0.12, null, musicGain);
+      }
+      bar++;
+    };
+    playBar();
+    musicTimer = setInterval(playBar, 2400);
+  }
+  function setMuted(m) {
+    muted = m;
+    try { localStorage.setItem("gw-muted", m ? "1" : "0"); } catch (e) {}
+    if (master) master.gain.setTargetAtTime(m ? 0 : 0.7, ctx.currentTime, 0.05);
+    $("sound").classList.toggle("off", m);
+  }
+  $("sound").addEventListener("click", () => { initAudio(); setMuted(!muted); if (!muted) { startMusic(); sound("click"); } });
+
+  /* ---------- Feel: vibration (Android) + screen shake + flash ---------- */
+  const buzz = (p) => { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} };
+  const main = document.querySelector("main");
+  function shake(big = false) {
+    if (reduce) return;
+    const c = big ? "big-shake" : "shake";
+    main.classList.remove("shake", "big-shake"); void main.offsetWidth; main.classList.add(c);
+  }
+  function flash() {
+    if (reduce) return;
+    const f = document.createElement("div"); f.className = "flash";
+    document.body.appendChild(f); setTimeout(() => f.remove(), 600);
+  }
+
   /* ---------- Announcer (queued so calls never overlap) ---------- */
   const queue = []; let busy = false;
   function announce(main, sub = "") { if (queue.length < 3) queue.push([main, sub]); if (!busy) next(); }
@@ -615,6 +743,7 @@
     $("a-main").textContent = item[0];
     $("a-sub").textContent = item[1]; $("a-sub").hidden = !item[1];
     a.classList.remove("show"); void a.offsetWidth; a.classList.add("show");
+    sound("stinger"); shake(); buzz(35);
     setTimeout(next, reduce ? 1200 : 1750);
   }
 
@@ -639,6 +768,7 @@
   renderReport();
 
   $("send").addEventListener("click", () => {
+    sound("kiss"); buzz(20);
     const text = `My Get Well Legends match report ♥\n` + reportLines().map(([k, v]) => `${k}: ${v}`).join("\n");
     const done = () => { $("copied").textContent = "Copied! Now paste it in our chat."; };
     const fallback = () => {
@@ -670,6 +800,8 @@
     clearInterval(tipTimer);
     $("loading").classList.add("gone");
     document.body.classList.remove("locked");
+    initAudio(); sound("whoosh"); startMusic(); buzz([30, 40, 30]);
+    $("sound").hidden = false; $("sound").classList.toggle("off", muted);
     setTimeout(() => {
       announce("Welcome!", "Your duo partner has entered the battle");
       const [x, y] = center(title); hearts(x, y, 16);
@@ -683,6 +815,7 @@
   const streak = ["", "First Blood", "Double Kill", "Triple Kill", "Maniac"];
   const callouts = ["An enemy germ has been slain", "Stay in the bush, I've got you", "Don't you dare recall", "Almost there, officer", "Buff secured"];
   $("guard").addEventListener("click", () => {
+    sound("guard"); buzz(40); flash();
     $("avatar").classList.add("guarded");
     $("shield").style.width = "30%";
     $("guard").disabled = true; $("guard").textContent = "Attached ♥";
@@ -693,6 +826,7 @@
   $("heal").addEventListener("click", () => {
     if (hp >= 100) return;
     heals++;
+    sound("heal", heals); buzz(20);
     hp = Math.min(100, hp + (heals < 5 ? 18 : 30));
     $("hpfill").style.width = hp + "%";
     $("hpfill").classList.toggle("low", hp < 35);
@@ -703,6 +837,7 @@
       $("mreveal").textContent = "GG. Now come back, I'm tired of carrying alone.";
       $("heal").textContent = "Full HP ♥"; $("heal").disabled = true;
       report.healed = true; hearts(x, y, 24);
+      setTimeout(() => sound("fanfare"), 250); shake(true); flash(); buzz([60, 40, 120]);
       emblem("heal");
     } else {
       announce(streak[Math.min(heals, 4)]);
@@ -714,6 +849,7 @@
   document.querySelectorAll(".pick").forEach((p) => p.addEventListener("click", () => {
     document.querySelectorAll(".pick").forEach((q) => q.classList.remove("chosen"));
     p.classList.add("chosen");
+    sound("click");
     report.hero = p.dataset.hero;
     $("dreveal").textContent = p.dataset.line;
     const [x, y] = center(p); hearts(x, y, 8, .6);
@@ -743,6 +879,7 @@
     g.addEventListener("click", () => {
       if (g.classList.contains("pop")) return;
       g.classList.add("pop");
+      sound("pop"); buzz(18);
       const [x, y] = center(g); hearts(x, y, 5, .5);
       report.germs++;
       $("gcount").textContent = `${report.germs} / ${TOTAL}`;
@@ -750,6 +887,7 @@
       if (report.germs === TOTAL) {
         setTimeout(() => {
           petri.innerHTML = '<div class="victory">Lane cleared.</div>';
+          sound("fanfare"); flash(); buzz([50, 30, 80]);
           $("greveal").textContent = "They just wanted to be close to you. I get it, but they can wait in line.";
           const [cx, cy] = center(petri); hearts(cx, cy, 18);
           emblem("germs");
@@ -780,11 +918,14 @@
     $("merc").style.height = measured >= 2 ? "100%" : measured === 1 ? "92%" : "84%";
     $("treveal").textContent = "";
     let v = 36.6; const end = target === "∞" ? 45 : parseFloat(target);
+    let beeps = 0;
     const tick = setInterval(() => {
+      if (beeps++ % 3 === 0) sound("beep");
       v = Math.min(end, v + 0.2);
       $("reading").innerHTML = `${v.toFixed(1)}<small>°C</small>`;
       if (v >= end) {
         clearInterval(tick);
+        sound("sizzle"); shake(measured >= 2); buzz(measured >= 2 ? [80, 40, 80] : 40);
         $("reading").innerHTML = `${target}<small>°C</small>`;
         $("treveal").textContent = line;
         $("thermo").classList.add("hot");
@@ -831,6 +972,7 @@
     }
     const f = document.createElement("div");
     f.className = "fly";
+    sound("swoosh"); if (Math.random() < 0.35) setTimeout(() => sound("kiss"), 250); buzz(12);
     f.style.setProperty("--x", `${rand(-90, 90)}px`);
     f.style.setProperty("--r", `${rand(-50, 50)}deg`);
     $("stage").appendChild(f);
@@ -868,6 +1010,7 @@
       const c = e.target.closest(".chip"); if (!c) return;
       q.querySelectorAll(".chip").forEach((x) => x.setAttribute("aria-pressed", "false"));
       c.setAttribute("aria-pressed", "true");
+      sound("click"); buzz(10);
       const v = c.dataset.v || c.textContent.trim();
       report.date[key] = v;
       const [x, y] = center(c); hearts(x, y, 4, .4);
@@ -880,6 +1023,7 @@
           $("confirm").hidden = false;
           const [tx, ty] = center(t); hearts(tx, ty, 16);
           announce("Party ready", "2/2 players");
+          sound("fanfare");
         }
       }
       renderReport();
@@ -900,6 +1044,8 @@
   let noTries = 0;
   dno.addEventListener("click", () => {
     noTries++;
+    sound("error"); buzz([20, 30, 20]);
+    dno.classList.remove("shake"); void dno.offsetWidth; if (!reduce) dno.classList.add("shake");
     const i = Math.min(noTries, noSteps.length) - 1;
     $("creveal2").textContent = noJokes[i];
     dyes.style.transform = `scale(${1 + noTries * 0.15})`;
@@ -914,6 +1060,7 @@
   });
   dyes.addEventListener("click", () => {
     if (dyes.disabled) return;
+    sound("fanfare"); setTimeout(() => sound("kiss"), 500); shake(true); flash(); buzz([80, 50, 80, 50, 200]); rain();
     report.date.yes = noTries ? `yes (tried No ${noTries} times)` : "yes, first try";
     dyes.textContent = "It's a date ♥"; dyes.disabled = true; dno.hidden = true;
     dyes.style.transform = "scale(1.1)";
