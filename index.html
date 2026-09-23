@@ -265,6 +265,8 @@
   .rx ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
   .rx label { display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start; cursor: pointer; padding: 5px 0; }
   .rx input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .rxi { display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start; padding: 5px 0; }
+  .box.on { background: var(--mint); color: var(--cherry-deep); font-weight: 900; font-size: 14px; }
   .box { width: 26px; height: 26px; border: 2.5px solid var(--ink); border-radius: 8px; background: #fff; display: grid; place-items: center; margin-top: 2px; transition: background .15s; }
   .box svg { width: 16px; height: 16px; opacity: 0; transform: scale(.4); transition: .2s cubic-bezier(.2,1.6,.4,1); }
   .rx input:checked + .box { background: var(--mint); }
@@ -415,15 +417,6 @@
   </div>
 </div>
 
-<!-- Emblem HUD -->
-<div class="hud" aria-label="Emblems collected">
-  <div class="hud-in">
-    <span class="hud-label">Emblems</span>
-    <div class="emblems" id="emblems"></div>
-    <span class="hud-count" id="emcount">0/9</span>
-  </div>
-</div>
-
 <main class="wrap">
   <header>
     <span class="clinic">Emergency house call · Romania</span>
@@ -491,20 +484,6 @@
     <p class="reveal" id="treveal"></p>
   </section>
 
-  <!-- Crush-o-meter -->
-  <section class="station" aria-labelledby="c-h">
-    <p class="tag">Quick question</p>
-    <h2 id="c-h">How much do you like your duo partner?</h2>
-    <p class="hint">Be honest. It knows if you lie.</p>
-    <div>
-      <p class="meter-num" id="mnum">50%</p>
-      <span class="rank" id="mrank">Unranked</span>
-    </div>
-    <label for="meter" class="hint">Drag it</label>
-    <input type="range" id="meter" min="0" max="100" value="50">
-    <p class="reveal" id="creveal"></p>
-  </section>
-
   <!-- Tissues -->
   <section class="station" aria-labelledby="x-h">
     <p class="tag">Loot drop</p>
@@ -520,17 +499,17 @@
   <section class="station" aria-labelledby="r-h">
     <p class="tag">Doctor's orders</p>
     <h2 id="r-h">Your official prescription</h2>
-    <p class="hint">Tick them all. I'll know if you skip.</p>
+    <p class="hint">Follow it. Doctor's orders.</p>
     <div class="rx">
       <div class="rx-head"><span class="rxs">Rx</span><span class="who">Patient: <span class="pname">the cutest one</span></span></div>
       <ul>
-        <li><label><input type="checkbox" id="rx1"><span class="box"><svg viewBox="0 0 16 16"><path d="M2 8.5l4 4 8-9" fill="none" stroke="#3A1231" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><span class="med">Hot tea with honey &amp; lemon</span><span class="dose">3 cups daily. Blow on it first, it's hot. Like you.</span></span></label></li>
-        <li><label><input type="checkbox" id="rx2"><span class="box"><svg viewBox="0 0 16 16"><path d="M2 8.5l4 4 8-9" fill="none" stroke="#3A1231" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><span class="med">Sleep, 10 hours minimum</span><span class="dose">Dreaming about me is optional (recommended).</span></span></label></li>
-        <li><label><input type="checkbox" id="rx3"><span class="box"><svg viewBox="0 0 16 16"><path d="M2 8.5l4 4 8-9" fill="none" stroke="#3A1231" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><span class="med">No ranked games until the fever's gone</span><span class="dose">I'll keep your spot in the lobby warm.</span></span></label></li>
-        <li><label><input type="checkbox" id="rx4"><span class="box"><svg viewBox="0 0 16 16"><path d="M2 8.5l4 4 8-9" fill="none" stroke="#3A1231" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><span class="med">Officer is officially off duty</span><span class="dose">No work, no reports. That's an order, and I outrank the cold.</span></span></label></li>
-        <li><label><input type="checkbox" id="rx5"><span class="box"><svg viewBox="0 0 16 16"><path d="M2 8.5l4 4 8-9" fill="none" stroke="#3A1231" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><span class="med">Texting me</span><span class="dose">As needed. Side effects: I smile at my phone like an idiot.</span></span></label></li>
+        <li><div class="rxi"><span class="box on">♥</span><span><span class="med">Hot tea with honey &amp; lemon</span><span class="dose">3 cups daily. Blow on it first, it's hot. Like you.</span></span></div></li>
+        <li><div class="rxi"><span class="box on">♥</span><span><span class="med">Sleep, 10 hours minimum</span><span class="dose">Dreaming about me is optional (recommended).</span></span></div></li>
+        <li><div class="rxi"><span class="box on">♥</span><span><span class="med">No ranked games until the fever's gone</span><span class="dose">I'll keep your spot in the lobby warm.</span></span></div></li>
+        <li><div class="rxi"><span class="box on">♥</span><span><span class="med">Officer is officially off duty</span><span class="dose">No work, no reports. That's an order, and I outrank the cold.</span></span></div></li>
+        <li><div class="rxi"><span class="box on">♥</span><span><span class="med">Texting me</span><span class="dose">As much as you want. Side effect: I smile at my phone like an idiot.</span></span></div></li>
       </ul>
-      <div class="stamp" id="stamp">APPROVED ♥</div>
+      <div class="stamp on" id="stamp">APPROVED ♥</div>
     </div>
   </section>
 
@@ -538,44 +517,17 @@
   <section class="station ml" aria-labelledby="p-h">
     <p class="tag">New event unlocked</p>
     <h2 id="p-h">Duo date session</h2>
-    <p class="hint">When you feel better, we play. You pick when, I'll be online.</p>
+    <p class="hint">When you feel better, we play. Pick a day if you want, I'll be online.</p>
     <div class="q" data-q="day">
-      <span class="q-title">Which day?</span>
+      <span class="q-title">When are you free?</span>
       <div class="chips" id="days"></div>
-    </div>
-    <div class="q" data-q="time">
-      <span class="q-title">What time?</span>
-      <div class="chips">
-        <button class="chip" aria-pressed="false">Morning</button>
-        <button class="chip" aria-pressed="false">After your shift</button>
-        <button class="chip" aria-pressed="false">Evening</button>
-        <button class="chip" aria-pressed="false">Late night (ranked hours)</button>
-      </div>
-    </div>
-    <div class="q" data-q="mode">
-      <span class="q-title">Game mode?</span>
-      <div class="chips">
-        <button class="chip" aria-pressed="false">Classic, chill</button>
-        <button class="chip" aria-pressed="false">Ranked, I carry</button>
-        <button class="chip" aria-pressed="false">Brawl, just for fun</button>
-        <button class="chip" aria-pressed="false">1v1 mid, loser buys coffee</button>
-      </div>
-    </div>
-    <div class="q" data-q="mic">
-      <span class="q-title">Mic on?</span>
-      <div class="chips">
-        <button class="chip" aria-pressed="false">Mic on</button>
-        <button class="chip" aria-pressed="false">Mic + camera</button>
-        <button class="chip" aria-pressed="false">Chat only (boring)</button>
-      </div>
     </div>
     <div class="ticket" id="ticket" hidden>
       <div class="t-top"><span class="t-title">Duo session</span><span class="t-rank">Party of 2</span></div>
       <dl>
-        <dt>Day</dt><dd id="t-day"></dd>
-        <dt>Time</dt><dd id="t-time"></dd>
-        <dt>Mode</dt><dd id="t-mode"></dd>
-        <dt>Mic</dt><dd id="t-mic"></dd>
+        <dt>When</dt><dd id="t-day"></dd>
+        <dt>Where</dt><dd>In game, obviously</dd>
+        <dt>Plan</dt><dd>A few games, a lot of chatting</dd>
       </dl>
     </div>
     <p class="reveal" id="preveal"></p>
@@ -589,31 +541,13 @@
     </div>
   </section>
 
-  <!-- Final question -->
-  <section class="station ask" aria-labelledby="a-h">
-    <p class="tag">Final check-up</p>
-    <h2 id="a-h">So… feeling a little better?</h2>
-    <div class="choices" id="choices">
-      <button class="btn" id="yes">Yes, a bit</button>
-      <button class="btn ghost" id="no">Not yet</button>
-    </div>
-    <p class="hugs" id="hugs"></p>
-    <p class="reveal" id="areveal"></p>
-  </section>
-
   <!-- Match report -->
   <section class="station ml report" aria-labelledby="rep-h">
     <p class="tag">Victory screen</p>
-    <h2 id="rep-h">Your match report</h2>
-    <div class="mvp">
-      <div class="badge dim" id="mvpbadge">MVP</div>
-      <div>
-        <p class="big" id="mvptitle">Collect all 9 emblems to unlock MVP</p>
-        <p class="hint" id="mvpsub">Every station above hides one.</p>
-      </div>
-    </div>
+    <h2 id="rep-h">GG, you survived</h2>
+    <p class="reveal">Now rest. I miss our chats in game. Te pup ♥</p>
     <ul class="stats" id="stats"></ul>
-    <p class="hint">Nothing gets sent by itself. If you want, copy it and send it to me. I want to see how you did.</p>
+    <p class="hint">Nothing gets sent by itself. If you feel like it, copy it and send it to me.</p>
     <button class="btn" id="send">Copy my report</button>
     <p class="copied" id="copied" aria-live="polite"></p>
     <textarea class="fallback" id="fallback" readonly hidden aria-label="Your report"></textarea>
@@ -684,49 +618,19 @@
     setTimeout(next, reduce ? 1200 : 1750);
   }
 
-  /* ---------- Report + emblems ---------- */
-  const report = { healed: false, hero: "", germs: 0, temp: "", meter: null, meterLow: false, tissues: 0, rx: 0, date: {}, better: "" };
-  const EMBLEMS = [
-    ["heal", "Savage Healer"], ["draft", "Draft Master"], ["germs", "Minion Slayer"],
-    ["hot", "Too Hot to Handle"], ["meter", "Honest Answer"], ["tissues", "Loot Collector"],
-    ["rx", "Good Patient"], ["date", "It's a Date"], ["better", "Back in the Game"]
-  ];
-  const got = new Set();
-  $("emblems").innerHTML = EMBLEMS.map(([k, label], i) => `<span class="em" id="em-${k}" title="${label}">${i + 1}</span>`).join("");
-  function emblem(key) {
-    if (got.has(key)) { renderReport(); return; }
-    got.add(key);
-    const label = EMBLEMS.find((e) => e[0] === key)[1];
-    $("em-" + key).classList.add("got");
-    $("emcount").textContent = `${got.size}/9`;
-    announce("Emblem unlocked", label);
-    if (got.size === EMBLEMS.length) {
-      announce("MVP!", "All 9 emblems collected");
-      $("mvpbadge").classList.remove("dim");
-      $("mvptitle").textContent = `MVP: ${name ? "Officer " + name : "Officer Cutie"}`;
-      $("mvpsub").textContent = "You unlocked the skin \"My Crush\". Only one exists.";
-      setTimeout(rain, 900);
-    }
-    renderReport();
-  }
+  /* ---------- Report (only sent if she wants) ---------- */
+  const report = { healed: false, hero: "", germs: 0, temp: "", tissues: 0, date: {} };
+  const emblem = () => renderReport();
 
   function reportLines() {
     const d = report.date;
-    const dateStr = ["day", "time", "mode", "mic"].every((k) => d[k])
-      ? `${d.day}, ${d.time.toLowerCase()}, ${d.mode.toLowerCase()}, ${d.mic.toLowerCase()}. Said ${d.yes || "nothing yet"}`
-      : "not picked yet";
-    const meterStr = report.meter === null ? "skipped (suspicious)" : `${report.meter}%${report.meterLow ? " (tried to go lower, got caught)" : ""}`;
     return [
-      ["Emblems", `${got.size}/9${got.size === 9 ? " (MVP)" : ""}`],
       ["Healed to full HP", report.healed ? "yes, Savage" : "not yet"],
-      ["Hero picked for you", report.hero || "no pick yet"],
+      ["Hero picked for you", report.hero || "-"],
       ["Germs squashed", `${report.germs}/7`],
-      ["Temperature", report.temp || "not measured"],
-      ["Crush-o-meter", meterStr],
+      ["Temperature", report.temp || "-"],
       ["Tissues pulled", `${report.tissues}/20`],
-      ["Prescription", `${report.rx}/5 taken`],
-      ["Duo date", dateStr],
-      ["Feeling better?", report.better || "no answer yet"]
+      ["Duo date", d.day ? `${d.day}${d.yes ? ", said " + d.yes : ""}` : "-"]
     ];
   }
   function renderReport() {
@@ -895,33 +799,6 @@
     }, reduce ? 5 : 45);
   });
 
-  /* ---------- Crush-o-meter ---------- */
-  const meter = $("meter");
-  let meterTimer;
-  function rankFor(v) {
-    if (v >= 100) return ["Mythical Glory", "Mythical Glory. Screenshotting this rn."];
-    if (v >= 90) return ["Mythic", "Mythic?? Stop, I'm red."];
-    if (v >= 75) return ["Legend", "Legend. Ok I'm blushing."];
-    return ["Epic", "Epic. Fine, I'll climb."];
-  }
-  meter.addEventListener("input", () => {
-    let v = +meter.value;
-    if (v < 60) {
-      meter.value = 60; v = 60; report.meterLow = true;
-      $("creveal").textContent = "Error: too low. The meter doesn't go there, sorry.";
-    } else {
-      $("creveal").textContent = rankFor(v)[1];
-    }
-    $("mnum").textContent = v + "%";
-    $("mrank").textContent = rankFor(v)[0];
-    clearTimeout(meterTimer);
-    meterTimer = setTimeout(() => {
-      report.meter = +meter.value;
-      if (report.meter >= 90) { const [x, y] = center($("mnum")); hearts(x, y, 14); }
-      emblem("meter");
-    }, 700);
-  });
-
   /* ---------- Tissues ---------- */
   const lines = [
     "Even with a red nose, you're still the cutest person I know.",
@@ -966,19 +843,6 @@
     if (report.tissues === 5) emblem("tissues"); else renderReport();
   });
 
-  /* ---------- Prescription ---------- */
-  const boxes = [...document.querySelectorAll('.rx input[type="checkbox"]')];
-  boxes.forEach((b) => b.addEventListener("change", () => {
-    if (b.checked) { const [x, y] = center(b.nextElementSibling); hearts(x, y, 4, .4); }
-    report.rx = boxes.filter((x) => x.checked).length;
-    const stamp = $("stamp");
-    if (report.rx === boxes.length) {
-      stamp.classList.add("on");
-      setTimeout(() => { const [x, y] = center(stamp); hearts(x, y, 20); }, 350);
-      emblem("rx");
-    } else { stamp.classList.remove("on"); renderReport(); }
-  }));
-
   /* ---------- Duo date session ---------- */
   const WD = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const MO = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -995,14 +859,9 @@
     "Right now": "Right now? You're sick lol. Ok one game, then bed.",
     "Today": "Today? Only if the fever's gone.",
     "Tomorrow": "Tomorrow works. I'll be waiting in the lobby.",
-    "Late night (ranked hours)": "Ranked hours. My favourite.",
-    "After your shift": "After your shift. Officer gets off duty, I get online.",
-    "Ranked, I carry": "Don't worry, I'll carry. Maybe.",
-    "1v1 mid, loser buys coffee": "Deal. I might lose on purpose.",
-    "Mic + camera": "Camera on? Ok now I'm nervous.",
-    "Chat only (boring)": "Chat only? Really? I'll allow it. Once."
+    "This weekend": "Weekend it is.",
   };
-  const DATE_KEYS = ["day", "time", "mode", "mic"];
+  const DATE_KEYS = ["day"];
   document.querySelectorAll(".q").forEach((q) => {
     const key = q.dataset.q;
     q.addEventListener("click", (e) => {
@@ -1063,37 +922,6 @@
     emblem("date");
   });
 
-  /* ---------- Final question ---------- */
-  const no = $("no"), yes = $("yes"), area = $("choices");
-  const noLabels = ["Not yet", "Are you sure?", "Think again", "Wrong answer", "Nope, try again", "Doctor disagrees", "Fine… yes"];
-  let dodges = 0;
-  function dodge(e) {
-    if (dodges >= noLabels.length - 1) return;
-    e && e.preventDefault();
-    dodges++;
-    no.textContent = noLabels[dodges];
-    const aw = area.clientWidth, bw = no.offsetWidth;
-    no.style.left = `${rand(0, Math.max(0, aw - bw))}px`;
-    no.style.top = `${rand(0, 70)}px`;
-    yes.style.transform = `scale(${1 + dodges * 0.08})`;
-    $("hugs").textContent = `Virtual hugs sent while you decide: ${dodges * 3}`;
-  }
-  no.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") dodge(e); });
-  no.addEventListener("click", (e) => {
-    if (dodges >= noLabels.length - 1) { finish(); return; }
-    dodge(e);
-  });
-  yes.addEventListener("click", finish);
-  function finish() {
-    report.better = dodges ? `yes (tried "not yet" ${dodges} times)` : "yes";
-    $("areveal").textContent = "Good. Now rest, I miss your voice in game. Te pup ♥";
-    $("hugs").textContent = "You owe me one real hug when you're better.";
-    yes.textContent = "Yay ♥"; yes.disabled = true; no.hidden = true;
-    yes.style.transform = "scale(1.15)";
-    const [x, y] = center(yes); hearts(x, y, 26);
-    rain();
-    emblem("better");
-  }
 })();
 </script>
 </body>
