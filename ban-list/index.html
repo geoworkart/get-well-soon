@@ -167,6 +167,7 @@
   .toast.on { transform: translate(-50%, 0); opacity: 1; }
   .toast .from { font-size: 11px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; color: var(--rose-soft); }
   .toast span:last-child { font-weight: 800; font-size: 15px; }
+  .sentence { margin: 0; font-family: var(--display); font-size: 24px; line-height: 1.15; color: var(--lip); }
   .fine { text-align: center; font-size: 12px; color: rgba(255,227,236,.6); margin: 0; }
 
   .fx { position: fixed; z-index: 60; pointer-events: none; animation: rise var(--d, 2.6s) ease-out forwards; }
@@ -290,53 +291,25 @@
       <div>
         <p class="label">Charges</p>
         <ul class="charges" id="charges">
-          <li>Running an illegal cuteness script in every match</li>
-          <li>Stealing someone's heart without permission</li>
-          <li>Being way too distracting in chat</li>
-          <li>Getting sick and leaving your duo partner to solo queue</li>
+          <li>Being too cute in every match</li>
+          <li>Stealing my heart without permission</li>
+          <li>Getting sick and leaving me to solo queue</li>
         </ul>
       </div>
-      <div>
-        <p class="label">Evidence</p>
-        <button class="censor" id="censor"><span id="censor-text">Your profile picture. Still illegal.</span></button>
-      </div>
-      <div>
+      <div class="verdict">
         <p class="label">Sentence</p>
-        <ul class="charges" id="sentence">
-          <li>Rest until 100% HP. Tea, blankets, zero work</li>
-          <li>One date with the reporter. You sit close. Anti-cheat rules</li>
-          <li>Early release possible for good behaviour (ask the reporter how)</li>
-        </ul>
+        <p class="sentence">One date with me when you're better 😏</p>
       </div>
-      <p class="by">Arresting officer: <b>Doci ★</b></p>
-      <p class="note" id="note">Funny how the officer is the one getting cuffed ;)</p>
       <div class="actions">
-        <button class="btn main" id="accept">Accept sentence</button>
-        <button class="btn soft" id="bail">Pay bail</button>
-        <div class="spots" id="spots" hidden>
-          <p class="label">Where does the kiss go?</p>
-          <div class="spot-row">
-            <button class="spot" data-spot="cheek" data-line="On the cheek. Classic. Payment accepted 😘">Cheek</button>
-            <button class="spot" data-spot="forehead" data-line="Forehead kiss? That's the soft kind. I'm melting.">Forehead</button>
-            <button class="spot" data-spot="nose" data-line="Nose kiss. Officially the cutest bail ever paid.">Nose</button>
-            <button class="spot" data-spot="lips" data-line="On the lips?? Ok the officer needs to sit down for a second 😳">Lips</button>
-            <button class="spot" data-spot="surprise" data-line="Surprise me? Dangerous answer. I like it 😏">Surprise me</button>
-          </div>
-          <button class="btn soft" id="tellme" hidden>Tell him my answer</button>
-        </div>
+        <button class="btn main" id="accept">Accept ♥</button>
         <button class="btn soft" id="appeal">Appeal</button>
-        <button class="btn soft" id="lawyer">Call my lawyer</button>
       </div>
       <svg class="cuffs" id="cuffs" viewBox="0 0 140 70" hidden aria-hidden="true">
         <g class="l"><path d="M40 60C18 46 10 36 10 25c0-9 7-15 15-15 7 0 11 4 15 9 4-5 8-9 15-9 8 0 15 6 15 15 0 11-8 21-30 35z" fill="none" stroke="#FF3D7F" stroke-width="6"/></g>
         <g class="r"><path d="M100 60C78 46 70 36 70 25c0-9 7-15 15-15 7 0 11 4 15 9 4-5 8-9 15-9 8 0 15 6 15 15 0 11-8 21-30 35z" fill="none" stroke="#D7143F" stroke-width="6"/></g>
       </svg>
       <p class="reply" id="reply" aria-live="polite"></p>
-      <div class="sign" id="sign" hidden>
-        <p class="label">Sign here to confirm</p>
-        <canvas id="pad" aria-label="Signature pad"></canvas>
-        <p class="reply" id="signed"></p>
-      </div>
+      <p class="by">— Doci ★</p>
     </div>
 
     <p class="fine">Not a real notice. Your account is fine, it's just me ♥</p>
@@ -411,7 +384,7 @@
     }, delay);
   }
 
-  setTimeout(() => { $("loading").hidden = true; $("list").hidden = false; toast("list", "Don't stop now, the best part is coming 😏", 1400); }, 1500);
+  setTimeout(() => { $("loading").hidden = true; $("list").hidden = false; toast("list", "Psst… tap your name 👀", 1400); }, 1500);
 
   // sirens → BUSTED → camera flash → the hot file
   let opened = false;
@@ -427,70 +400,15 @@
       window.scrollTo({ top: 0 });
       floatHearts();
       document.querySelectorAll("#charges li").forEach((li, i) => setTimeout(() => li.classList.add("in"), 700 + i * 380));
-      document.querySelectorAll("#sentence li").forEach((li, i) => setTimeout(() => li.classList.add("in"), 2400 + i * 380));
       setTimeout(() => { const [x, y] = center($("mug")); burst(x, y, 16); }, 700);
-      toast("charges", "Keep going… I worked hard on this", 2300);
-      toast("almost", "You're doing so well. Almost there ♥", 6800);
     }, reduce ? 50 : 1400);
   }
   $("her").addEventListener("click", openCase);
   $("her").addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openCase(); } });
 
-  const peek = [
-    "Your profile picture. Still illegal.",
-    "Ok, it's you in the lobby looking this cute. Had to censor it for everyone's safety.",
-    "Stop peeking. It's classified. …Fine, I kept a screenshot."
-  ];
-  let peeks = 0;
-  $("censor").addEventListener("click", () => {
-    const c = $("censor");
-    if (c.classList.contains("open")) $("censor-text").textContent = peek[Math.min(peeks, peek.length - 1)];
-    c.classList.add("open"); peeks++;
-    toast("peek", "Caught you peeking 👀 Keep going");
-    const [x, y] = center(c); burst(x, y, 6, ["🔥", "♥"]);
-  });
-
-  let bail = 0;
-  $("bail").addEventListener("click", () => {
-    bail++;
-    const [x, y] = center($("bail"));
-    if (bail === 1) {
-      $("reply").textContent = "Bail is set at 1 kiss. Payable in person only. No diamonds accepted.";
-      $("bail").textContent = "Pay the kiss 💋";
-    } else if (!$("bail").disabled) {
-      $("bail").hidden = true;
-      $("spots").hidden = false;
-      $("reply").textContent = "";
-    }
-  });
-
-  let spot = "";
-  $("spots").addEventListener("click", (e) => {
-    const b = e.target.closest(".spot"); if (!b) return;
-    $("spots").querySelectorAll(".spot").forEach((x) => x.setAttribute("aria-pressed", "false"));
-    b.setAttribute("aria-pressed", "true");
-    spot = b.textContent.trim();
-    const [x, y] = center(b);
-    smooch(x, y - 70);
-    $("kissmark").classList.add("on");
-    $("reply").textContent = b.dataset.line + " Collecting in person when you're better.";
-    burst(x, y, 10, ["💋", "♥"]);
-    $("bail").disabled = true;
-    $("tellme").hidden = false;
-    hit("ban-list-bail");
-  });
-  $("tellme").addEventListener("click", () => {
-    const msg = `Bail paid 💋 Kiss goes on the: ${spot.toLowerCase()}`;
-    const ok = () => { $("reply").textContent = "Copied! Paste it in our chat 😘"; };
-    const show = () => { $("reply").textContent = msg; };
-    try { navigator.clipboard.writeText(msg).then(ok, show); } catch (e) { show(); }
-  });
-
   const appeals = [
-    "Appeal received. Reviewing… denied.",
-    "Denied. Have you seen yourself? The evidence is too strong.",
-    "The judge is also the arresting officer. And he has a crush. Denied.",
-    "Bribing the judge might work though 😏",
+    "Denied. Have you seen yourself? 😌",
+    "Denied. The judge has a crush on you.",
     "Appeal button has left the chat."
   ];
   let tries = 0;
@@ -498,56 +416,24 @@
   appeal.addEventListener("click", () => {
     $("reply").textContent = appeals[Math.min(tries, appeals.length - 1)];
     tries++;
-    appeal.style.transform = `scale(${Math.max(.6, 1 - tries * .09)})`;
-    accept.style.transform = `scale(${1 + tries * .04})`;
+    appeal.style.transform = `scale(${Math.max(.6, 1 - tries * .12)})`;
+    accept.style.transform = `scale(${1 + tries * .05})`;
     if (tries >= appeals.length) appeal.hidden = true;
   });
-
-  const lawyer = [
-    "Calling your lawyer… 📞",
-    "Your lawyer is also me. Hi 😏",
-    "Your lawyer advises: accept the date."
-  ];
-  let calls = 0;
-  $("lawyer").addEventListener("click", () => {
-    $("reply").textContent = lawyer[Math.min(calls++, lawyer.length - 1)];
-    if (calls >= lawyer.length) $("lawyer").hidden = true;
-  });
-
-  // finger signature after accepting
-  function setupPad() {
-    const c = $("pad"), g = c.getContext("2d");
-    const fit = () => { const r = c.getBoundingClientRect(), d = devicePixelRatio || 1; c.width = r.width * d; c.height = r.height * d; g.setTransform(d, 0, 0, d, 0, 0); g.lineWidth = 3; g.lineCap = "round"; g.strokeStyle = "#D7143F"; };
-    fit();
-    let down = false, last = null, len = 0, done = false;
-    const pos = (e) => { const r = c.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
-    c.addEventListener("pointerdown", (e) => { down = true; last = pos(e); c.setPointerCapture(e.pointerId); });
-    c.addEventListener("pointermove", (e) => {
-      if (!down) return;
-      const p = pos(e); g.beginPath(); g.moveTo(...last); g.lineTo(...p); g.stroke();
-      len += Math.hypot(p[0] - last[0], p[1] - last[1]); last = p;
-      if (!done && len > 180) { done = true; $("signed").textContent = "Signed. No take-backs 💋"; const [x, y] = center(c); burst(x, y, 16); hit("ban-list-signed"); }
-    });
-    ["pointerup", "pointercancel"].forEach((t) => c.addEventListener(t, () => { down = false; }));
-  }
 
   accept.addEventListener("click", () => {
     if (accept.disabled) return;
     accept.disabled = true; appeal.hidden = true;
-    if (!$("bail").disabled) $("bail").hidden = true;
-    accept.textContent = "Sentence accepted ♥";
+    accept.textContent = "It's a date ♥";
+    accept.style.transform = "none";
     $("cuffs").hidden = false;
-    $("note").textContent = "Cuffed. To me. Get well soon ;)";
-    $("reply").textContent = tries
-      ? `Smart, after ${tries} failed appeal${tries > 1 ? "s" : ""}. Sentence starts the day you're better. I'll be waiting 😏`
-      : "No appeal? You wanted this date, admit it 😏 Sentence starts the day you're better.";
+    $("kissmark").classList.add("on");
+    $("reply").textContent = "Cuffed. To me. Now rest and get well soon 😘";
     const [x, y] = center(accept);
     burst(x, y, 26); smooch(x, y - 120);
     setTimeout(() => burst(rand(40, innerWidth - 40), innerHeight - 40, 14), 400);
     hit("ban-list-accepted");
-    toast("end", "You made it to the end. I knew you couldn't resist me 😘", 600);
-    $("lawyer").hidden = true;
-    $("sign").hidden = false; setupPad();
+    toast("end", "Knew you couldn't resist me 😘", 900);
   });
 })();
 </script>
