@@ -411,7 +411,7 @@
     accept.disabled = true; appeal.hidden = true;
     accept.textContent = "It's a date ♥";
     accept.style.transform = "none";
-    $("cuffs").hidden = false;
+    $("cuffs").removeAttribute("hidden"); // .hidden only exists on HTML elements, not <svg>
     $("kissmark").classList.add("on");
     $("reply").textContent = "Cuffed. To me. Now rest and get well soon 😘";
     const [x, y] = center(accept);
