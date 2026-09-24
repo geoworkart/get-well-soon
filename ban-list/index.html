@@ -83,6 +83,11 @@
   .btn.main { background: #E8356D; color: #fff; box-shadow: 0 4px 0 #B81E50; }
   .btn.alt { background: #fff; color: #3A1231; border: 2px solid #F3C4D0; }
   .btn:focus-visible { outline: 3px solid #3A1231; outline-offset: 3px; }
+  .censor {
+    font: inherit; font-weight: 800; color: #fff; background: #3A1231; border-radius: 6px; padding: 2px 8px;
+    filter: blur(0); cursor: pointer; text-align: left;
+  }
+  .censor.open { background: #FFE0E7; color: #B81E50; }
   .reply { margin: 0; font-weight: 700; color: #7A4A6B; min-height: 1.5em; }
   .back { color: var(--gold); font-weight: 800; text-align: center; display: block; text-decoration: none; padding: 8px; }
   .fine { text-align: center; font-size: 12px; color: var(--soft); margin: 0; }
@@ -156,13 +161,19 @@
         </ul>
       </dd>
       <dt>Evidence</dt>
-      <dd>I smile at my phone every time you type in chat. That's not normal.</dd>
+      <dd>
+        <ul>
+          <li>I smile at my phone every time you type in chat. That's not normal.</li>
+          <li>Exhibit B: <button class="censor" id="censor">[ CENSORED: too hot for this server ]</button></li>
+        </ul>
+      </dd>
       <dt>Penalty</dt>
       <dd>
         <ul>
           <li>Rest until 100% HP. Tea, blankets, no work.</li>
-          <li>One date with the reporter when you're better</li>
+          <li>One date with the reporter when you're better. You sit close. Anti-cheat rules.</li>
           <li>Ban from being sick, effective immediately</li>
+          <li>Early release possible for good behaviour (ask the reporter how 😏)</li>
         </ul>
       </dd>
     </dl>
@@ -170,6 +181,7 @@
     <div class="btns" id="btns">
       <button class="btn main" id="accept">Accept penalty</button>
       <button class="btn alt" id="appeal">Appeal</button>
+      <button class="btn alt" id="bail">Pay bail</button>
     </div>
     <p class="reply" id="reply" aria-live="polite"></p>
   </div>
@@ -222,10 +234,37 @@
 
   const appeals = [
     "Appeal received. Reviewing… denied.",
-    "Appeal denied. Evidence is too strong.",
-    "The judge is also the reporter. Denied.",
+    "Denied. Have you seen yourself? The evidence is too strong.",
+    "The judge is also the reporter. And the judge has a crush. Denied.",
+    "Bribing the judge might work though 😏",
     "System error: Appeal button not found.",
   ];
+  let peeks = 0;
+  const peekLines = [
+    "Your profile picture. Still illegal.",
+    "Ok it's you in the lobby looking cute. I had to censor it for everyone's safety.",
+    "Stop tapping, it's classified. …Fine, I kept a screenshot."
+  ];
+  $("censor").addEventListener("click", () => {
+    const c = $("censor");
+    c.classList.add("open");
+    c.textContent = peekLines[Math.min(peeks++, peekLines.length - 1)];
+  });
+
+  let bailStep = 0;
+  $("bail").addEventListener("click", () => {
+    bailStep++;
+    if (bailStep === 1) {
+      $("reply").textContent = "Bail is set at: 1 kiss. Payable in person only. No cash, no diamonds.";
+      $("bail").textContent = "Pay the kiss";
+    } else {
+      $("reply").textContent = "Payment pending until you're better. The reporter will collect personally 😘";
+      $("bail").textContent = "Bail pending ♥"; $("bail").disabled = true;
+      const [x, y] = center($("bail")); hearts(x, y, 12);
+      hit("ban-list-bail");
+    }
+  });
+
   let tries = 0;
   const appeal = $("appeal"), accept = $("accept");
   appeal.addEventListener("click", () => {
@@ -243,10 +282,11 @@
   accept.addEventListener("click", () => {
     if (accept.disabled) return;
     accept.disabled = true; appeal.hidden = true;
+    if (!$("bail").disabled) $("bail").hidden = true;
     accept.textContent = "Penalty accepted ♥";
     $("reply").textContent = tries
-      ? `Good choice (after ${tries} failed appeal${tries > 1 ? "s" : ""}). Get well soon, I'll be waiting in the lobby.`
-      : "No appeal? Respect. Get well soon, I'll be waiting in the lobby.";
+      ? `Smart (after ${tries} failed appeal${tries > 1 ? "s" : ""}). Sentence starts when you're better. I'll pick you up… in the lobby first 😏`
+      : "No appeal? You wanted this date, admit it 😏 Get well soon, I'll be waiting.";
     const [x, y] = center(accept); hearts(x, y, 24);
     $("back").hidden = false;
     hit("ban-list-accepted");
