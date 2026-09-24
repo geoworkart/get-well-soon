@@ -7,201 +7,298 @@
 <meta name="description" content="Some penalized players are publicly listed. Tap to view the list.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grandstander:wght@700;900&family=Nunito+Sans:opsz,wght@6..12,400;6..12,700;6..12,800&family=Caveat:wght@700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yeseva+One&family=Nunito+Sans:opsz,wght@6..12,400;6..12,700;6..12,800;6..12,900&family=Caveat:wght@700&display=swap">
 <style>
   :root {
     color-scheme: dark;
-    --ground: #0F1A33;
-    --panel: #1B2A4A;
-    --panel-2: #22365E;
-    --line: #34507F;
-    --text: #E8EEF9;
-    --soft: #9FB2D3;
-    --gold: #F2B84B;
-    --red: #FF5470;
-    --pink: #FF8FAB;
-    --display: "Grandstander", "Comic Sans MS", system-ui, sans-serif;
+    --navy: #0E1729;
+    --navy-2: #172440;
+    --navy-line: #2C4470;
+    --ice: #E6EDF8;
+    --ice-soft: #93A7C8;
+    --amber: #F2B84B;
+    --wine: #1E0714;
+    --rose: #FF3D7F;
+    --rose-soft: #FF9EBF;
+    --blush: #FFE3EC;
+    --gloss: #FFF6F9;
+    --lip: #D7143F;
+    --display: "Yeseva One", Georgia, "Times New Roman", serif;
     --body: "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
     --hand: "Caveat", "Segoe Print", cursive;
   }
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
-  html { background: var(--ground); }
+  html { background: var(--navy); }
   body {
-    margin: 0; color: var(--text); font-family: var(--body); font-size: 16px; line-height: 1.5;
-    padding-inline: 16px; padding-block: 24px 48px;
-    background: radial-gradient(circle at 50% 0%, #22365E 0, transparent 60%), var(--ground);
+    margin: 0; min-height: 100vh; color: var(--ice); font-family: var(--body); font-size: 16px; line-height: 1.5;
+    padding-inline: 16px; padding-block: 22px 60px;
+    background: radial-gradient(120% 60% at 50% 0%, #1C2D52 0, transparent 70%), var(--navy);
     -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
-    min-height: 100vh;
+    overflow-x: hidden;
   }
-  .wrap { max-width: 560px; margin: 0 auto; display: grid; gap: 16px; }
-  .card { background: var(--panel); border: 1.5px solid var(--line); border-radius: 14px; padding: 18px 16px; display: grid; gap: 12px; }
-  h1 { margin: 0; font-size: 20px; font-weight: 800; text-align: center; letter-spacing: .01em; }
-  .muted { color: var(--soft); margin: 0; }
-  .num { color: var(--gold); font-weight: 800; }
-  .checking { display: grid; gap: 10px; justify-items: center; text-align: center; padding-block: 30px; }
-  .spin { width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--line); border-top-color: var(--gold); animation: spin .8s linear infinite; }
+  body.hot {
+    background: radial-gradient(90% 50% at 50% 0%, #5A0F33 0, transparent 70%),
+                radial-gradient(70% 40% at 100% 100%, #4A0A26 0, transparent 70%), var(--wine);
+    color: var(--blush);
+  }
+  html:has(body.hot) { background: var(--wine); }
+  .wrap { max-width: 520px; margin: 0 auto; display: grid; gap: 18px; position: relative; z-index: 1; }
+  button { font: inherit; border: 0; cursor: pointer; color: inherit; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
 
-  table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  th { text-align: left; color: var(--soft); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; padding: 6px 6px; border-bottom: 1px solid var(--line); }
-  td { padding: 10px 6px; border-bottom: 1px solid #263D66; vertical-align: top; }
-  td:last-child { white-space: nowrap; }
-  tr.her { background: rgba(255,84,112,.12); cursor: pointer; animation: glow 1.6s ease-in-out infinite; }
-  tr.her td { font-weight: 800; }
-  tr.her td:first-child { color: #fff; }
-  .pl { display: flex; align-items: center; gap: 8px; }
-  .ava { width: 40px; height: 40px; flex: none; filter: drop-shadow(0 2px 3px rgba(0,0,0,.4)); }
-  .ava.big { width: 72px; height: 72px; }
-  tr.her .uname { white-space: nowrap; }
-  .uname { font-family: "Segoe UI", "Noto Sans", "Nunito Sans", system-ui, sans-serif; font-weight: 700; letter-spacing: .01em; }
-  .who-row { display: flex; align-items: center; gap: 12px; }
-  .who-row .who { margin: 0; }
-  .flag { display: inline-block; width: 16px; height: 11px; vertical-align: -1px; margin-right: 6px; border-radius: 2px;
+  /* ===== stage 1: the "official" list ===== */
+  .sys { background: linear-gradient(180deg, var(--navy-2), #111C33); border: 1px solid var(--navy-line); border-radius: 16px; padding: 18px 14px; display: grid; gap: 12px; box-shadow: 0 20px 40px rgba(0,0,0,.35); }
+  .sys h1 { margin: 0; font-size: 19px; font-weight: 900; text-align: center; }
+  .muted { color: var(--ice-soft); margin: 0; font-size: 15px; }
+  .num { color: var(--amber); font-weight: 900; }
+  .loading { display: grid; justify-items: center; gap: 10px; padding-block: 34px; text-align: center; }
+  .spin { width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--navy-line); border-top-color: var(--amber); animation: spin .8s linear infinite; }
+  .rows { display: grid; gap: 8px; }
+  .row {
+    display: grid; grid-template-columns: 40px 1fr auto; gap: 10px; align-items: center;
+    background: rgba(255,255,255,.03); border: 1px solid #22375E; border-radius: 12px; padding: 9px 10px;
+    opacity: 0; transform: translateY(8px); animation: rowIn .45s ease forwards;
+  }
+  .row .pic { width: 40px; height: 40px; border-radius: 10px; background: #22375E; display: grid; place-items: center; font-weight: 900; color: var(--ice-soft); font-size: 14px; }
+  .row b { display: block; font-size: 15px; line-height: 1.2; }
+  .row small { color: var(--ice-soft); font-size: 13px; }
+  .pill { font-size: 12px; font-weight: 900; padding: 4px 9px; border-radius: 999px; background: rgba(255,84,112,.15); color: #FF7A93; white-space: nowrap; }
+  .row.her { border-color: #FF5470; background: rgba(255,84,112,.12); cursor: pointer; position: relative; overflow: hidden; }
+  .row.her::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.14) 50%, transparent 70%); transform: translateX(-100%); animation: shine 2.4s ease-in-out 1.2s infinite; pointer-events: none; }
+  .row.her .pill { background: #FF5470; color: #fff; animation: throb 1.2s ease-in-out infinite; }
+  .row.her small.tap { color: var(--amber); font-weight: 800; }
+  .ava { width: 40px; height: 40px; display: block; filter: drop-shadow(0 2px 3px rgba(0,0,0,.45)); }
+  .uname { font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif; font-weight: 800; white-space: nowrap; }
+  .flag { display: inline-block; width: 15px; height: 10px; border-radius: 2px; margin-left: 5px;
     background: linear-gradient(90deg, #002B7F 0 33.3%, #FCD116 33.3% 66.6%, #CE1126 66.6%); }
-  .tap { color: var(--gold); font-size: 12px; font-weight: 800; display: block; margin-top: 2px; }
 
-  /* the reveal */
-  .case { background: #FFF6F8; color: #3A1231; border-radius: 16px; padding: 20px 16px; display: grid; gap: 12px; position: relative; overflow: hidden; }
-  .case h2 { margin: 0; font-family: var(--display); font-weight: 900; font-size: 28px; line-height: 1.05; color: #B81E50; }
-  .case .who { font-weight: 800; }
-  .case dl { margin: 0; display: grid; gap: 10px; }
-  .case dt { font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #7A4A6B; }
-  .case dd { margin: 2px 0 0; font-weight: 700; }
-  .case ul { margin: 4px 0 0; padding-left: 18px; }
-  .case li { margin-bottom: 4px; }
-  .note { font-family: var(--hand); font-size: 28px; line-height: 1.15; color: #E8356D; margin: 0; }
-  .stamp {
-    position: absolute; right: 10px; top: 14px; transform: rotate(12deg);
-    font-family: var(--display); font-weight: 900; font-size: 18px; letter-spacing: .06em;
-    color: #E8356D; border: 3px solid #E8356D; border-radius: 10px; padding: 2px 10px; background: rgba(255,255,255,.7);
+  /* ===== transition: sirens + BUSTED + camera flash ===== */
+  .siren { position: fixed; inset: 0; z-index: 50; pointer-events: none; opacity: 0; overflow: hidden; }
+  .siren.on { animation: sirenFade 1.9s ease forwards; }
+  .siren::before, .siren::after { content: ""; position: absolute; inset: -20%; }
+  .siren::before { background: radial-gradient(circle at 20% 30%, rgba(255,40,80,.75), transparent 45%); animation: sirenA .35s steps(2) infinite; }
+  .siren::after { background: radial-gradient(circle at 80% 30%, rgba(60,120,255,.75), transparent 45%); animation: sirenB .35s steps(2) infinite; }
+  .busted {
+    position: fixed; left: 50%; top: 42%; z-index: 51; opacity: 0; pointer-events: none;
+    transform: translate(-50%, -50%) rotate(-8deg) scale(3);
+    font-family: var(--display); font-size: clamp(56px, 18vw, 96px); color: #fff; letter-spacing: .04em;
+    text-shadow: 0 0 20px var(--rose), 0 6px 0 var(--lip);
   }
-  .case.show { animation: pop .5s cubic-bezier(.2,1.4,.4,1); }
+  .busted.on { animation: bust 1.8s cubic-bezier(.2,1.4,.4,1) forwards; }
+  .flash { position: fixed; inset: 0; z-index: 52; background: #fff; pointer-events: none; opacity: 0; }
+  .flash.on { animation: flash .5s ease-out forwards; }
 
-  .btns { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; min-height: 56px; position: relative; }
-  button { font: inherit; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-  .btn { font-family: var(--display); font-weight: 900; font-size: 17px; padding: 11px 20px; border-radius: 999px; transition: transform .2s ease; }
-  .btn.main { background: #E8356D; color: #fff; box-shadow: 0 4px 0 #B81E50; }
-  .btn.alt { background: #fff; color: #3A1231; border: 2px solid #F3C4D0; }
-  .btn:focus-visible { outline: 3px solid #3A1231; outline-offset: 3px; }
+  /* ===== stage 2: the hot file ===== */
+  .file { display: grid; gap: 18px; }
+  .kicker { margin: 0; text-align: center; font-size: 12px; font-weight: 900; letter-spacing: .24em; text-transform: uppercase; color: var(--rose-soft); }
+  .title { margin: 0; text-align: center; font-family: var(--display); font-weight: 400; font-size: clamp(40px, 12vw, 62px); line-height: .95; color: #fff; text-shadow: 0 0 24px rgba(255,61,127,.55); }
+  .title em { font-style: normal; color: var(--rose); display: block; }
+
+  .mug {
+    justify-self: center; width: min(300px, 100%); aspect-ratio: 4 / 4.6; border-radius: 18px; position: relative; overflow: hidden;
+    background: repeating-linear-gradient(180deg, transparent 0 27px, rgba(255,255,255,.14) 27px 28px), linear-gradient(180deg, #3A1426, #22091A);
+    border: 2px solid rgba(255,158,191,.35);
+    box-shadow: 0 24px 50px rgba(0,0,0,.45), 0 0 40px rgba(255,61,127,.25);
+    transform-origin: 50% -40px; animation: drop .9s cubic-bezier(.2,1.5,.4,1) both, swing 4s ease-in-out 1s infinite;
+  }
+  .ruler { position: absolute; left: 10px; top: 6px; bottom: 70px; display: grid; align-content: space-between; font-size: 10px; font-weight: 900; color: rgba(255,255,255,.45); }
+  .mug .ava-big { position: absolute; left: 50%; top: 14%; width: 58%; transform: translateX(-50%); filter: drop-shadow(0 10px 18px rgba(0,0,0,.5)); }
+  .placard {
+    position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); width: 86%;
+    background: #111; color: #fff; border-radius: 6px; padding: 7px 10px; text-align: center; border: 2px solid #fff;
+    box-shadow: 0 6px 16px rgba(0,0,0,.4);
+  }
+  .placard .uname { display: block; font-size: 17px; }
+  .placard small { font-size: 11px; font-weight: 800; letter-spacing: .14em; color: #bbb; }
+  .kissmark { position: absolute; width: 74px; right: 12px; top: 18px; transform: rotate(18deg) scale(0); opacity: 0; }
+  .kissmark.on { animation: kissOn .5s cubic-bezier(.2,1.6,.4,1) forwards; }
+
+  .sheet { background: var(--gloss); color: #3A0C22; border-radius: 22px; padding: 20px 18px; display: grid; gap: 16px; box-shadow: 0 20px 40px rgba(0,0,0,.3); }
+  .label { margin: 0 0 6px; font-size: 11px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; color: #9A5877; }
+  .charges { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .charges li { display: grid; grid-template-columns: 20px 1fr; gap: 8px; font-weight: 800; opacity: 0; transform: translateX(-10px); }
+  .charges li.in { animation: slideIn .45s ease forwards; }
+  .charges li::before { content: "♥"; color: var(--rose); font-size: 16px; line-height: 1.4; }
+  .by { margin: 0; font-weight: 800; font-size: 14px; color: #9A5877; }
+  .by b { color: #3A0C22; }
+
   .censor {
-    font: inherit; font-weight: 800; color: #fff; background: #3A1231; border-radius: 6px; padding: 2px 8px;
-    filter: blur(0); cursor: pointer; text-align: left;
+    display: block; width: 100%; text-align: left; font-weight: 800; border-radius: 12px; padding: 12px 14px; min-height: 52px;
+    background: linear-gradient(135deg, #FF3D7F, #B3124F); color: #fff; position: relative; overflow: hidden;
   }
-  .censor.open { background: #FFE0E7; color: #B81E50; }
-  .reply { margin: 0; font-weight: 700; color: #7A4A6B; min-height: 1.5em; }
-  .back { color: var(--gold); font-weight: 800; text-align: center; display: block; text-decoration: none; padding: 8px; }
-  .fine { text-align: center; font-size: 12px; color: var(--soft); margin: 0; }
+  .censor span { display: block; filter: blur(6px); transition: filter .6s ease; }
+  .censor::before { content: "TOO HOT · TAP TO PEEK"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 13px; letter-spacing: .14em; font-weight: 900; background: rgba(0,0,0,.25); transition: opacity .4s; }
+  .censor.open span { filter: blur(0); }
+  .censor.open::before { opacity: 0; }
 
-  .heart { position: fixed; z-index: 50; pointer-events: none; font-size: 22px; animation: float 2.4s ease-out forwards; }
+  .note { font-family: var(--hand); font-size: 30px; line-height: 1.1; color: var(--lip); margin: 0; text-align: center; }
+  .actions { display: grid; gap: 10px; }
+  .btn { font-weight: 900; font-size: 17px; padding: 14px 18px; border-radius: 999px; transition: transform .2s ease; }
+  .btn.main { background: linear-gradient(135deg, #FF3D7F, #D7143F); color: #fff; box-shadow: 0 6px 18px rgba(215,20,63,.4); }
+  .btn.soft { background: #FFE3EC; color: #7A1B45; }
+  .btn[disabled] { opacity: .8; cursor: default; }
+  .reply { margin: 0; font-weight: 800; text-align: center; color: #7A1B45; min-height: 1.5em; }
+
+  .cuffs { justify-self: center; width: 140px; height: 70px; }
+  .cuffs .l { animation: cuffL .8s cubic-bezier(.2,1.5,.4,1) both; }
+  .cuffs .r { animation: cuffR .8s cubic-bezier(.2,1.5,.4,1) both; }
+
+  .fine { text-align: center; font-size: 12px; color: rgba(255,227,236,.6); margin: 0; }
+
+  .fx { position: fixed; z-index: 60; pointer-events: none; animation: rise var(--d, 2.6s) ease-out forwards; }
+  .lips-fx { position: fixed; z-index: 60; pointer-events: none; width: 90px; height: 54px; animation: smooch 1.6s cubic-bezier(.2,1.4,.4,1) forwards; }
+  .bg-heart { position: fixed; bottom: -40px; z-index: 0; pointer-events: none; color: rgba(255,61,127,.22); animation: drift linear forwards; }
+
   @keyframes spin { to { transform: rotate(360deg) } }
-  @keyframes glow { 50% { background: rgba(255,84,112,.28) } }
-  @keyframes pop { 0% { transform: scale(.9); opacity: 0 } 100% { transform: none; opacity: 1 } }
-  @keyframes float { 0% { transform: translate(0,0) scale(.6); opacity: 0 } 15% { opacity: 1 } 100% { transform: translate(var(--x), -280px) scale(1.2); opacity: 0 } }
-  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  @keyframes rowIn { to { opacity: 1; transform: none } }
+  @keyframes shine { 0% { transform: translateX(-100%) } 60%, 100% { transform: translateX(100%) } }
+  @keyframes throb { 50% { transform: scale(1.08) } }
+  @keyframes sirenA { 0% { opacity: 1 } 100% { opacity: .15 } }
+  @keyframes sirenB { 0% { opacity: .15 } 100% { opacity: 1 } }
+  @keyframes sirenFade { 0% { opacity: 0 } 10% { opacity: 1 } 80% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes bust {
+    0% { opacity: 0; transform: translate(-50%,-50%) rotate(-8deg) scale(3) }
+    25% { opacity: 1; transform: translate(-50%,-50%) rotate(-8deg) scale(1) }
+    80% { opacity: 1; transform: translate(-50%,-50%) rotate(-8deg) scale(1.05) }
+    100% { opacity: 0; transform: translate(-50%,-50%) rotate(-8deg) scale(.9) }
+  }
+  @keyframes flash { 0% { opacity: .95 } 100% { opacity: 0 } }
+  @keyframes drop { 0% { transform: translateY(-60px) rotate(-6deg); opacity: 0 } 100% { transform: none; opacity: 1 } }
+  @keyframes swing { 0%, 100% { transform: rotate(-1.2deg) } 50% { transform: rotate(1.2deg) } }
+  @keyframes slideIn { to { opacity: 1; transform: none } }
+  @keyframes kissOn { to { opacity: .9; transform: rotate(18deg) scale(1) } }
+  @keyframes cuffL { 0% { transform: translateX(-30px); opacity: 0 } 100% { transform: none; opacity: 1 } }
+  @keyframes cuffR { 0% { transform: translateX(30px); opacity: 0 } 100% { transform: none; opacity: 1 } }
+  @keyframes rise { 0% { transform: translate(0,0) scale(.5); opacity: 0 } 15% { opacity: 1 } 100% { transform: translate(var(--x), -300px) scale(1.2) rotate(var(--r)); opacity: 0 } }
+  @keyframes smooch { 0% { transform: scale(2.4) rotate(var(--r)); opacity: 0 } 30% { transform: scale(1) rotate(var(--r)); opacity: 1 } 80% { opacity: 1 } 100% { transform: scale(1) rotate(var(--r)); opacity: 0 } }
+  @keyframes drift { to { transform: translateY(-115vh) rotate(25deg) } }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  }
 </style>
 </head>
 <body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE9A0"/><stop offset=".5" stop-color="#E0A93A"/><stop offset="1" stop-color="#9C6A12"/></linearGradient>
+    <symbol id="cat" viewBox="0 0 64 64">
+      <path d="M32 2l7 6 9-2 3 9 9 4-3 9 5 8-8 5 1 9-9 2-4 8-8-3-8 3-4-8-9-2 1-9-8-5 5-8-3-9 9-4 3-9 9 2z" fill="url(#gold)" stroke="#6B4508" stroke-width="1.2"/>
+      <rect x="12" y="12" width="40" height="40" rx="8" fill="#C9D3E0"/>
+      <path d="M17 50V26l6-9 6 7h6l6-7 6 9v24z" fill="#8F8F8F"/>
+      <path d="M22 50c0-9 4-15 10-15s10 6 10 15z" fill="#F4F1EC"/>
+      <path d="M26 24l6 4 6-4v8H26z" fill="#F4F1EC"/>
+      <circle cx="25.5" cy="33" r="3.2" fill="#1C1C1C"/><circle cx="38.5" cy="33" r="3.2" fill="#1C1C1C"/>
+      <circle cx="26.4" cy="32" r="1" fill="#fff"/><circle cx="39.4" cy="32" r="1" fill="#fff"/>
+      <path d="M30 38h4l-2 2.4z" fill="#FF8FAB"/>
+      <path d="M29 42q3 2 6 0" fill="none" stroke="#FF6F91" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M29.5 43q2.5 4 5 0" fill="#FF6F91"/>
+      <path d="M18 25l3-7 4 5zM46 25l-3-7-4 5z" fill="#FFB3C6"/>
+    </symbol>
+    <symbol id="lips" viewBox="0 0 100 60">
+      <path d="M50 14c-6-9-16-12-24-8C16 10 8 20 2 28c10 3 20 4 30 2 7-1 13-4 18-7 5 3 11 6 18 7 10 2 20 1 30-2-6-8-14-18-24-22-8-4-18-1-24 8z" fill="#D7143F"/>
+      <path d="M2 28c10 16 28 28 48 28s38-12 48-28c-10 3-20 4-30 2-7-1-13-4-18-7-5 3-11 6-18 7-10 2-20 1-30-2z" fill="#B30F35"/>
+      <path d="M8 29c14 4 28 3 42-5 14 8 28 9 42 5" fill="none" stroke="#6E0620" stroke-width="2" stroke-linecap="round"/>
+      <path d="M30 40c6 4 14 6 20 6" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
 <main class="wrap">
 
-  <div class="card checking" id="checking">
-    <div class="spin" aria-hidden="true"></div>
-    <p class="muted">Loading penalized players…</p>
-  </div>
-
-  <div class="card" id="list" hidden>
-    <h1>Punishment for Cheating (2026-09-24)</h1>
-    <p class="muted">Recently, a total of <span class="num">5</span> players were penalized in this round. Some penalized players are publicly listed below.</p>
-    <div style="overflow-x:auto">
-      <table>
-        <thead><tr><th>Player</th><th>Violation</th><th>Penalty</th></tr></thead>
-        <tbody>
-          <tr><td>xX_M1dG0d_Xx</td><td>Map hack</td><td>Banned 30 days</td></tr>
-          <tr><td>NoobDestroyer99</td><td>Speed script</td><td>Banned 7 days</td></tr>
-          <tr class="her" id="her" tabindex="0" role="button" aria-label="Open case details"><td><span class="pl"><svg class="ava" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE9A0"/><stop offset=".5" stop-color="#E0A93A"/><stop offset="1" stop-color="#9C6A12"/></linearGradient></defs>
-<path d="M32 2l7 6 9-2 3 9 9 4-3 9 5 8-8 5 1 9-9 2-4 8-8-3-8 3-4-8-9-2 1-9-8-5 5-8-3-9 9-4 3-9 9 2z" fill="url(#gold)" stroke="#6B4508" stroke-width="1.2"/>
-<rect x="12" y="12" width="40" height="40" rx="8" fill="#C9D3E0"/>
-<path d="M17 50V26l6-9 6 7h6l6-7 6 9v24z" fill="#8F8F8F"/>
-<path d="M22 50c0-9 4-15 10-15s10 6 10 15z" fill="#F4F1EC"/>
-<path d="M26 24l6 4 6-4v8H26z" fill="#F4F1EC"/>
-<circle cx="25.5" cy="33" r="3.2" fill="#1C1C1C"/><circle cx="38.5" cy="33" r="3.2" fill="#1C1C1C"/>
-<circle cx="26.4" cy="32" r="1" fill="#fff"/><circle cx="39.4" cy="32" r="1" fill="#fff"/>
-<path d="M30 38h4l-2 2.4z" fill="#FF8FAB"/>
-<path d="M29 42q3 2 6 0" fill="none" stroke="#FF6F91" stroke-width="1.6" stroke-linecap="round"/>
-<path d="M29.5 43q2.5 4 5 0" fill="#FF6F91"/>
-<path d="M18 25l3-7 4 5zM46 25l-3-7-4 5z" fill="#FFB3C6"/></svg><span><span class="flag" aria-hidden="true"></span><span id="hername" class="uname">Tսrŋ iŧ σғғ!!</span><span class="tap">Tap to see case</span></span></span></td><td>Illegal script (see details)</td><td>Special penalty</td></tr>
-          <tr><td>LordStealer_07</td><td>Auto-retribution</td><td>Banned 14 days</td></tr>
-          <tr><td>AFK_King</td><td>Went AFK 12 times</td><td>Credit score −30</td></tr>
-        </tbody>
-      </table>
+  <section class="sys" id="sys">
+    <div class="loading" id="loading">
+      <div class="spin" aria-hidden="true"></div>
+      <p class="muted">Loading penalized players…</p>
     </div>
-  </div>
+    <div id="list" hidden>
+      <h1>Punishment for Cheating (2026-09-24)</h1>
+      <p class="muted" style="text-align:center;margin:6px 0 12px">Recently, <span class="num">5</span> players were penalized in this round.</p>
+      <div class="rows">
+        <div class="row" style="animation-delay:.05s"><span class="pic">M</span><span><b>xX_M1dG0d_Xx</b><small>Map hack</small></span><span class="pill">30 days</span></div>
+        <div class="row" style="animation-delay:.15s"><span class="pic">N</span><span><b>NoobDestroyer99</b><small>Speed script</small></span><span class="pill">7 days</span></div>
+        <div class="row her" id="her" role="button" tabindex="0" aria-label="Open case" style="animation-delay:.25s">
+          <svg class="ava" viewBox="0 0 64 64"><use href="#cat"/></svg>
+          <span><b><span class="uname" data-name>Tսrŋ iŧ σғғ!!</span><span class="flag" aria-hidden="true"></span></b><small class="tap">Illegal script · tap to see case</small></span>
+          <span class="pill">Special</span>
+        </div>
+        <div class="row" style="animation-delay:.35s"><span class="pic">L</span><span><b>LordStealer_07</b><small>Auto-retribution</small></span><span class="pill">14 days</span></div>
+        <div class="row" style="animation-delay:.45s"><span class="pic">A</span><span><b>AFK_King</b><small>AFK 12 times</small></span><span class="pill">−30 credit</span></div>
+      </div>
+    </div>
+  </section>
 
-  <div class="case" id="case" hidden>
-    <span class="stamp">GUILTY ♥</span>
-    <h2>Case details</h2>
-    <div class="who-row"><svg class="ava big" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="gold2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE9A0"/><stop offset=".5" stop-color="#E0A93A"/><stop offset="1" stop-color="#9C6A12"/></linearGradient></defs>
-<path d="M32 2l7 6 9-2 3 9 9 4-3 9 5 8-8 5 1 9-9 2-4 8-8-3-8 3-4-8-9-2 1-9-8-5 5-8-3-9 9-4 3-9 9 2z" fill="url(#gold2)" stroke="#6B4508" stroke-width="1.2"/>
-<rect x="12" y="12" width="40" height="40" rx="8" fill="#C9D3E0"/>
-<path d="M17 50V26l6-9 6 7h6l6-7 6 9v24z" fill="#8F8F8F"/>
-<path d="M22 50c0-9 4-15 10-15s10 6 10 15z" fill="#F4F1EC"/>
-<path d="M26 24l6 4 6-4v8H26z" fill="#F4F1EC"/>
-<circle cx="25.5" cy="33" r="3.2" fill="#1C1C1C"/><circle cx="38.5" cy="33" r="3.2" fill="#1C1C1C"/>
-<circle cx="26.4" cy="32" r="1" fill="#fff"/><circle cx="39.4" cy="32" r="1" fill="#fff"/>
-<path d="M30 38h4l-2 2.4z" fill="#FF8FAB"/>
-<path d="M29 42q3 2 6 0" fill="none" stroke="#FF6F91" stroke-width="1.6" stroke-linecap="round"/>
-<path d="M29.5 43q2.5 4 5 0" fill="#FF6F91"/>
-<path d="M18 25l3-7 4 5zM46 25l-3-7-4 5z" fill="#FFB3C6"/></svg><p class="who">Player: <span id="hername2" class="uname">Tսrŋ iŧ σғғ!!</span> <span class="flag" aria-hidden="true"></span><br>Reported by: Doci ★</p></div>
-    <dl>
-      <dt>Violation</dt>
-      <dd>
-        <ul>
-          <li>Using an illegal cuteness script in every match</li>
+  <section class="file" id="file" hidden>
+    <p class="kicker">Case #143 · Classified</p>
+    <h2 class="title">You're under<em>arrest, officer</em></h2>
+
+    <div class="mug" id="mug">
+      <div class="ruler" aria-hidden="true"><span>180</span><span>170</span><span>160</span><span>150</span></div>
+      <svg class="ava-big" viewBox="0 0 64 64"><use href="#cat"/></svg>
+      <svg class="kissmark" id="kissmark" viewBox="0 0 100 60" aria-hidden="true"><use href="#lips"/></svg>
+      <div class="placard"><span class="uname" data-name>Tսrŋ iŧ σғғ!!</span><small>CASE #143 · ROMANIA</small></div>
+    </div>
+
+    <div class="sheet">
+      <div>
+        <p class="label">Charges</p>
+        <ul class="charges" id="charges">
+          <li>Running an illegal cuteness script in every match</li>
           <li>Stealing someone's heart without permission</li>
+          <li>Being way too distracting in chat</li>
           <li>Getting sick and leaving your duo partner to solo queue</li>
         </ul>
-      </dd>
-      <dt>Evidence</dt>
-      <dd>
-        <ul>
-          <li>I smile at my phone every time you type in chat. That's not normal.</li>
-          <li>Exhibit B: <button class="censor" id="censor">[ CENSORED: too hot for this server ]</button></li>
+      </div>
+      <div>
+        <p class="label">Evidence</p>
+        <button class="censor" id="censor"><span id="censor-text">Your profile picture. Still illegal.</span></button>
+      </div>
+      <div>
+        <p class="label">Sentence</p>
+        <ul class="charges" id="sentence">
+          <li>Rest until 100% HP. Tea, blankets, zero work</li>
+          <li>One date with the reporter. You sit close. Anti-cheat rules</li>
+          <li>Early release possible for good behaviour (ask the reporter how)</li>
         </ul>
-      </dd>
-      <dt>Penalty</dt>
-      <dd>
-        <ul>
-          <li>Rest until 100% HP. Tea, blankets, no work.</li>
-          <li>One date with the reporter when you're better. You sit close. Anti-cheat rules.</li>
-          <li>Ban from being sick, effective immediately</li>
-          <li>Early release possible for good behaviour (ask the reporter how 😏)</li>
-        </ul>
-      </dd>
-    </dl>
-    <p class="note">Officer, you're the one getting arrested this time ;)</p>
-    <div class="btns" id="btns">
-      <button class="btn main" id="accept">Accept penalty</button>
-      <button class="btn alt" id="appeal">Appeal</button>
-      <button class="btn alt" id="bail">Pay bail</button>
+      </div>
+      <p class="by">Arresting officer: <b>Doci ★</b></p>
+      <p class="note" id="note">Funny how the officer is the one getting cuffed ;)</p>
+      <div class="actions">
+        <button class="btn main" id="accept">Accept sentence</button>
+        <button class="btn soft" id="bail">Pay bail</button>
+        <button class="btn soft" id="appeal">Appeal</button>
+      </div>
+      <svg class="cuffs" id="cuffs" viewBox="0 0 140 70" hidden aria-hidden="true">
+        <g class="l"><path d="M40 60C18 46 10 36 10 25c0-9 7-15 15-15 7 0 11 4 15 9 4-5 8-9 15-9 8 0 15 6 15 15 0 11-8 21-30 35z" fill="none" stroke="#FF3D7F" stroke-width="6"/></g>
+        <g class="r"><path d="M100 60C78 46 70 36 70 25c0-9 7-15 15-15 7 0 11 4 15 9 4-5 8-9 15-9 8 0 15 6 15 15 0 11-8 21-30 35z" fill="none" stroke="#D7143F" stroke-width="6"/></g>
+      </svg>
+      <p class="reply" id="reply" aria-live="polite"></p>
     </div>
-    <p class="reply" id="reply" aria-live="polite"></p>
-  </div>
 
-  <a class="back" id="back" href="../" hidden>Your get-well-soon page is here ♥</a>
-  <p class="fine" id="fine" hidden>Not a real notice. Your account is totally fine, it's just me.</p>
+    <p class="fine">Not a real notice. Your account is fine, it's just me ♥</p>
+  </section>
 </main>
+
+<div class="siren" id="siren" aria-hidden="true"></div>
+<div class="busted" id="busted" aria-hidden="true">BUSTED</div>
+<div class="flash" id="flash" aria-hidden="true"></div>
 
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
   const rand = (a, b) => a + Math.random() * (b - a);
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const center = (el) => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
 
-  // Optional: .../ban-list/#Ana shows another name instead of her username
+  // Optional: .../ban-list/#Name shows another name
   try {
     const n = decodeURIComponent(location.hash.slice(1)).replace(/[_~+-]+/g, " ").replace(/[<>&"]/g, "").trim().slice(0, 24);
-    if (n) { $("hername").textContent = n; $("hername2").textContent = n; }
+    if (n) document.querySelectorAll("[data-name]").forEach((el) => (el.textContent = n));
   } catch (e) {}
 
-  // Open counter (same as the main page). ?me=1 stops your own phone from counting.
+  // Open counter. ?me=1 stops your own phone from counting.
   let isMe = false;
   try {
     if (/[?&]me=1/.test(location.search)) localStorage.setItem("gw-me", "1");
@@ -210,85 +307,117 @@
   const hit = (key) => { if (!isMe) { const i = new Image(); i.src = "https://hits.sh/geoworkart.github.io/" + key + ".svg"; } };
   hit("ban-list");
 
-  function hearts(x, y, n = 14) {
+  function burst(x, y, n = 14, chars = ["♥", "💋", "♥", "✨"]) {
+    if (reduce) n = Math.min(n, 4);
     for (let i = 0; i < n; i++) {
       const h = document.createElement("div");
-      h.className = "heart"; h.textContent = ["♥", "❤", "💕"][i % 3];
-      h.style.cssText = `left:${x}px;top:${y}px;--x:${rand(-140, 140)}px;color:${["#FF5470", "#FF8FAB", "#F2B84B"][i % 3]};animation-delay:${rand(0, .3)}s`;
-      document.body.appendChild(h); setTimeout(() => h.remove(), 3000);
+      h.className = "fx"; h.textContent = chars[i % chars.length];
+      h.style.cssText = `left:${x}px;top:${y}px;font-size:${rand(16, 30)}px;color:${["#FF3D7F", "#FF9EBF", "#D7143F"][i % 3]};--x:${rand(-150, 150)}px;--r:${rand(-40, 40)}deg;--d:${rand(1.8, 2.8)}s;animation-delay:${rand(0, .25)}s`;
+      document.body.appendChild(h); setTimeout(() => h.remove(), 3300);
     }
   }
-  const center = (el) => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
+  function smooch(x, y) {
+    const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    s.setAttribute("viewBox", "0 0 100 60"); s.setAttribute("class", "lips-fx");
+    s.innerHTML = '<use href="#lips"/>';
+    s.style.cssText = `left:${x - 45}px;top:${y - 27}px;--r:${rand(-25, 25)}deg`;
+    document.body.appendChild(s); setTimeout(() => s.remove(), 1700);
+  }
+  let bgTimer = null;
+  function floatHearts() {
+    if (reduce || bgTimer) return;
+    bgTimer = setInterval(() => {
+      const h = document.createElement("div");
+      h.className = "bg-heart"; h.textContent = "♥";
+      const d = rand(7, 12);
+      h.style.cssText = `left:${rand(0, 100)}vw;font-size:${rand(14, 34)}px;animation-duration:${d}s`;
+      document.body.appendChild(h); setTimeout(() => h.remove(), d * 1000);
+    }, 700);
+  }
 
-  setTimeout(() => { $("checking").hidden = true; $("list").hidden = false; }, 1400);
+  setTimeout(() => { $("loading").hidden = true; $("list").hidden = false; }, 1500);
 
+  // sirens → BUSTED → camera flash → the hot file
+  let opened = false;
   function openCase() {
-    if (!$("case").hidden) return;
-    $("case").hidden = false; $("case").classList.add("show");
-    $("fine").hidden = false;
-    $("case").scrollIntoView({ behavior: "smooth", block: "start" });
-    setTimeout(() => { const [x, y] = center($("case")); hearts(x, y - 100, 16); }, 400);
+    if (opened) return; opened = true;
+    $("siren").classList.add("on");
+    $("busted").classList.add("on");
+    setTimeout(() => $("flash").classList.add("on"), reduce ? 0 : 1300);
+    setTimeout(() => {
+      $("sys").hidden = true;
+      document.body.classList.add("hot");
+      $("file").hidden = false;
+      window.scrollTo({ top: 0 });
+      floatHearts();
+      document.querySelectorAll("#charges li").forEach((li, i) => setTimeout(() => li.classList.add("in"), 700 + i * 380));
+      document.querySelectorAll("#sentence li").forEach((li, i) => setTimeout(() => li.classList.add("in"), 2400 + i * 380));
+      setTimeout(() => { const [x, y] = center($("mug")); burst(x, y, 16); }, 700);
+    }, reduce ? 50 : 1400);
   }
   $("her").addEventListener("click", openCase);
   $("her").addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openCase(); } });
 
-  const appeals = [
-    "Appeal received. Reviewing… denied.",
-    "Denied. Have you seen yourself? The evidence is too strong.",
-    "The judge is also the reporter. And the judge has a crush. Denied.",
-    "Bribing the judge might work though 😏",
-    "System error: Appeal button not found.",
+  const peek = [
+    "Your profile picture. Still illegal.",
+    "Ok, it's you in the lobby looking this cute. Had to censor it for everyone's safety.",
+    "Stop peeking. It's classified. …Fine, I kept a screenshot."
   ];
   let peeks = 0;
-  const peekLines = [
-    "Your profile picture. Still illegal.",
-    "Ok it's you in the lobby looking cute. I had to censor it for everyone's safety.",
-    "Stop tapping, it's classified. …Fine, I kept a screenshot."
-  ];
   $("censor").addEventListener("click", () => {
     const c = $("censor");
-    c.classList.add("open");
-    c.textContent = peekLines[Math.min(peeks++, peekLines.length - 1)];
+    if (c.classList.contains("open")) $("censor-text").textContent = peek[Math.min(peeks, peek.length - 1)];
+    c.classList.add("open"); peeks++;
+    const [x, y] = center(c); burst(x, y, 6, ["🔥", "♥"]);
   });
 
-  let bailStep = 0;
+  let bail = 0;
   $("bail").addEventListener("click", () => {
-    bailStep++;
-    if (bailStep === 1) {
-      $("reply").textContent = "Bail is set at: 1 kiss. Payable in person only. No cash, no diamonds.";
-      $("bail").textContent = "Pay the kiss";
-    } else {
-      $("reply").textContent = "Payment pending until you're better. The reporter will collect personally 😘";
+    bail++;
+    const [x, y] = center($("bail"));
+    if (bail === 1) {
+      $("reply").textContent = "Bail is set at 1 kiss. Payable in person only. No diamonds accepted.";
+      $("bail").textContent = "Pay the kiss 💋";
+    } else if (!$("bail").disabled) {
+      smooch(x, y - 60); setTimeout(() => smooch(x + rand(-80, 80), y - 180), 250);
+      $("kissmark").classList.add("on");
+      $("reply").textContent = "Payment pending until you're better. The officer will collect personally 😘";
       $("bail").textContent = "Bail pending ♥"; $("bail").disabled = true;
-      const [x, y] = center($("bail")); hearts(x, y, 12);
+      burst(x, y, 12, ["💋", "♥"]);
       hit("ban-list-bail");
     }
   });
 
+  const appeals = [
+    "Appeal received. Reviewing… denied.",
+    "Denied. Have you seen yourself? The evidence is too strong.",
+    "The judge is also the arresting officer. And he has a crush. Denied.",
+    "Bribing the judge might work though 😏",
+    "Appeal button has left the chat."
+  ];
   let tries = 0;
   const appeal = $("appeal"), accept = $("accept");
   appeal.addEventListener("click", () => {
     $("reply").textContent = appeals[Math.min(tries, appeals.length - 1)];
     tries++;
-    accept.style.transform = `scale(${1 + tries * 0.1})`;
-    appeal.style.transform = `scale(${Math.max(0.6, 1 - tries * 0.1)})`;
-    if (tries >= appeals.length) {
-      appeal.textContent = "Accept penalty";
-      appeal.className = "btn main";
-      appeal.style.transform = "scale(1)";
-      appeal.onclick = () => accept.click();
-    }
+    appeal.style.transform = `scale(${Math.max(.6, 1 - tries * .09)})`;
+    accept.style.transform = `scale(${1 + tries * .04})`;
+    if (tries >= appeals.length) appeal.hidden = true;
   });
+
   accept.addEventListener("click", () => {
     if (accept.disabled) return;
     accept.disabled = true; appeal.hidden = true;
     if (!$("bail").disabled) $("bail").hidden = true;
-    accept.textContent = "Penalty accepted ♥";
+    accept.textContent = "Sentence accepted ♥";
+    $("cuffs").hidden = false;
+    $("note").textContent = "Cuffed. To me. Get well soon ;)";
     $("reply").textContent = tries
-      ? `Smart (after ${tries} failed appeal${tries > 1 ? "s" : ""}). Sentence starts when you're better. I'll pick you up… in the lobby first 😏`
-      : "No appeal? You wanted this date, admit it 😏 Get well soon, I'll be waiting.";
-    const [x, y] = center(accept); hearts(x, y, 24);
-    $("back").hidden = false;
+      ? `Smart, after ${tries} failed appeal${tries > 1 ? "s" : ""}. Sentence starts the day you're better. I'll be waiting 😏`
+      : "No appeal? You wanted this date, admit it 😏 Sentence starts the day you're better.";
+    const [x, y] = center(accept);
+    burst(x, y, 26); smooch(x, y - 120);
+    setTimeout(() => burst(rand(40, innerWidth - 40), innerHeight - 40, 14), 400);
     hit("ban-list-accepted");
   });
 })();
