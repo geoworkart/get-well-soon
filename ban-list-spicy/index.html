@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E1729">
+<title>Punishment list (2026-09-24)</title>
+<meta name="description" content="Some penalized players are publicly listed. Tap to view the list.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yeseva+One&family=Nunito+Sans:opsz,wght@6..12,400;6..12,700;6..12,800;6..12,900&family=Caveat:wght@700&display=swap">
+<style>
+  :root {
+    color-scheme: dark;
+    --navy: #0E1729;
+    --navy-2: #172440;
+    --navy-line: #2C4470;
+    --ice: #E6EDF8;
+    --ice-soft: #93A7C8;
+    --amber: #F2B84B;
+    --wine: #1E0714;
+    --rose: #FF3D7F;
+    --rose-soft: #FF9EBF;
+    --blush: #FFE3EC;
+    --gloss: #FFF6F9;
+    --lip: #D7143F;
+    --display: "Yeseva One", Georgia, "Times New Roman", serif;
+    --body: "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --hand: "Caveat", "Segoe Print", cursive;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { background: var(--navy); }
+  body {
+    margin: 0; min-height: 100vh; min-height: 100dvh; overscroll-behavior-y: none; color: var(--ice); font-family: var(--body); font-size: 16px; line-height: 1.5;
+    padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px));
+    padding-block: calc(18px + env(safe-area-inset-top, 0px)) calc(48px + env(safe-area-inset-bottom, 0px));
+    background: radial-gradient(120% 60% at 50% 0%, #1C2D52 0, transparent 70%), var(--navy);
+    -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+    overflow-x: hidden;
+  }
+  body.hot {
+    background: radial-gradient(90% 50% at 50% 0%, #5A0F33 0, transparent 70%),
+                radial-gradient(70% 40% at 100% 100%, #4A0A26 0, transparent 70%), var(--wine);
+    color: var(--blush);
+  }
+  html:has(body.hot) { background: var(--wine); }
+  .wrap > * { min-width: 0; }
+  .wrap { max-width: 520px; margin: 0 auto; display: grid; gap: 18px; position: relative; z-index: 1; }
+  button { font: inherit; border: 0; cursor: pointer; color: inherit; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
+
+  /* ===== stage 1: the "official" list ===== */
+  .sys { background: linear-gradient(180deg, var(--navy-2), #111C33); border: 1px solid var(--navy-line); border-radius: 16px; padding: 18px 14px; display: grid; gap: 12px; box-shadow: 0 20px 40px rgba(0,0,0,.35); }
+  .sys h1 { margin: 0; font-size: 19px; font-weight: 900; text-align: center; }
+  .muted { color: var(--ice-soft); margin: 0; font-size: 15px; }
+  .num { color: var(--amber); font-weight: 900; }
+  .loading { display: grid; justify-items: center; gap: 10px; padding-block: 34px; text-align: center; }
+  .spin { width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--navy-line); border-top-color: var(--amber); animation: spin .8s linear infinite; }
+  .rows { display: grid; gap: 8px; }
+  .row {
+    display: grid; grid-template-columns: 40px 1fr auto; gap: 10px; align-items: center;
+    background: rgba(255,255,255,.03); border: 1px solid #22375E; border-radius: 12px; padding: 9px 10px;
+    opacity: 0; transform: translateY(8px); animation: rowIn .45s ease forwards;
+  }
+  .row .pic { width: 40px; height: 40px; border-radius: 10px; background: #22375E; display: grid; place-items: center; font-weight: 900; color: var(--ice-soft); font-size: 14px; }
+  .row > span:nth-child(2) { min-width: 0; }
+  .row b { display: block; font-size: 15px; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row.her { min-height: 60px; }
+  .row small { color: var(--ice-soft); font-size: 13px; }
+  .pill { font-size: 12px; font-weight: 900; padding: 4px 9px; border-radius: 999px; background: rgba(255,84,112,.15); color: #FF7A93; white-space: nowrap; }
+  .row.her { border-color: #FF5470; background: rgba(255,84,112,.12); cursor: pointer; position: relative; overflow: hidden; }
+  .row.her::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.14) 50%, transparent 70%); transform: translateX(-100%); animation: shine 2.4s ease-in-out 1.2s infinite; pointer-events: none; }
+  .row.her .pill { background: #FF5470; color: #fff; animation: throb 1.2s ease-in-out infinite; }
+  .row.her small.tap { color: var(--amber); font-weight: 800; }
+  .ava { width: 40px; height: 40px; display: block; filter: drop-shadow(0 2px 3px rgba(0,0,0,.45)); }
+  .uname { font-family: "Segoe UI", "Noto Sans", system-ui, sans-serif; font-weight: 800; white-space: nowrap; }
+  .flag { display: inline-block; width: 15px; height: 10px; border-radius: 2px; margin-left: 5px;
+    background: linear-gradient(90deg, #002B7F 0 33.3%, #FCD116 33.3% 66.6%, #CE1126 66.6%); }
+
+  /* ===== transition: sirens + BUSTED + camera flash ===== */
+  .siren { position: fixed; inset: 0; z-index: 50; pointer-events: none; opacity: 0; overflow: hidden; }
+  .siren.on { animation: sirenFade 1.9s ease forwards; }
+  .siren::before, .siren::after { content: ""; position: absolute; inset: -20%; }
+  .siren::before { background: radial-gradient(circle at 20% 30%, rgba(255,40,80,.75), transparent 45%); animation: sirenA .35s steps(2) infinite; }
+  .siren::after { background: radial-gradient(circle at 80% 30%, rgba(60,120,255,.75), transparent 45%); animation: sirenB .35s steps(2) infinite; }
+  .busted {
+    position: fixed; left: 50%; top: 42%; z-index: 51; opacity: 0; pointer-events: none;
+    transform: translate(-50%, -50%) rotate(-8deg) scale(3);
+    font-family: var(--display); font-size: clamp(56px, 18vw, 96px); color: #fff; letter-spacing: .04em;
+    text-shadow: 0 0 20px var(--rose), 0 6px 0 var(--lip);
+  }
+  .busted.on { animation: bust 1.8s cubic-bezier(.2,1.4,.4,1) forwards; }
+  .flash { position: fixed; inset: 0; z-index: 52; background: #fff; pointer-events: none; opacity: 0; }
+  .flash.on { animation: flash .5s ease-out forwards; }
+
+  /* ===== stage 2: the hot file ===== */
+  .file { display: grid; gap: 18px; }
+  .kicker { margin: 0; text-align: center; font-size: 12px; font-weight: 900; letter-spacing: .24em; text-transform: uppercase; color: var(--rose-soft); }
+  .title { margin: 0; text-align: center; font-family: var(--display); font-weight: 400; font-size: clamp(40px, 12vw, 62px); line-height: .95; color: #fff; text-shadow: 0 0 24px rgba(255,61,127,.55); }
+  .title em { font-style: normal; color: var(--rose); display: block; }
+
+  .mug {
+    justify-self: center; width: min(300px, 100%); aspect-ratio: 4 / 4.6; border-radius: 18px; position: relative; overflow: hidden;
+    background: repeating-linear-gradient(180deg, transparent 0 27px, rgba(255,255,255,.14) 27px 28px), linear-gradient(180deg, #3A1426, #22091A);
+    border: 2px solid rgba(255,158,191,.35);
+    box-shadow: 0 24px 50px rgba(0,0,0,.45), 0 0 40px rgba(255,61,127,.25);
+    transform-origin: 50% -40px; animation: drop .9s cubic-bezier(.2,1.5,.4,1) both, swing 4s ease-in-out 1s infinite;
+  }
+  .ruler { position: absolute; left: 10px; top: 6px; bottom: 70px; display: grid; align-content: space-between; font-size: 10px; font-weight: 900; color: rgba(255,255,255,.45); }
+  .mug .ava-big { position: absolute; left: 50%; top: 14%; width: 58%; transform: translateX(-50%); filter: drop-shadow(0 10px 18px rgba(0,0,0,.5)); }
+  .placard {
+    position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); width: 86%;
+    background: #111; color: #fff; border-radius: 6px; padding: 7px 10px; text-align: center; border: 2px solid #fff;
+    box-shadow: 0 6px 16px rgba(0,0,0,.4);
+  }
+  .placard .uname { display: block; font-size: 17px; }
+  .placard small { font-size: 11px; font-weight: 800; letter-spacing: .14em; color: #bbb; }
+  .kissmark { position: absolute; width: 74px; right: 12px; top: 18px; transform: rotate(18deg) scale(0); opacity: 0; }
+  .kissmark.on { animation: kissOn .5s cubic-bezier(.2,1.6,.4,1) forwards; }
+
+  .sheet { background: var(--gloss); color: #3A0C22; border-radius: 22px; padding: 20px 18px; display: grid; gap: 16px; box-shadow: 0 20px 40px rgba(0,0,0,.3); }
+  .label { margin: 0 0 6px; font-size: 11px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; color: #9A5877; }
+  .charges { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .charges li { display: grid; grid-template-columns: 20px 1fr; gap: 8px; font-weight: 800; opacity: 0; transform: translateX(-10px); }
+  .charges li.in { animation: slideIn .45s ease forwards; }
+  .charges li::before { content: "♥"; color: var(--rose); font-size: 16px; line-height: 1.4; }
+  .by { margin: 0; font-weight: 800; font-size: 14px; color: #9A5877; }
+  .by b { color: #3A0C22; }
+
+  .censor {
+    display: block; width: 100%; text-align: left; font-weight: 800; border-radius: 12px; padding: 12px 14px; min-height: 52px;
+    background: linear-gradient(135deg, #FF3D7F, #B3124F); color: #fff; position: relative; overflow: hidden;
+  }
+  .censor span { display: block; filter: blur(6px); transition: filter .6s ease; }
+  .censor::before { content: "TOO HOT · TAP TO PEEK"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 13px; letter-spacing: .14em; font-weight: 900; background: rgba(0,0,0,.25); transition: opacity .4s; }
+  .censor.open span { filter: blur(0); }
+  .censor.open::before { opacity: 0; }
+
+  .note { font-family: var(--hand); font-size: 30px; line-height: 1.1; color: var(--lip); margin: 0; text-align: center; }
+  .actions { display: grid; gap: 10px; }
+  .btn { min-height: 52px; font-weight: 900; font-size: 17px; padding: 14px 18px; border-radius: 999px; transition: transform .2s ease; }
+  .btn.main { background: linear-gradient(135deg, #FF3D7F, #D7143F); color: #fff; box-shadow: 0 6px 18px rgba(215,20,63,.4); }
+  .btn.soft { background: #FFE3EC; color: #7A1B45; }
+  .btn[disabled] { opacity: .8; cursor: default; }
+  .reply { margin: 0; font-weight: 800; text-align: center; color: #7A1B45; min-height: 1.5em; }
+
+  .cuffs { justify-self: center; width: 140px; height: 70px; }
+  .cuffs .l { animation: cuffL .8s cubic-bezier(.2,1.5,.4,1) both; }
+  .cuffs .r { animation: cuffR .8s cubic-bezier(.2,1.5,.4,1) both; }
+
+  .sign { display: grid; gap: 6px; }
+  #pad { width: 100%; height: 140px; background: #fff; border: 2px dashed #F3A9C3; border-radius: 14px; touch-action: none; }
+  .spots { display: grid; gap: 8px; }
+  .spot-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .spot { min-height: 44px; padding: 8px 16px; border-radius: 999px; background: #fff; border: 2px solid #F3A9C3; color: #7A1B45; font-weight: 900; }
+  .spot[aria-pressed="true"] { background: var(--rose); border-color: var(--rose); color: #fff; }
+  .toast {
+    position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 70;
+    width: min(92vw, 420px); transform: translate(-50%, 140%); opacity: 0;
+    background: rgba(20,6,14,.92); color: #fff; border: 1.5px solid rgba(255,61,127,.6);
+    border-radius: 18px; padding: 10px 14px; display: grid; gap: 2px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.45), 0 0 20px rgba(255,61,127,.25);
+    transition: transform .45s cubic-bezier(.2,1.3,.4,1), opacity .3s;
+    pointer-events: none;
+  }
+  .toast.on { transform: translate(-50%, 0); opacity: 1; }
+  .toast .from { font-size: 11px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; color: var(--rose-soft); }
+  .toast span:last-child { font-weight: 800; font-size: 15px; }
+  .fine { text-align: center; font-size: 12px; color: rgba(255,227,236,.6); margin: 0; }
+
+  .fx { position: fixed; z-index: 60; pointer-events: none; animation: rise var(--d, 2.6s) ease-out forwards; }
+  .lips-fx { position: fixed; z-index: 60; pointer-events: none; width: 90px; height: 54px; animation: smooch 1.6s cubic-bezier(.2,1.4,.4,1) forwards; }
+  .bg-heart { position: fixed; bottom: -40px; z-index: 0; pointer-events: none; color: rgba(255,61,127,.22); animation: drift linear forwards; }
+
+  @keyframes spin { to { transform: rotate(360deg) } }
+  @keyframes rowIn { to { opacity: 1; transform: none } }
+  @keyframes shine { 0% { transform: translateX(-100%) } 60%, 100% { transform: translateX(100%) } }
+  @keyframes throb { 50% { transform: scale(1.08) } }
+  @keyframes sirenA { 0% { opacity: 1 } 100% { opacity: .15 } }
+  @keyframes sirenB { 0% { opacity: .15 } 100% { opacity: 1 } }
+  @keyframes sirenFade { 0% { opacity: 0 } 10% { opacity: 1 } 80% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes bust {
+    0% { opacity: 0; transform: translate(-50%,-50%) rotate(-8deg) scale(3) }
+    25% { opacity: 1; transform: translate(-50%,-50%) rotate(-8deg) scale(1) }
+    80% { opacity: 1; transform: translate(-50%,-50%) rotate(-8deg) scale(1.05) }
+    100% { opacity: 0; transform: translate(-50%,-50%) rotate(-8deg) scale(.9) }
+  }
+  @keyframes flash { 0% { opacity: .95 } 100% { opacity: 0 } }
+  @keyframes drop { 0% { transform: translateY(-60px) rotate(-6deg); opacity: 0 } 100% { transform: none; opacity: 1 } }
+  @keyframes swing { 0%, 100% { transform: rotate(-1.2deg) } 50% { transform: rotate(1.2deg) } }
+  @keyframes slideIn { to { opacity: 1; transform: none } }
+  @keyframes kissOn { to { opacity: .9; transform: rotate(18deg) scale(1) } }
+  @keyframes cuffL { 0% { transform: translateX(-30px); opacity: 0 } 100% { transform: none; opacity: 1 } }
+  @keyframes cuffR { 0% { transform: translateX(30px); opacity: 0 } 100% { transform: none; opacity: 1 } }
+  @keyframes rise { 0% { transform: translate(0,0) scale(.5); opacity: 0 } 15% { opacity: 1 } 100% { transform: translate(var(--x), -300px) scale(1.2) rotate(var(--r)); opacity: 0 } }
+  @keyframes smooch { 0% { transform: scale(2.4) rotate(var(--r)); opacity: 0 } 30% { transform: scale(1) rotate(var(--r)); opacity: 1 } 80% { opacity: 1 } 100% { transform: scale(1) rotate(var(--r)); opacity: 0 } }
+  @keyframes drift { to { transform: translateY(-115vh) rotate(25deg) } }
+
+  @media (max-width: 360px) {
+    .title { font-size: 36px; }
+    .row { grid-template-columns: 34px 1fr auto; gap: 8px; }
+    .ava, .row .pic { width: 34px; height: 34px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE9A0"/><stop offset=".5" stop-color="#E0A93A"/><stop offset="1" stop-color="#9C6A12"/></linearGradient>
+    <symbol id="cat" viewBox="0 0 64 64">
+      <!-- gold ornate frame -->
+      <path d="M32 1l5 5 7-3 3 7 8 1-1 8 7 4-4 7 4 7-7 4 1 8-8 1-3 7-7-3-5 5-5-5-7 3-3-7-8-1 1-8-7-4 4-7-4-7 7-4-1-8 8-1 3-7 7 3z" fill="url(#gold)" stroke="#6B4508" stroke-width="1"/>
+      <path d="M9 14q-4 6 0 11M55 14q4 6 0 11M9 50q-4-6 0-11M55 50q4-6 0-11" fill="none" stroke="#FFF0B8" stroke-width="1.2" stroke-linecap="round"/>
+      <rect x="11" y="11" width="42" height="42" rx="9" fill="#DCE4EE" stroke="#8A5A10" stroke-width="1.2"/>
+      <clipPath id="win"><rect x="11" y="11" width="42" height="42" rx="9"/></clipPath>
+      <g clip-path="url(#win)">
+        <!-- body -->
+        <ellipse cx="32" cy="58" rx="17" ry="10" fill="#F6F4F0"/>
+        <!-- ears -->
+        <path d="M15 30l2-15 10 8z" fill="#7E7B78"/><path d="M49 30l-2-15-10 8z" fill="#7E7B78"/>
+        <path d="M17.5 27l1.3-9 5.5 4.8z" fill="#F4B6C4"/><path d="M46.5 27l-1.3-9-5.5 4.8z" fill="#F4B6C4"/>
+        <!-- head -->
+        <ellipse cx="32" cy="35" rx="17" ry="15" fill="#F6F4F0"/>
+        <!-- grey cap + tabby stripes -->
+        <path d="M15.5 32c0-9 7.5-13 16.5-13s16.5 4 16.5 13c-3-2-6-3-9-3-3 0-5 3-7.5 3S27 29 24.5 29c-3 0-6 1-9 3z" fill="#8C8985"/>
+        <path d="M28 21.5l1 4M32 21v5M36 21.5l-1 4" stroke="#5E5B58" stroke-width="1.3" stroke-linecap="round"/>
+        <!-- big eyes -->
+        <ellipse cx="25" cy="35" rx="4.6" ry="5" fill="#1E2A2E"/><ellipse cx="39" cy="35" rx="4.6" ry="5" fill="#1E2A2E"/>
+        <ellipse cx="25" cy="35.4" rx="3.4" ry="3.9" fill="#3E5A55"/><ellipse cx="39" cy="35.4" rx="3.4" ry="3.9" fill="#3E5A55"/>
+        <ellipse cx="25" cy="35.6" rx="2" ry="2.8" fill="#0C1012"/><ellipse cx="39" cy="35.6" rx="2" ry="2.8" fill="#0C1012"/>
+        <circle cx="26.5" cy="33.2" r="1.3" fill="#fff"/><circle cx="40.5" cy="33.2" r="1.3" fill="#fff"/>
+        <!-- nose, mouth, tongue out -->
+        <path d="M30.3 41h3.4l-1.7 1.9z" fill="#E88FA3"/>
+        <path d="M32 43v1.2M32 44.2q-2 1.8-4 .6M32 44.2q2 1.8 4 .6" fill="none" stroke="#9C7F86" stroke-width="1" stroke-linecap="round"/>
+        <path d="M30 45.2q2 5 4 0z" fill="#F47A95"/><path d="M32 45.4v2.6" stroke="#D95C79" stroke-width=".7"/>
+        <!-- whiskers -->
+        <path d="M22 42l-8-1M22 43.6l-8 1.4M42 42l8-1M42 43.6l8 1.4" stroke="#B7B2AC" stroke-width=".7" stroke-linecap="round"/>
+      </g>
+    </symbol>
+    <symbol id="lips" viewBox="0 0 100 60">
+      <path d="M50 14c-6-9-16-12-24-8C16 10 8 20 2 28c10 3 20 4 30 2 7-1 13-4 18-7 5 3 11 6 18 7 10 2 20 1 30-2-6-8-14-18-24-22-8-4-18-1-24 8z" fill="#D7143F"/>
+      <path d="M2 28c10 16 28 28 48 28s38-12 48-28c-10 3-20 4-30 2-7-1-13-4-18-7-5 3-11 6-18 7-10 2-20 1-30-2z" fill="#B30F35"/>
+      <path d="M8 29c14 4 28 3 42-5 14 8 28 9 42 5" fill="none" stroke="#6E0620" stroke-width="2" stroke-linecap="round"/>
+      <path d="M30 40c6 4 14 6 20 6" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<main class="wrap">
+
+  <section class="sys" id="sys">
+    <div class="loading" id="loading">
+      <div class="spin" aria-hidden="true"></div>
+      <p class="muted">Loading penalized players…</p>
+    </div>
+    <div id="list" hidden>
+      <h1>Punishment for Cheating (2026-09-24)</h1>
+      <p class="muted" style="text-align:center;margin:6px 0 12px">Recently, <span class="num">5</span> players were penalized in this round.</p>
+      <div class="rows">
+        <div class="row" style="animation-delay:.05s"><span class="pic">M</span><span><b>xX_M1dG0d_Xx</b><small>Map hack</small></span><span class="pill">30 days</span></div>
+        <div class="row" style="animation-delay:.15s"><span class="pic">N</span><span><b>NoobDestroyer99</b><small>Speed script</small></span><span class="pill">7 days</span></div>
+        <div class="row her" id="her" role="button" tabindex="0" aria-label="Open case" style="animation-delay:.25s">
+          <svg class="ava" viewBox="0 0 64 64"><use href="#cat"/></svg>
+          <span><b><span class="uname" data-name>Tսrŋ iŧ σғғ!!</span><span class="flag" aria-hidden="true"></span></b><small class="tap">Illegal script · tap to see case</small></span>
+          <span class="pill">Special</span>
+        </div>
+        <div class="row" style="animation-delay:.35s"><span class="pic">L</span><span><b>LordStealer_07</b><small>Auto-retribution</small></span><span class="pill">14 days</span></div>
+        <div class="row" style="animation-delay:.45s"><span class="pic">A</span><span><b>AFK_King</b><small>AFK 12 times</small></span><span class="pill">−30 credit</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="file" id="file" hidden>
+    <p class="kicker">Case #143 · Classified</p>
+    <h2 class="title">You're under<em>arrest, officer</em></h2>
+
+    <div class="mug" id="mug">
+      <div class="ruler" aria-hidden="true"><span>180</span><span>170</span><span>160</span><span>150</span></div>
+      <svg class="ava-big" viewBox="0 0 64 64"><use href="#cat"/></svg>
+      <svg class="kissmark" id="kissmark" viewBox="0 0 100 60" aria-hidden="true"><use href="#lips"/></svg>
+      <div class="placard"><span class="uname" data-name>Tսrŋ iŧ σғғ!!</span><small>CASE #143 · ROMANIA</small></div>
+    </div>
+
+    <div class="sheet">
+      <div>
+        <p class="label">Charges</p>
+        <ul class="charges" id="charges">
+          <li>Running an illegal cuteness script in every match</li>
+          <li>Stealing someone's heart without permission</li>
+          <li>Being way too distracting in chat</li>
+          <li>Getting sick and leaving your duo partner to solo queue</li>
+        </ul>
+      </div>
+      <div>
+        <p class="label">Evidence</p>
+        <button class="censor" id="censor"><span id="censor-text">Your profile picture. Still illegal.</span></button>
+      </div>
+      <div>
+        <p class="label">Sentence</p>
+        <ul class="charges" id="sentence">
+          <li>Rest until 100% HP. Tea, blankets, zero work</li>
+          <li>One date with the reporter. You sit close. Anti-cheat rules</li>
+          <li>Early release possible for good behaviour (ask the reporter how)</li>
+        </ul>
+      </div>
+      <p class="by">Arresting officer: <b>Doci ★</b></p>
+      <p class="note" id="note">Funny how the officer is the one getting cuffed ;)</p>
+      <div class="actions">
+        <button class="btn main" id="accept">Accept sentence</button>
+        <button class="btn soft" id="bail">Pay bail</button>
+        <div class="spots" id="spots" hidden>
+          <p class="label">Where does the kiss go?</p>
+          <div class="spot-row">
+            <button class="spot" data-spot="cheek" data-line="On the cheek. Classic. Payment accepted 😘">Cheek</button>
+            <button class="spot" data-spot="forehead" data-line="Forehead kiss? That's the soft kind. I'm melting.">Forehead</button>
+            <button class="spot" data-spot="nose" data-line="Nose kiss. Officially the cutest bail ever paid.">Nose</button>
+            <button class="spot" data-spot="lips" data-line="On the lips?? Ok the officer needs to sit down for a second 😳">Lips</button>
+            <button class="spot" data-spot="surprise" data-line="Surprise me? Dangerous answer. I like it 😏">Surprise me</button>
+          </div>
+          <button class="btn soft" id="tellme" hidden>Tell him my answer</button>
+        </div>
+        <button class="btn soft" id="appeal">Appeal</button>
+        <button class="btn soft" id="lawyer">Call my lawyer</button>
+      </div>
+      <svg class="cuffs" id="cuffs" viewBox="0 0 140 70" hidden aria-hidden="true">
+        <g class="l"><path d="M40 60C18 46 10 36 10 25c0-9 7-15 15-15 7 0 11 4 15 9 4-5 8-9 15-9 8 0 15 6 15 15 0 11-8 21-30 35z" fill="none" stroke="#FF3D7F" stroke-width="6"/></g>
+        <g class="r"><path d="M100 60C78 46 70 36 70 25c0-9 7-15 15-15 7 0 11 4 15 9 4-5 8-9 15-9 8 0 15 6 15 15 0 11-8 21-30 35z" fill="none" stroke="#D7143F" stroke-width="6"/></g>
+      </svg>
+      <p class="reply" id="reply" aria-live="polite"></p>
+      <div class="sign" id="sign" hidden>
+        <p class="label">Sign here to confirm</p>
+        <canvas id="pad" aria-label="Signature pad"></canvas>
+        <p class="reply" id="signed"></p>
+      </div>
+    </div>
+
+    <p class="fine">Not a real notice. Your account is fine, it's just me ♥</p>
+  </section>
+</main>
+
+<div class="siren" id="siren" aria-hidden="true"></div>
+<div class="busted" id="busted" aria-hidden="true">BUSTED</div>
+<div class="flash" id="flash" aria-hidden="true"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"><span class="from">Doci ★</span><span id="toast-text"></span></div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const center = (el) => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
+
+  // Optional: .../ban-list/#Name shows another name
+  try {
+    const n = decodeURIComponent(location.hash.slice(1)).replace(/[_~+-]+/g, " ").replace(/[<>&"]/g, "").trim().slice(0, 24);
+    if (n) document.querySelectorAll("[data-name]").forEach((el) => (el.textContent = n));
+  } catch (e) {}
+
+  // Open counter. ?me=1 stops your own phone from counting.
+  let isMe = false;
+  try {
+    if (/[?&]me=1/.test(location.search)) localStorage.setItem("gw-me", "1");
+    isMe = localStorage.getItem("gw-me") === "1";
+  } catch (e) {}
+  const hit = (key) => { if (!isMe) { const i = new Image(); i.src = "https://hits.sh/geoworkart.github.io/spicy-" + key + ".svg"; } };
+  hit("ban-list");
+
+  function burst(x, y, n = 14, chars = ["♥", "💋", "♥", "✨"]) {
+    if (reduce) n = Math.min(n, 4);
+    for (let i = 0; i < n; i++) {
+      const h = document.createElement("div");
+      h.className = "fx"; h.textContent = chars[i % chars.length];
+      h.style.cssText = `left:${x}px;top:${y}px;font-size:${rand(16, 30)}px;color:${["#FF3D7F", "#FF9EBF", "#D7143F"][i % 3]};--x:${rand(-150, 150)}px;--r:${rand(-40, 40)}deg;--d:${rand(1.8, 2.8)}s;animation-delay:${rand(0, .25)}s`;
+      document.body.appendChild(h); setTimeout(() => h.remove(), 3300);
+    }
+  }
+  function smooch(x, y) {
+    const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    s.setAttribute("viewBox", "0 0 100 60"); s.setAttribute("class", "lips-fx");
+    s.innerHTML = '<use href="#lips"/>';
+    s.style.cssText = `left:${x - 45}px;top:${y - 27}px;--r:${rand(-25, 25)}deg`;
+    document.body.appendChild(s); setTimeout(() => s.remove(), 1700);
+  }
+  let bgTimer = null;
+  function floatHearts() {
+    if (reduce || bgTimer) return;
+    bgTimer = setInterval(() => {
+      const h = document.createElement("div");
+      h.className = "bg-heart"; h.textContent = "♥";
+      const d = rand(7, 12);
+      h.style.cssText = `left:${rand(0, 100)}vw;font-size:${rand(14, 34)}px;animation-duration:${d}s`;
+      document.body.appendChild(h); setTimeout(() => h.remove(), d * 1000);
+    }, 700);
+  }
+
+  // little messages from him along the way
+  let toastTimer;
+  const said = new Set();
+  function toast(key, text, delay = 0) {
+    if (said.has(key)) return; said.add(key);
+    setTimeout(() => {
+      $("toast-text").textContent = text;
+      $("toast").classList.add("on");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => $("toast").classList.remove("on"), 3800);
+    }, delay);
+  }
+
+  setTimeout(() => { $("loading").hidden = true; $("list").hidden = false; toast("list", "Don't stop now, the best part is coming 😏", 1400); }, 1500);
+
+  // sirens → BUSTED → camera flash → the hot file
+  let opened = false;
+  function openCase() {
+    if (opened) return; opened = true;
+    $("siren").classList.add("on");
+    $("busted").classList.add("on");
+    setTimeout(() => $("flash").classList.add("on"), reduce ? 0 : 1300);
+    setTimeout(() => {
+      $("sys").hidden = true;
+      document.body.classList.add("hot");
+      $("file").hidden = false;
+      window.scrollTo({ top: 0 });
+      floatHearts();
+      document.querySelectorAll("#charges li").forEach((li, i) => setTimeout(() => li.classList.add("in"), 700 + i * 380));
+      document.querySelectorAll("#sentence li").forEach((li, i) => setTimeout(() => li.classList.add("in"), 2400 + i * 380));
+      setTimeout(() => { const [x, y] = center($("mug")); burst(x, y, 16); }, 700);
+      toast("charges", "Keep going… I worked hard on this", 2300);
+      toast("almost", "You're doing so well. Almost there ♥", 6800);
+    }, reduce ? 50 : 1400);
+  }
+  $("her").addEventListener("click", openCase);
+  $("her").addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openCase(); } });
+
+  const peek = [
+    "Your profile picture. Still illegal.",
+    "Ok, it's you in the lobby looking this cute. Had to censor it for everyone's safety.",
+    "Stop peeking. It's classified. …Fine, I kept a screenshot."
+  ];
+  let peeks = 0;
+  $("censor").addEventListener("click", () => {
+    const c = $("censor");
+    if (c.classList.contains("open")) $("censor-text").textContent = peek[Math.min(peeks, peek.length - 1)];
+    c.classList.add("open"); peeks++;
+    toast("peek", "Caught you peeking 👀 Keep going");
+    const [x, y] = center(c); burst(x, y, 6, ["🔥", "♥"]);
+  });
+
+  let bail = 0;
+  $("bail").addEventListener("click", () => {
+    bail++;
+    const [x, y] = center($("bail"));
+    if (bail === 1) {
+      $("reply").textContent = "Bail is set at 1 kiss. Payable in person only. No diamonds accepted.";
+      $("bail").textContent = "Pay the kiss 💋";
+    } else if (!$("bail").disabled) {
+      $("bail").hidden = true;
+      $("spots").hidden = false;
+      $("reply").textContent = "";
+    }
+  });
+
+  let spot = "";
+  $("spots").addEventListener("click", (e) => {
+    const b = e.target.closest(".spot"); if (!b) return;
+    $("spots").querySelectorAll(".spot").forEach((x) => x.setAttribute("aria-pressed", "false"));
+    b.setAttribute("aria-pressed", "true");
+    spot = b.textContent.trim();
+    const [x, y] = center(b);
+    smooch(x, y - 70);
+    $("kissmark").classList.add("on");
+    $("reply").textContent = b.dataset.line + " Collecting in person when you're better.";
+    burst(x, y, 10, ["💋", "♥"]);
+    $("bail").disabled = true;
+    $("tellme").hidden = false;
+    hit("ban-list-bail");
+  });
+  $("tellme").addEventListener("click", () => {
+    const msg = `Bail paid 💋 Kiss goes on the: ${spot.toLowerCase()}`;
+    const ok = () => { $("reply").textContent = "Copied! Paste it in our chat 😘"; };
+    const show = () => { $("reply").textContent = msg; };
+    try { navigator.clipboard.writeText(msg).then(ok, show); } catch (e) { show(); }
+  });
+
+  const appeals = [
+    "Appeal received. Reviewing… denied.",
+    "Denied. Have you seen yourself? The evidence is too strong.",
+    "The judge is also the arresting officer. And he has a crush. Denied.",
+    "Bribing the judge might work though 😏",
+    "Appeal button has left the chat."
+  ];
+  let tries = 0;
+  const appeal = $("appeal"), accept = $("accept");
+  appeal.addEventListener("click", () => {
+    $("reply").textContent = appeals[Math.min(tries, appeals.length - 1)];
+    tries++;
+    appeal.style.transform = `scale(${Math.max(.6, 1 - tries * .09)})`;
+    accept.style.transform = `scale(${1 + tries * .04})`;
+    if (tries >= appeals.length) appeal.hidden = true;
+  });
+
+  const lawyer = [
+    "Calling your lawyer… 📞",
+    "Your lawyer is also me. Hi 😏",
+    "Your lawyer advises: accept the date."
+  ];
+  let calls = 0;
+  $("lawyer").addEventListener("click", () => {
+    $("reply").textContent = lawyer[Math.min(calls++, lawyer.length - 1)];
+    if (calls >= lawyer.length) $("lawyer").hidden = true;
+  });
+
+  // finger signature after accepting
+  function setupPad() {
+    const c = $("pad"), g = c.getContext("2d");
+    const fit = () => { const r = c.getBoundingClientRect(), d = devicePixelRatio || 1; c.width = r.width * d; c.height = r.height * d; g.setTransform(d, 0, 0, d, 0, 0); g.lineWidth = 3; g.lineCap = "round"; g.strokeStyle = "#D7143F"; };
+    fit();
+    let down = false, last = null, len = 0, done = false;
+    const pos = (e) => { const r = c.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    c.addEventListener("pointerdown", (e) => { down = true; last = pos(e); c.setPointerCapture(e.pointerId); });
+    c.addEventListener("pointermove", (e) => {
+      if (!down) return;
+      const p = pos(e); g.beginPath(); g.moveTo(...last); g.lineTo(...p); g.stroke();
+      len += Math.hypot(p[0] - last[0], p[1] - last[1]); last = p;
+      if (!done && len > 180) { done = true; $("signed").textContent = "Signed. No take-backs 💋"; const [x, y] = center(c); burst(x, y, 16); hit("ban-list-signed"); }
+    });
+    ["pointerup", "pointercancel"].forEach((t) => c.addEventListener(t, () => { down = false; }));
+  }
+
+  accept.addEventListener("click", () => {
+    if (accept.disabled) return;
+    accept.disabled = true; appeal.hidden = true;
+    if (!$("bail").disabled) $("bail").hidden = true;
+    accept.textContent = "Sentence accepted ♥";
+    $("cuffs").hidden = false;
+    $("note").textContent = "Cuffed. To me. Get well soon ;)";
+    $("reply").textContent = tries
+      ? `Smart, after ${tries} failed appeal${tries > 1 ? "s" : ""}. Sentence starts the day you're better. I'll be waiting 😏`
+      : "No appeal? You wanted this date, admit it 😏 Sentence starts the day you're better.";
+    const [x, y] = center(accept);
+    burst(x, y, 26); smooch(x, y - 120);
+    setTimeout(() => burst(rand(40, innerWidth - 40), innerHeight - 40, 14), 400);
+    hit("ban-list-accepted");
+    toast("end", "You made it to the end. I knew you couldn't resist me 😘", 600);
+    $("lawyer").hidden = true;
+    $("sign").hidden = false; setupPad();
+  });
+})();
+</script>
+</body>
+</html>
