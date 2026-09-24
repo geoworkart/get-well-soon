@@ -151,6 +151,10 @@
 
   .sign { display: grid; gap: 6px; }
   #pad { width: 100%; height: 140px; background: #fff; border: 2px dashed #F3A9C3; border-radius: 14px; touch-action: none; }
+  .spots { display: grid; gap: 8px; }
+  .spot-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .spot { min-height: 44px; padding: 8px 16px; border-radius: 999px; background: #fff; border: 2px solid #F3A9C3; color: #7A1B45; font-weight: 900; }
+  .spot[aria-pressed="true"] { background: var(--rose); border-color: var(--rose); color: #fff; }
   .fine { text-align: center; font-size: 12px; color: rgba(255,227,236,.6); margin: 0; }
 
   .fx { position: fixed; z-index: 60; pointer-events: none; animation: rise var(--d, 2.6s) ease-out forwards; }
@@ -280,6 +284,17 @@
       <div class="actions">
         <button class="btn main" id="accept">Accept sentence</button>
         <button class="btn soft" id="bail">Pay bail</button>
+        <div class="spots" id="spots" hidden>
+          <p class="label">Where does the kiss go?</p>
+          <div class="spot-row">
+            <button class="spot" data-spot="cheek" data-line="On the cheek. Classic. Payment accepted 😘">Cheek</button>
+            <button class="spot" data-spot="forehead" data-line="Forehead kiss? That's the soft kind. I'm melting.">Forehead</button>
+            <button class="spot" data-spot="nose" data-line="Nose kiss. Officially the cutest bail ever paid.">Nose</button>
+            <button class="spot" data-spot="lips" data-line="On the lips?? Ok the officer needs to sit down for a second 😳">Lips</button>
+            <button class="spot" data-spot="surprise" data-line="Surprise me? Dangerous answer. I like it 😏">Surprise me</button>
+          </div>
+          <button class="btn soft" id="tellme" hidden>Tell him my answer</button>
+        </div>
         <button class="btn soft" id="appeal">Appeal</button>
         <button class="btn soft" id="lawyer">Call my lawyer</button>
       </div>
@@ -397,13 +412,32 @@
       $("reply").textContent = "Bail is set at 1 kiss. Payable in person only. No diamonds accepted.";
       $("bail").textContent = "Pay the kiss 💋";
     } else if (!$("bail").disabled) {
-      smooch(x, y - 60); setTimeout(() => smooch(x + rand(-80, 80), y - 180), 250);
-      $("kissmark").classList.add("on");
-      $("reply").textContent = "Payment pending until you're better. The officer will collect personally 😘";
-      $("bail").textContent = "Bail pending ♥"; $("bail").disabled = true;
-      burst(x, y, 12, ["💋", "♥"]);
-      hit("ban-list-bail");
+      $("bail").hidden = true;
+      $("spots").hidden = false;
+      $("reply").textContent = "";
     }
+  });
+
+  let spot = "";
+  $("spots").addEventListener("click", (e) => {
+    const b = e.target.closest(".spot"); if (!b) return;
+    $("spots").querySelectorAll(".spot").forEach((x) => x.setAttribute("aria-pressed", "false"));
+    b.setAttribute("aria-pressed", "true");
+    spot = b.textContent.trim();
+    const [x, y] = center(b);
+    smooch(x, y - 70);
+    $("kissmark").classList.add("on");
+    $("reply").textContent = b.dataset.line + " Collecting in person when you're better.";
+    burst(x, y, 10, ["💋", "♥"]);
+    $("bail").disabled = true;
+    $("tellme").hidden = false;
+    hit("ban-list-bail");
+  });
+  $("tellme").addEventListener("click", () => {
+    const msg = `Bail paid 💋 Kiss goes on the: ${spot.toLowerCase()}`;
+    const ok = () => { $("reply").textContent = "Copied! Paste it in our chat 😘"; };
+    const show = () => { $("reply").textContent = msg; };
+    try { navigator.clipboard.writeText(msg).then(ok, show); } catch (e) { show(); }
   });
 
   const appeals = [
