@@ -18,12 +18,14 @@
     --ice: #E6EDF8;
     --ice-soft: #93A7C8;
     --amber: #F2B84B;
-    --wine: #1E0714;
+    --char: #12030A;
     --rose: #FF3D7F;
     --rose-soft: #FF9EBF;
     --blush: #FFE3EC;
-    --gloss: #FFF6F9;
     --lip: #D7143F;
+    --ember: #FF7A2E;
+    --flame: #FFB02E;
+    --chili: #FF2A2A;
     --display: "Yeseva One", Georgia, "Times New Roman", serif;
     --body: "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
     --hand: "Caveat", "Segoe Print", cursive;
@@ -40,13 +42,14 @@
     overflow-x: hidden;
   }
   body.hot {
-    background: radial-gradient(90% 50% at 50% 0%, #5A0F33 0, transparent 70%),
-                radial-gradient(70% 40% at 100% 100%, #4A0A26 0, transparent 70%), var(--wine);
+    padding-top: calc(64px + env(safe-area-inset-top, 0px));
+    background: radial-gradient(90% 45% at 50% 0%, #4A0A1E 0, transparent 70%), var(--char);
     color: var(--blush);
   }
-  html:has(body.hot) { background: var(--wine); }
+  html:has(body.hot) { background: var(--char); }
   .wrap > * { min-width: 0; }
   .wrap { max-width: 520px; margin: 0 auto; display: grid; gap: 18px; position: relative; z-index: 1; }
+  .wrap.shake { animation: shake .5s ease; }
   button { font: inherit; border: 0; cursor: pointer; color: inherit; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
   button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
 
@@ -78,7 +81,7 @@
   .flag { display: inline-block; width: 15px; height: 10px; border-radius: 2px; margin-left: 5px;
     background: linear-gradient(90deg, #002B7F 0 33.3%, #FCD116 33.3% 66.6%, #CE1126 66.6%); }
 
-  /* ===== transition: sirens + BUSTED + camera flash ===== */
+  /* ===== transition: sirens + BUSTED + fire + camera flash ===== */
   .siren { position: fixed; inset: 0; z-index: 50; pointer-events: none; opacity: 0; overflow: hidden; }
   .siren.on { animation: sirenFade 1.9s ease forwards; }
   .siren::before, .siren::after { content: ""; position: absolute; inset: -20%; }
@@ -88,25 +91,70 @@
     position: fixed; left: 50%; top: 42%; z-index: 51; opacity: 0; pointer-events: none;
     transform: translate(-50%, -50%) rotate(-8deg) scale(3);
     font-family: var(--display); font-size: clamp(56px, 18vw, 96px); color: #fff; letter-spacing: .04em;
-    text-shadow: 0 0 20px var(--rose), 0 6px 0 var(--lip);
+    text-shadow: 0 0 22px var(--ember), 0 6px 0 var(--lip);
   }
   .busted.on { animation: bust 1.8s cubic-bezier(.2,1.4,.4,1) forwards; }
   .flash { position: fixed; inset: 0; z-index: 52; background: #fff; pointer-events: none; opacity: 0; }
+  .flash.fire { background: radial-gradient(circle at 50% 85%, #FFE08A, var(--ember) 45%, var(--lip) 85%); }
   .flash.on { animation: flash .5s ease-out forwards; }
 
+  .firewall { position: fixed; left: 0; right: 0; bottom: 0; height: 115vh; z-index: 53; pointer-events: none; overflow: hidden; display: none; transform: translateY(102%); }
+  .firewall.rise { display: block; animation: fwRise 1.5s cubic-bezier(.3,.7,.3,1) forwards; }
+  .firewall.lick { display: block; animation: fwLick 1.9s ease-in-out forwards; }
+  /* the glowing base sits on top of the flame tongues so only their tips lick out of it */
+  .firewall::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 62%; background: linear-gradient(to top, #FFE08A 0%, var(--flame) 18%, #FF5A1F 42%, var(--lip) 72%, rgba(215,20,63,0) 100%); }
+  .tongue {
+    position: absolute; bottom: var(--b); left: var(--l); width: max(90px, var(--w)); height: var(--h); transform-origin: 50% 100%;
+    border-radius: 50% 50% 42% 42% / 72% 72% 28% 28%;
+    background: radial-gradient(50% 85% at 50% 100%, #FFE9A8 0%, var(--flame) 38%, #FF5A1F 66%, rgba(255,60,30,0) 100%);
+    animation: lick var(--t) ease-in-out var(--dl) infinite alternate;
+  }
+
   /* ===== stage 2: the hot file ===== */
+  .heat {
+    position: fixed; top: calc(10px + env(safe-area-inset-top, 0px)); left: 0; right: 0; z-index: 65;
+    width: max-content; margin-inline: auto; display: flex; align-items: center; gap: 8px; white-space: nowrap;
+    padding: 6px 14px 6px 12px; border-radius: 999px;
+    background: rgba(18,3,10,.84); border: 1px solid rgba(255,122,46,.45);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.45), 0 0 18px rgba(255,90,40,.2);
+    font-size: 11px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; color: var(--rose-soft);
+    animation: heatIn .6s cubic-bezier(.2,1.4,.4,1) both;
+    transition: border-color .4s, box-shadow .4s;
+  }
+  .heat b { min-width: 7.4em; color: #fff; letter-spacing: .08em; font-size: 12px; transition: color .3s; }
+  .heat.bump { animation: heatBump .5s ease; }
+  .heat.max { border-color: var(--flame); box-shadow: 0 8px 24px rgba(0,0,0,.45), 0 0 28px rgba(255,120,30,.65); }
+  .heat.max b { color: var(--flame); }
+  .peps { display: flex; gap: 2px; }
+  .pep { width: 20px; height: 20px; display: block; --body: rgba(255,255,255,.13); --leaf: rgba(255,255,255,.2); }
+  .pep.lit { --body: var(--chili); --leaf: #35C46A; filter: drop-shadow(0 0 4px rgba(255,80,30,.85)); animation: pepPop .55s cubic-bezier(.2,1.8,.4,1); }
+  .heat.max .pep.lit { animation: pepHot .45s ease-in-out infinite alternate; }
+
+  .floor {
+    position: fixed; left: 0; right: 0; bottom: -30px; height: 210px; z-index: 0; pointer-events: none;
+    background: radial-gradient(75% 100% at 50% 100%, rgba(255,130,40,.5), rgba(215,20,63,.22) 55%, transparent 78%);
+    transform-origin: 50% 100%; animation: flicker 2.6s ease-in-out infinite alternate;
+  }
+  body:not(.hot) .floor { display: none; }
+
   .file { display: grid; gap: 18px; }
-  .kicker { margin: 0; text-align: center; font-size: 12px; font-weight: 900; letter-spacing: .24em; text-transform: uppercase; color: var(--rose-soft); }
-  .title { margin: 0; text-align: center; font-family: var(--display); font-weight: 400; font-size: clamp(40px, 12vw, 62px); line-height: .95; color: #fff; text-shadow: 0 0 24px rgba(255,61,127,.55); }
-  .title em { font-style: normal; color: var(--rose); display: block; }
+  .kicker { margin: 0; text-align: center; font-size: 12px; font-weight: 900; letter-spacing: .24em; text-transform: uppercase; color: var(--ember); }
+  .title { margin: 0; text-align: center; font-family: var(--display); font-weight: 400; font-size: clamp(40px, 12vw, 62px); line-height: .95; color: #fff; text-shadow: 0 0 24px rgba(255,90,40,.45); }
+  .title em {
+    font-style: normal; display: block; padding-bottom: .08em; text-shadow: none;
+    background: linear-gradient(90deg, #FFC94A, #FF6A1F 45%, #FF2E63 90%); -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 0 12px rgba(255,90,30,.5)); animation: glow 2.4s ease-in-out infinite alternate;
+  }
 
   .mug {
     justify-self: center; width: min(300px, 100%); aspect-ratio: 4 / 4.6; border-radius: 18px; position: relative; overflow: hidden;
-    background: repeating-linear-gradient(180deg, transparent 0 27px, rgba(255,255,255,.14) 27px 28px), linear-gradient(180deg, #3A1426, #22091A);
-    border: 2px solid rgba(255,158,191,.35);
-    box-shadow: 0 24px 50px rgba(0,0,0,.45), 0 0 40px rgba(255,61,127,.25);
-    transform-origin: 50% -40px; animation: drop .9s cubic-bezier(.2,1.5,.4,1) both, swing 4s ease-in-out 1s infinite;
+    background: repeating-linear-gradient(180deg, transparent 0 27px, rgba(255,255,255,.12) 27px 28px), linear-gradient(180deg, #3E0F1C, #1E050E);
+    border: 2px solid rgba(255,122,46,.45);
+    box-shadow: 0 24px 50px rgba(0,0,0,.5), 0 0 44px rgba(255,80,30,.3);
+    transform-origin: 50% -40px; animation: drop .9s cubic-bezier(.2,1.5,.4,1) .5s both, swing 4s ease-in-out 1.5s infinite;
   }
+  .mug.held { animation-play-state: paused; }
   .ruler { position: absolute; left: 10px; top: 6px; bottom: 70px; display: grid; align-content: space-between; font-size: 10px; font-weight: 900; color: rgba(255,255,255,.45); }
   .mug .ava-big { position: absolute; left: 50%; top: 14%; width: 58%; transform: translateX(-50%); filter: drop-shadow(0 10px 18px rgba(0,0,0,.5)); }
   .placard {
@@ -116,51 +164,73 @@
   }
   .placard .uname { display: block; font-size: 17px; }
   .placard small { font-size: 11px; font-weight: 800; letter-spacing: .14em; color: #bbb; }
-  .kissmark { position: absolute; width: 74px; right: 12px; top: 18px; transform: rotate(18deg) scale(0); opacity: 0; }
+  .steam { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; touch-action: pan-y; cursor: grab; transition: opacity .9s ease; }
+  .steam.gone { opacity: 0; pointer-events: none; }
+  .kissmark { position: absolute; z-index: 3; width: 74px; right: 12px; top: 18px; transform: rotate(18deg) scale(0); opacity: 0; }
   .kissmark.on { animation: kissOn .5s cubic-bezier(.2,1.6,.4,1) forwards; }
+  .steam-hint { margin: -6px 0 4px; text-align: center; font-weight: 800; font-size: 14px; color: var(--rose-soft); animation: bob 1.6s ease-in-out infinite; }
+  .steam-hint.done { animation: none; color: var(--flame); }
 
-  .sheet { background: var(--gloss); color: #3A0C22; border-radius: 22px; padding: 20px 18px; display: grid; gap: 16px; box-shadow: 0 20px 40px rgba(0,0,0,.3); }
-  .label { margin: 0 0 6px; font-size: 11px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; color: #9A5877; }
+  .sheet {
+    position: relative; border-radius: 22px; padding: 20px 18px; display: grid; gap: 16px; color: var(--blush);
+    background: linear-gradient(165deg, #2E0914 0%, #1D040D 55%, #270712 100%);
+    border: 1px solid rgba(255,122,46,.28);
+    box-shadow: 0 20px 44px rgba(0,0,0,.5), 0 0 40px rgba(255,60,30,.12);
+  }
+  .stamp {
+    position: absolute; top: -4px; right: 12px; z-index: 2; pointer-events: none;
+    padding: 5px 10px; border: 3px double var(--chili); border-radius: 7px; background: rgba(24,3,10,.94);
+    color: var(--chili); font-size: 12px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase;
+    box-shadow: 0 0 16px rgba(255,42,42,.35); opacity: 0; transform: rotate(7deg) scale(2.4);
+    transform-origin: 100% 50%; /* grow leftwards so the slam never pokes past the screen edge */
+  }
+  .stamp.on { animation: stampIn .4s cubic-bezier(.3,1.6,.5,1) forwards; }
+  .label { margin: 0 0 6px; font-size: 11px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; color: var(--ember); }
   .charges { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-  .charges li { display: grid; grid-template-columns: 20px 1fr; gap: 8px; font-weight: 800; opacity: 0; transform: translateX(-10px); }
+  .charges li { display: grid; grid-template-columns: 22px 1fr; gap: 8px; font-weight: 800; opacity: 0; transform: translateX(-10px); }
   .charges li.in { animation: slideIn .45s ease forwards; }
   .charges li::before { content: "♥"; color: var(--rose); font-size: 16px; line-height: 1.4; }
-  .by { margin: 0; font-weight: 800; font-size: 14px; color: #9A5877; }
-  .by b { color: #3A0C22; }
+  #charges li::before { content: "🌶️"; font-size: 14px; line-height: 1.7; }
+  .rights { margin: 0; font-weight: 700; font-style: italic; color: #F5B7CB; }
+  .by { margin: 0; font-weight: 800; font-size: 14px; color: #C98AA5; }
+  .by b { color: #fff; }
 
   .censor {
     display: block; width: 100%; text-align: left; font-weight: 800; border-radius: 12px; padding: 12px 14px; min-height: 52px;
-    background: linear-gradient(135deg, #FF3D7F, #B3124F); color: #fff; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #FF5A1F, var(--lip) 55%, #8E0B32); color: #fff; position: relative; overflow: hidden;
   }
   .censor span { display: block; filter: blur(6px); transition: filter .6s ease; }
-  .censor::before { content: "TOO HOT · TAP TO PEEK"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 13px; letter-spacing: .14em; font-weight: 900; background: rgba(0,0,0,.25); transition: opacity .4s; }
+  .censor::before { content: "🌶️ TOO HOT · TAP TO PEEK"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 13px; letter-spacing: .14em; font-weight: 900; background: rgba(0,0,0,.28); transition: opacity .4s; }
   .censor.open span { filter: blur(0); }
   .censor.open::before { opacity: 0; }
 
-  .note { font-family: var(--hand); font-size: 30px; line-height: 1.1; color: var(--lip); margin: 0; text-align: center; }
+  .note { font-family: var(--hand); font-size: 30px; line-height: 1.1; color: #FF5C8A; margin: 0; text-align: center; text-shadow: 0 0 16px rgba(255,61,127,.45); }
   .actions { display: grid; gap: 10px; }
   .btn { min-height: 52px; font-weight: 900; font-size: 17px; padding: 14px 18px; border-radius: 999px; transition: transform .2s ease; }
-  .btn.main { background: linear-gradient(135deg, #FF3D7F, #D7143F); color: #fff; box-shadow: 0 6px 18px rgba(215,20,63,.4); }
-  .btn.soft { background: #FFE3EC; color: #7A1B45; }
+  .btn.main { background: linear-gradient(135deg, var(--flame), #FF4D1F 45%, var(--lip)); color: #fff; box-shadow: 0 6px 22px rgba(255,77,31,.45); position: relative; overflow: hidden; }
+  .btn.main::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.3) 50%, transparent 70%); transform: translateX(-100%); animation: shine 2.8s ease-in-out 1s infinite; pointer-events: none; }
+  .btn.main[disabled]::after { display: none; }
+  .btn.soft { background: rgba(255,255,255,.06); color: var(--blush); border: 1px solid rgba(255,158,191,.22); }
   .btn[disabled] { opacity: .8; cursor: default; }
-  .reply { margin: 0; font-weight: 800; text-align: center; color: #7A1B45; min-height: 1.5em; }
+  .reply { margin: 0; font-weight: 800; text-align: center; color: #FFC2D6; min-height: 1.5em; }
 
-  .cuffs { justify-self: center; width: 140px; height: 70px; }
+  .cuffs { justify-self: center; width: 170px; height: 90px; overflow: visible; }
   .cuffs .l { animation: cuffL .8s cubic-bezier(.2,1.5,.4,1) both; }
   .cuffs .r { animation: cuffR .8s cubic-bezier(.2,1.5,.4,1) both; }
+  .cuffs .lock { animation: lockOn .5s cubic-bezier(.2,1.6,.4,1) .6s both; }
 
   .sign { display: grid; gap: 6px; }
-  #pad { width: 100%; height: 140px; background: #fff; border: 2px dashed #F3A9C3; border-radius: 14px; touch-action: none; }
+  #pad { width: 100%; height: 140px; background: #16030A; border: 2px dashed rgba(255,122,46,.5); border-radius: 14px; touch-action: none; }
   .spots { display: grid; gap: 8px; }
   .spot-row { display: flex; flex-wrap: wrap; gap: 8px; }
-  .spot { min-height: 44px; padding: 8px 16px; border-radius: 999px; background: #fff; border: 2px solid #F3A9C3; color: #7A1B45; font-weight: 900; }
-  .spot[aria-pressed="true"] { background: var(--rose); border-color: var(--rose); color: #fff; }
+  .spot { min-height: 44px; padding: 8px 16px; border-radius: 999px; background: rgba(255,255,255,.05); border: 2px solid rgba(255,122,46,.45); color: var(--blush); font-weight: 900; }
+  .spot[aria-pressed="true"] { background: linear-gradient(135deg, #FF4D1F, var(--lip)); border-color: transparent; color: #fff; }
   .toast {
     position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 70;
     width: min(92vw, 420px); transform: translate(-50%, 140%); opacity: 0;
-    background: rgba(20,6,14,.92); color: #fff; border: 1.5px solid rgba(255,61,127,.6);
+    background: rgba(18,3,10,.94); color: #fff; border: 1.5px solid rgba(255,122,46,.6);
     border-radius: 18px; padding: 10px 14px; display: grid; gap: 2px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.45), 0 0 20px rgba(255,61,127,.25);
+    box-shadow: 0 10px 30px rgba(0,0,0,.45), 0 0 20px rgba(255,90,40,.25);
     transition: transform .45s cubic-bezier(.2,1.3,.4,1), opacity .3s;
     pointer-events: none;
   }
@@ -172,6 +242,12 @@
   .fx { position: fixed; z-index: 60; pointer-events: none; animation: rise var(--d, 2.6s) ease-out forwards; }
   .lips-fx { position: fixed; z-index: 60; pointer-events: none; width: 90px; height: 54px; animation: smooch 1.6s cubic-bezier(.2,1.4,.4,1) forwards; }
   .bg-heart { position: fixed; bottom: -40px; z-index: 0; pointer-events: none; color: rgba(255,61,127,.22); animation: drift linear forwards; }
+  .ember {
+    position: fixed; bottom: -12px; z-index: 0; pointer-events: none; width: var(--s); height: var(--s); border-radius: 50%;
+    background: radial-gradient(circle, #FFF4C8 0 18%, var(--flame) 42%, rgba(255,90,30,0) 72%);
+    box-shadow: 0 0 10px 2px rgba(255,110,40,.5);
+    animation: ember var(--d) linear forwards;
+  }
 
   @keyframes spin { to { transform: rotate(360deg) } }
   @keyframes rowIn { to { opacity: 1; transform: none } }
@@ -187,15 +263,35 @@
     100% { opacity: 0; transform: translate(-50%,-50%) rotate(-8deg) scale(.9) }
   }
   @keyframes flash { 0% { opacity: .95 } 100% { opacity: 0 } }
+  @keyframes fwRise { 0% { transform: translateY(102%) } 35%, 55% { transform: translateY(0) } 100% { transform: translateY(102%) } }
+  @keyframes fwLick { 0% { transform: translateY(102%) } 35%, 60% { transform: translateY(45%) } 100% { transform: translateY(102%) } }
+  @keyframes lick { 0% { transform: scale(1, 1) skewX(0deg) } 100% { transform: scale(.82, 1.18) skewX(var(--sk)) } }
+  @keyframes heatIn { 0% { opacity: 0; transform: translateY(-24px) } 100% { opacity: 1; transform: none } }
+  @keyframes heatBump { 40% { transform: scale(1.1) } }
+  @keyframes pepPop { 0% { transform: scale(.3) rotate(-35deg) } 70% { transform: scale(1.35) rotate(8deg) } 100% { transform: none } }
+  @keyframes pepHot { 0% { transform: rotate(-7deg) } 100% { transform: rotate(7deg) scale(1.12) } }
+  @keyframes flicker { 0% { transform: scaleY(1); opacity: .8 } 35% { transform: scaleY(1.15); opacity: 1 } 70% { transform: scaleY(.92); opacity: .75 } 100% { transform: scaleY(1.06); opacity: .95 } }
+  @keyframes glow { to { filter: drop-shadow(0 0 22px rgba(255,60,30,.85)) } }
   @keyframes drop { 0% { transform: translateY(-60px) rotate(-6deg); opacity: 0 } 100% { transform: none; opacity: 1 } }
   @keyframes swing { 0%, 100% { transform: rotate(-1.2deg) } 50% { transform: rotate(1.2deg) } }
+  @keyframes bob { 50% { transform: translateY(-3px) } }
+  @keyframes stampIn { to { opacity: 1; transform: rotate(7deg) scale(1) } }
   @keyframes slideIn { to { opacity: 1; transform: none } }
   @keyframes kissOn { to { opacity: .9; transform: rotate(18deg) scale(1) } }
   @keyframes cuffL { 0% { transform: translateX(-30px); opacity: 0 } 100% { transform: none; opacity: 1 } }
   @keyframes cuffR { 0% { transform: translateX(30px); opacity: 0 } 100% { transform: none; opacity: 1 } }
+  @keyframes lockOn { 0% { transform: translateY(-14px); opacity: 0 } 100% { transform: none; opacity: 1 } }
+  @keyframes shake { 0%, 100% { transform: none } 20% { transform: translate(-6px, 2px) rotate(-.6deg) } 40% { transform: translate(5px, -2px) rotate(.5deg) } 60% { transform: translate(-4px, 1px) } 80% { transform: translate(3px, -1px) } }
   @keyframes rise { 0% { transform: translate(0,0) scale(.5); opacity: 0 } 15% { opacity: 1 } 100% { transform: translate(var(--x), -300px) scale(1.2) rotate(var(--r)); opacity: 0 } }
   @keyframes smooch { 0% { transform: scale(2.4) rotate(var(--r)); opacity: 0 } 30% { transform: scale(1) rotate(var(--r)); opacity: 1 } 80% { opacity: 1 } 100% { transform: scale(1) rotate(var(--r)); opacity: 0 } }
   @keyframes drift { to { transform: translateY(-115vh) rotate(25deg) } }
+  @keyframes ember {
+    0% { transform: translate(0, 0); opacity: 0 }
+    10% { opacity: 1 }
+    35% { transform: translate(var(--x), -38vh) }
+    65% { transform: translate(calc(var(--x) * -.6), -72vh); opacity: .8 }
+    100% { transform: translate(calc(var(--x) * .4), -108vh); opacity: 0 }
+  }
 
   @media (max-width: 360px) {
     .title { font-size: 36px; }
@@ -248,8 +344,17 @@
       <path d="M8 29c14 4 28 3 42-5 14 8 28 9 42 5" fill="none" stroke="#6E0620" stroke-width="2" stroke-linecap="round"/>
       <path d="M30 40c6 4 14 6 20 6" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="3" stroke-linecap="round"/>
     </symbol>
+    <!-- chili for the spice meter; colors come from --body / --leaf on each .pep -->
+    <symbol id="chili" viewBox="0 0 24 24">
+      <path d="M16.2 8.6c.6 5-4.1 11.2-13.2 12.9 3.7-3.1 5.5-7.4 6.1-11.8 2.2-2.2 5-2.4 7.1-1.1z" style="fill:var(--body)"/>
+      <path d="M8.6 10c1.2-2.9 5.4-3.6 8-1.2-2.5-.6-5.4-.3-8 1.2z" style="fill:var(--leaf)"/>
+      <path d="M12.9 7.6c-.3-2.3.9-4.2 3.3-4.9" fill="none" stroke-width="1.7" stroke-linecap="round" style="stroke:var(--leaf)"/>
+      <path d="M13.8 10.9c-.4 2.9-2.4 5.5-5.4 7.3" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.1" stroke-linecap="round"/>
+    </symbol>
   </defs>
 </svg>
+
+<div class="floor" aria-hidden="true"></div>
 
 <main class="wrap">
 
@@ -276,37 +381,44 @@
   </section>
 
   <section class="file" id="file" hidden>
-    <p class="kicker">Case #143 · Classified</p>
+    <p class="kicker">Case #143 · For your eyes only</p>
     <h2 class="title">You're under<em>arrest, officer</em></h2>
 
     <div class="mug" id="mug">
       <div class="ruler" aria-hidden="true"><span>180</span><span>170</span><span>160</span><span>150</span></div>
       <svg class="ava-big" viewBox="0 0 64 64"><use href="#cat"/></svg>
-      <svg class="kissmark" id="kissmark" viewBox="0 0 100 60" aria-hidden="true"><use href="#lips"/></svg>
       <div class="placard"><span class="uname" data-name>Tսrŋ iŧ σғғ!!</span><small>CASE #143 · ROMANIA</small></div>
+      <canvas class="steam" id="steam" aria-hidden="true"></canvas>
+      <svg class="kissmark" id="kissmark" viewBox="0 0 100 60" aria-hidden="true"><use href="#lips"/></svg>
     </div>
+    <p class="steam-hint" id="steam-hint">It got steamy in here… wipe the glass 👆</p>
 
     <div class="sheet">
+      <span class="stamp" id="stamp" aria-hidden="true">Extra spicy</span>
       <div>
         <p class="label">Charges</p>
         <ul class="charges" id="charges">
-          <li>Running an illegal cuteness script in every match</li>
-          <li>Stealing someone's heart without permission</li>
-          <li>Being way too distracting in chat</li>
-          <li>Getting sick and leaving your duo partner to solo queue</li>
+          <li>Being illegally hot in every single match</li>
+          <li>Stealing my heart without permission. And my sleep</li>
+          <li>Raising my temperature higher than your fever</li>
+          <li>Resisting a rest. Get in bed. Now</li>
         </ul>
       </div>
       <div>
         <p class="label">Evidence</p>
-        <button class="censor" id="censor"><span id="censor-text">Your profile picture. Still illegal.</span></button>
+        <button class="censor" id="censor"><span id="censor-text">Exhibit A: your profile picture. Illegally hot.</span></button>
       </div>
       <div>
         <p class="label">Sentence</p>
         <ul class="charges" id="sentence">
-          <li>Rest until 100% HP. Tea, blankets, zero work</li>
-          <li>One date with the reporter. You sit close. Anti-cheat rules</li>
-          <li>Early release possible for good behaviour (ask the reporter how)</li>
+          <li>Strict bed rest until 100% HP. Supervised. Closely</li>
+          <li>One date with the reporter. Zero personal space. Anti-cheat rules</li>
+          <li>Early release for good behaviour. Bad behaviour… also considered 😏</li>
         </ul>
+      </div>
+      <div>
+        <p class="label">Your rights</p>
+        <p class="rights">You have the right to remain silent. But I'd rather hear you say my name 😏</p>
       </div>
       <p class="by">Arresting officer: <b>Doci ★</b></p>
       <p class="note" id="note">Funny how the officer is the one getting cuffed ;)</p>
@@ -316,24 +428,42 @@
         <div class="spots" id="spots" hidden>
           <p class="label">Where does the kiss go?</p>
           <div class="spot-row">
-            <button class="spot" data-spot="cheek" data-line="On the cheek. Classic. Payment accepted 😘">Cheek</button>
-            <button class="spot" data-spot="forehead" data-line="Forehead kiss? That's the soft kind. I'm melting.">Forehead</button>
-            <button class="spot" data-spot="nose" data-line="Nose kiss. Officially the cutest bail ever paid.">Nose</button>
-            <button class="spot" data-spot="lips" data-line="On the lips?? Ok the officer needs to sit down for a second 😳">Lips</button>
-            <button class="spot" data-spot="surprise" data-line="Surprise me? Dangerous answer. I like it 😏">Surprise me</button>
+            <button class="spot" data-say="on the cheek" data-line="Cheek? Playing it safe. Cute. That's just the starter 😘">Cheek</button>
+            <button class="spot" data-say="on the forehead" data-line="Forehead first. Then we'll see where it goes 😏">Forehead</button>
+            <button class="spot" data-say="on the lips" data-line="On the lips?? Ok the officer needs a cold shower 🥵">Lips</button>
+            <button class="spot" data-say="on the neck 🔥" data-line="The neck?? Who gave you permission to be this dangerous 🔥">Neck</button>
+            <button class="spot" data-say="everywhere 🔥" data-line="Everywhere. Noted. Bail just became a very long payment plan 😏">Everywhere</button>
+            <button class="spot" data-say="wherever you want 😏" data-line="Surprise me? Dangerous answer. I like it 😏">Surprise me</button>
           </div>
           <button class="btn soft" id="tellme" hidden>Tell him my answer</button>
         </div>
         <button class="btn soft" id="appeal">Appeal</button>
         <button class="btn soft" id="lawyer">Call my lawyer</button>
       </div>
-      <svg class="cuffs" id="cuffs" viewBox="0 0 140 70" hidden aria-hidden="true">
-        <g class="l"><path d="M40 60C18 46 10 36 10 25c0-9 7-15 15-15 7 0 11 4 15 9 4-5 8-9 15-9 8 0 15 6 15 15 0 11-8 21-30 35z" fill="none" stroke="#FF3D7F" stroke-width="6"/></g>
-        <g class="r"><path d="M100 60C78 46 70 36 70 25c0-9 7-15 15-15 7 0 11 4 15 9 4-5 8-9 15-9 8 0 15 6 15 15 0 11-8 21-30 35z" fill="none" stroke="#D7143F" stroke-width="6"/></g>
+      <svg class="cuffs" id="cuffs" viewBox="0 0 170 90" hidden aria-hidden="true">
+        <!-- chain first so the fluffy cuffs sit on top of it -->
+        <g fill="none" stroke="#E6E9EF" stroke-width="2">
+          <ellipse cx="78" cy="42" rx="5" ry="3.2"/><ellipse cx="85" cy="42" rx="4.2" ry="1.6"/><ellipse cx="92" cy="42" rx="5" ry="3.2"/>
+        </g>
+        <g class="l">
+          <circle cx="45" cy="42" r="24" fill="none" stroke="#FF4F9A" stroke-width="13"/>
+          <circle cx="45" cy="42" r="24" fill="none" stroke="#FF7DB5" stroke-width="17" stroke-dasharray="0 6.3" stroke-linecap="round"/>
+          <circle cx="45" cy="42" r="24" fill="none" stroke="#FFC2DC" stroke-width="6" stroke-dasharray="0 5" stroke-linecap="round" transform="rotate(8 45 42)"/>
+        </g>
+        <g class="r">
+          <circle cx="125" cy="42" r="24" fill="none" stroke="#FF4F9A" stroke-width="13"/>
+          <circle cx="125" cy="42" r="24" fill="none" stroke="#FF7DB5" stroke-width="17" stroke-dasharray="0 6.3" stroke-linecap="round"/>
+          <circle cx="125" cy="42" r="24" fill="none" stroke="#FFC2DC" stroke-width="6" stroke-dasharray="0 5" stroke-linecap="round" transform="rotate(8 125 42)"/>
+        </g>
+        <g class="lock">
+          <path d="M81.5 55v-5a3.5 3.5 0 0 1 7 0v5" fill="none" stroke="#E6E9EF" stroke-width="2"/>
+          <path d="M85 72c-7-4.5-9-8-9-10.5 0-2.5 2-4.5 4.5-4.5 1.9 0 3.5 1.1 4.5 2.7 1-1.6 2.6-2.7 4.5-2.7 2.5 0 4.5 2 4.5 4.5 0 2.5-2 6-9 10.5z" fill="url(#gold)" stroke="#8A5A10" stroke-width=".8"/>
+          <circle cx="85" cy="62" r="1.4" fill="#5A3A08"/><path d="M85 62v3.4" stroke="#5A3A08" stroke-width="1.2" stroke-linecap="round"/>
+        </g>
       </svg>
       <p class="reply" id="reply" aria-live="polite"></p>
       <div class="sign" id="sign" hidden>
-        <p class="label">Sign here to confirm</p>
+        <p class="label">Sign here to confirm you're mine</p>
         <canvas id="pad" aria-label="Signature pad"></canvas>
         <p class="reply" id="signed"></p>
       </div>
@@ -343,9 +473,21 @@
   </section>
 </main>
 
+<div class="heat" id="heat" hidden>
+  <span>Spice</span>
+  <span class="peps" aria-hidden="true">
+    <svg class="pep" viewBox="0 0 24 24"><use href="#chili"/></svg>
+    <svg class="pep" viewBox="0 0 24 24"><use href="#chili"/></svg>
+    <svg class="pep" viewBox="0 0 24 24"><use href="#chili"/></svg>
+    <svg class="pep" viewBox="0 0 24 24"><use href="#chili"/></svg>
+    <svg class="pep" viewBox="0 0 24 24"><use href="#chili"/></svg>
+  </span>
+  <b id="heat-word" aria-live="polite"></b>
+</div>
 <div class="siren" id="siren" aria-hidden="true"></div>
 <div class="busted" id="busted" aria-hidden="true">BUSTED</div>
 <div class="flash" id="flash" aria-hidden="true"></div>
+<div class="firewall" id="firewall" aria-hidden="true"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"><span class="from">Doci ★</span><span id="toast-text"></span></div>
 
 <script>
@@ -354,8 +496,9 @@
   const rand = (a, b) => a + Math.random() * (b - a);
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const center = (el) => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
+  const replay = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
 
-  // Optional: .../ban-list/#Name shows another name
+  // Optional: .../ban-list-spicy/#Name shows another name
   try {
     const n = decodeURIComponent(location.hash.slice(1)).replace(/[_~+-]+/g, " ").replace(/[<>&"]/g, "").trim().slice(0, 24);
     if (n) document.querySelectorAll("[data-name]").forEach((el) => (el.textContent = n));
@@ -370,12 +513,15 @@
   const hit = (key) => { if (!isMe) { const i = new Image(); i.src = "https://hits.sh/geoworkart.github.io/spicy-" + key + ".svg"; } };
   hit("ban-list");
 
-  function burst(x, y, n = 14, chars = ["♥", "💋", "♥", "✨"]) {
+  // the message written in the steam uses the handwriting font, so start loading it now
+  const handReady = document.fonts ? document.fonts.load('700 40px "Caveat"').catch(() => {}) : Promise.resolve();
+
+  function burst(x, y, n = 14, chars = ["🔥", "♥", "💋", "🌶️"]) {
     if (reduce) n = Math.min(n, 4);
     for (let i = 0; i < n; i++) {
       const h = document.createElement("div");
       h.className = "fx"; h.textContent = chars[i % chars.length];
-      h.style.cssText = `left:${x}px;top:${y}px;font-size:${rand(16, 30)}px;color:${["#FF3D7F", "#FF9EBF", "#D7143F"][i % 3]};--x:${rand(-150, 150)}px;--r:${rand(-40, 40)}deg;--d:${rand(1.8, 2.8)}s;animation-delay:${rand(0, .25)}s`;
+      h.style.cssText = `left:${x}px;top:${y}px;font-size:${rand(16, 30)}px;color:${["#FF3D7F", "#FFB02E", "#D7143F"][i % 3]};--x:${rand(-150, 150)}px;--r:${rand(-40, 40)}deg;--d:${rand(1.8, 2.8)}s;animation-delay:${rand(0, .25)}s`;
       document.body.appendChild(h); setTimeout(() => h.remove(), 3300);
     }
   }
@@ -386,24 +532,43 @@
     s.style.cssText = `left:${x - 45}px;top:${y - 27}px;--r:${rand(-25, 25)}deg`;
     document.body.appendChild(s); setTimeout(() => s.remove(), 1700);
   }
+
+  // embers (and the odd heart) floating up from the fire
   let bgTimer = null;
-  function floatHearts() {
+  function floatEmbers() {
     if (reduce || bgTimer) return;
+    let i = 0;
     bgTimer = setInterval(() => {
-      const h = document.createElement("div");
-      h.className = "bg-heart"; h.textContent = "♥";
-      const d = rand(7, 12);
-      h.style.cssText = `left:${rand(0, 100)}vw;font-size:${rand(14, 34)}px;animation-duration:${d}s`;
-      document.body.appendChild(h); setTimeout(() => h.remove(), d * 1000);
-    }, 700);
+      const e = document.createElement("div"), d = rand(6, 11);
+      if (i++ % 4 === 0) {
+        e.className = "bg-heart"; e.textContent = "♥";
+        e.style.cssText = `left:${rand(0, 95)}vw;font-size:${rand(14, 30)}px;animation-duration:${d}s`;
+      } else {
+        e.className = "ember";
+        e.style.cssText = `left:${rand(2, 96)}vw;--s:${rand(3, 7)}px;--x:${rand(-40, 40)}px;--d:${d}s`;
+      }
+      e.addEventListener("animationend", () => e.remove());
+      document.body.appendChild(e);
+    }, 260);
   }
+
+  // wall of flames: "rise" covers the screen, "lick" only the bottom half
+  const wall = $("firewall");
+  for (let i = 0; i < 14; i++) {
+    const t = document.createElement("span");
+    t.className = "tongue";
+    t.style.cssText = `--l:${i * 7.6 - 8 + rand(-2, 2)}%;--b:${rand(20, 28)}%;--w:${rand(18, 30)}vw;--h:${rand(50, 80)}%;--t:${rand(.3, .6)}s;--dl:${-rand(0, .6)}s;--sk:${rand(-9, 9)}deg`;
+    wall.appendChild(t);
+  }
+  wall.addEventListener("animationend", (e) => { if (e.target === wall) wall.className = "firewall"; });
+  function fire(kind) { if (reduce) return; wall.className = "firewall"; void wall.offsetWidth; wall.classList.add(kind); }
 
   // little messages from him along the way
   let toastTimer;
   const said = new Set();
   function toast(key, text, delay = 0) {
-    if (said.has(key)) return; said.add(key);
     setTimeout(() => {
+      if (said.has(key)) return; said.add(key);
       $("toast-text").textContent = text;
       $("toast").classList.add("on");
       clearTimeout(toastTimer);
@@ -411,51 +576,182 @@
     }, delay);
   }
 
+  // spice meter: every new naughty thing turns it up a notch, accepting the sentence maxes it out
+  const WORDS = ["", "Warm", "Hot", "Spicy", "Extra spicy", "Illegal"];
+  let level = 0;
+  const heated = new Set();
+  function setHeat(n) {
+    n = Math.min(5, n);
+    if (n <= level) return;
+    const first = level === 0;
+    level = n;
+    document.querySelectorAll(".pep").forEach((p, i) => p.classList.toggle("lit", i < level));
+    $("heat-word").textContent = WORDS[level];
+    if (!first) replay($("heat"), "bump");
+    if (level === 5) overheat();
+  }
+  function heat(key) { if (heated.has(key)) return; heated.add(key); setHeat(Math.min(4, level + 1)); }
+  function overheat() {
+    $("heat").classList.add("max");
+    setTimeout(() => {
+      fire("lick");
+      const f = $("flash"); f.classList.add("fire"); replay(f, "on");
+      if (!reduce) replay(document.querySelector(".wrap"), "shake");
+      for (let i = 0; i < 5; i++) setTimeout(() => burst(rand(30, innerWidth - 30), innerHeight - 40, 7, ["🔥", "🌶️", "🔥", "♥"]), 150 + i * 110);
+    }, 650);
+    toast("max", "Spice level: ILLEGAL 🥵 You did this, officer.", 1100);
+  }
+
   setTimeout(() => { $("loading").hidden = true; $("list").hidden = false; toast("list", "Don't stop now, the best part is coming 😏", 1400); }, 1500);
 
-  // sirens → BUSTED → camera flash → the hot file
+  // the mugshot glass steams up; she wipes it with her finger
+  function steamUp() {
+    const c = $("steam"), mug = $("mug");
+    const w = c.clientWidth, h = c.clientHeight;
+    if (!w || !h) return;
+    const d = Math.min(devicePixelRatio || 1, 2);
+    c.width = Math.round(w * d); c.height = Math.round(h * d);
+    const g = c.getContext("2d");
+    g.scale(d, d);
+    const fog = g.createLinearGradient(0, 0, 0, h);
+    fog.addColorStop(0, "rgba(255,236,242,.93)");
+    fog.addColorStop(1, "rgba(246,212,224,.88)");
+    g.fillStyle = fog; g.fillRect(0, 0, w, h);
+    // condensation: water drops (a clearer spot with a glint) and a few faint drips
+    const drop = (x, y, r) => {
+      g.globalCompositeOperation = "destination-out";
+      g.fillStyle = `rgba(0,0,0,${rand(.25, .45)})`; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill();
+      g.globalCompositeOperation = "source-over";
+      g.fillStyle = "rgba(255,255,255,.75)"; g.beginPath(); g.arc(x - r * .35, y - r * .35, Math.max(.5, r * .3), 0, 7); g.fill();
+    };
+    for (let i = 0; i < 70; i++) drop(rand(0, w), rand(0, h), rand(.9, 3));
+    g.lineCap = "round";
+    for (let i = 0; i < 4; i++) {
+      const x = rand(14, w - 14), y = rand(0, h * .5), len = rand(30, 90), ex = x + rand(-3, 3);
+      g.globalCompositeOperation = "destination-out";
+      g.strokeStyle = "rgba(0,0,0,.22)"; g.lineWidth = rand(1.2, 2.2);
+      g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + rand(-3, 3), y + len / 2, ex, y + len); g.stroke();
+      drop(ex, y + len, rand(2.2, 3.4));
+    }
+    g.globalCompositeOperation = "source-over";
+
+    let wiping = false, done = false, last = null;
+    // someone wrote on the steamy glass
+    handReady.then(() => {
+      if (done) return;
+      g.save();
+      g.lineJoin = g.lineCap = "round";
+      g.translate(w / 2, h * .38); g.rotate(-.07);
+      g.font = `700 ${Math.round(w * .19)}px Caveat, "Segoe Print", cursive`;
+      g.textAlign = "center"; g.textBaseline = "middle";
+      const s = w * .065, dy = h * .19;
+      const heart = () => {
+        g.beginPath(); g.moveTo(0, dy + s * .95);
+        g.bezierCurveTo(-s * 1.7, dy - s * .1, -s * .75, dy - s * 1.3, 0, dy - s * .35);
+        g.bezierCurveTo(s * .75, dy - s * 1.3, s * 1.7, dy - s * .1, 0, dy + s * .95);
+      };
+      // water beads along the edges of the finger trail (keeps it readable over the white cat), then the trail itself is clear
+      g.strokeStyle = "rgba(150,50,80,.55)";
+      g.lineWidth = 6; g.strokeText("u + me", 0, 0);
+      g.lineWidth = 9; heart(); g.stroke();
+      g.globalCompositeOperation = "destination-out";
+      g.fillStyle = g.strokeStyle = "rgba(0,0,0,.92)";
+      g.lineWidth = 2.5; g.fillText("u + me", 0, 0); g.strokeText("u + me", 0, 0);
+      g.lineWidth = 5.5; heart(); g.stroke();
+      g.restore();
+    });
+
+    // rough coverage grid; once half the glass is clear the rest fades away
+    const COLS = 10, ROWS = 12, cells = new Uint8Array(COLS * ROWS), R = Math.max(22, w * .085);
+    let cleared = 0;
+    function dab(x, y) {
+      const grd = g.createRadialGradient(x, y, 0, x, y, R);
+      grd.addColorStop(0, "rgba(0,0,0,1)"); grd.addColorStop(.55, "rgba(0,0,0,.9)"); grd.addColorStop(1, "rgba(0,0,0,0)");
+      g.globalCompositeOperation = "destination-out";
+      g.fillStyle = grd; g.beginPath(); g.arc(x, y, R, 0, 7); g.fill();
+      const cw = w / COLS, ch = h / ROWS, r = R * .7;
+      for (let cx = Math.max(0, Math.floor((x - r) / cw)); cx <= Math.min(COLS - 1, Math.floor((x + r) / cw)); cx++)
+        for (let cy = Math.max(0, Math.floor((y - r) / ch)); cy <= Math.min(ROWS - 1, Math.floor((y + r) / ch)); cy++)
+          if (!cells[cy * COLS + cx]) { cells[cy * COLS + cx] = 1; cleared++; }
+    }
+    function wipeTo(p) {
+      if (last) {
+        const steps = Math.ceil(Math.hypot(p[0] - last[0], p[1] - last[1]) / 6);
+        for (let i = 1; i <= steps; i++) dab(last[0] + (p[0] - last[0]) * i / steps, last[1] + (p[1] - last[1]) * i / steps);
+      } else dab(p[0], p[1]);
+      last = p;
+      if (!done && cleared / cells.length > .5) clearAll();
+    }
+    function clearAll() {
+      done = true; wiping = false;
+      c.classList.add("gone"); mug.classList.remove("held");
+      setTimeout(() => c.remove(), 1000);
+      const hint = $("steam-hint"); hint.textContent = "Much better. Now I can see you 😏"; hint.classList.add("done");
+      const [x, y] = center(mug); burst(x, y, 10, ["💨", "🔥", "♥"]);
+      toast("steam", "You wiped it with your finger? Bold. I like it 😳");
+      heat("steam");
+    }
+    c.addEventListener("pointerdown", (e) => {
+      if (done) return;
+      wiping = true; last = null; mug.classList.add("held");
+      try { c.setPointerCapture(e.pointerId); } catch (x) {}
+      wipeTo([e.offsetX, e.offsetY]);
+    });
+    c.addEventListener("pointermove", (e) => { if (wiping && !done) wipeTo([e.offsetX, e.offsetY]); });
+    ["pointerup", "pointercancel", "lostpointercapture"].forEach((t) => c.addEventListener(t, () => { wiping = false; last = null; mug.classList.remove("held"); }));
+  }
+
+  // sirens → BUSTED → flames → camera flash → the hot file
   let opened = false;
   function openCase() {
     if (opened) return; opened = true;
     $("siren").classList.add("on");
     $("busted").classList.add("on");
+    setTimeout(() => fire("rise"), 800);
     setTimeout(() => $("flash").classList.add("on"), reduce ? 0 : 1300);
     setTimeout(() => {
       $("sys").hidden = true;
       document.body.classList.add("hot");
+      document.querySelector('meta[name="theme-color"]').setAttribute("content", "#12030A");
       $("file").hidden = false;
+      $("heat").hidden = false;
+      setHeat(1);
       window.scrollTo({ top: 0 });
-      floatHearts();
-      document.querySelectorAll("#charges li").forEach((li, i) => setTimeout(() => li.classList.add("in"), 700 + i * 380));
-      document.querySelectorAll("#sentence li").forEach((li, i) => setTimeout(() => li.classList.add("in"), 2400 + i * 380));
-      setTimeout(() => { const [x, y] = center($("mug")); burst(x, y, 16); }, 700);
-      toast("charges", "Keep going… I worked hard on this", 2300);
-      toast("almost", "You're doing so well. Almost there ♥", 6800);
+      floatEmbers();
+      steamUp();
+      const t0 = reduce ? 0 : 1000;
+      document.querySelectorAll("#charges li").forEach((li, i) => setTimeout(() => li.classList.add("in"), t0 + i * 380));
+      setTimeout(() => { $("stamp").classList.add("on"); heat("charges"); }, t0 + 1700);
+      document.querySelectorAll("#sentence li").forEach((li, i) => setTimeout(() => li.classList.add("in"), t0 + 1900 + i * 380));
+      setTimeout(() => { const [x, y] = center($("mug")); burst(x, y, 16); }, reduce ? 0 : 1200);
+      toast("charges", "Is it hot in here, or is it just you? 🔥", t0 + 2200);
+      toast("almost", "Careful… this page might raise your fever 🥵", t0 + 7500);
     }, reduce ? 50 : 1400);
   }
   $("her").addEventListener("click", openCase);
   $("her").addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openCase(); } });
 
   const peek = [
-    "Your profile picture. Still illegal.",
-    "Ok, it's you in the lobby looking this cute. Had to censor it for everyone's safety.",
-    "Stop peeking. It's classified. …Fine, I kept a screenshot."
+    "Exhibit A: your profile picture. Illegally hot.",
+    "Exhibit B: you in the lobby looking this good. Censored for everyone's safety.",
+    "Exhibit C: the screenshot I kept. For evidence. Obviously 😏",
+    "Exhibit D: my heart rate every time you text me. Classified."
   ];
   let peeks = 0;
   $("censor").addEventListener("click", () => {
     const c = $("censor");
     if (c.classList.contains("open")) $("censor-text").textContent = peek[Math.min(peeks, peek.length - 1)];
     c.classList.add("open"); peeks++;
-    toast("peek", "Caught you peeking 👀 Keep going");
+    toast("peek", "Caught you peeking 👀 Naughty.");
+    heat("peek");
     const [x, y] = center(c); burst(x, y, 6, ["🔥", "♥"]);
   });
 
   let bail = 0;
   $("bail").addEventListener("click", () => {
     bail++;
-    const [x, y] = center($("bail"));
     if (bail === 1) {
-      $("reply").textContent = "Bail is set at 1 kiss. Payable in person only. No diamonds accepted.";
+      $("reply").textContent = "Bail is set at 1 kiss. Payable in person. I decide how long it lasts 😏";
       $("bail").textContent = "Pay the kiss 💋";
     } else if (!$("bail").disabled) {
       $("bail").hidden = true;
@@ -464,34 +760,35 @@
     }
   });
 
-  let spot = "";
+  let say = "";
   $("spots").addEventListener("click", (e) => {
     const b = e.target.closest(".spot"); if (!b) return;
     $("spots").querySelectorAll(".spot").forEach((x) => x.setAttribute("aria-pressed", "false"));
     b.setAttribute("aria-pressed", "true");
-    spot = b.textContent.trim();
+    say = b.dataset.say;
     const [x, y] = center(b);
     smooch(x, y - 70);
     $("kissmark").classList.add("on");
     $("reply").textContent = b.dataset.line + " Collecting in person when you're better.";
-    burst(x, y, 10, ["💋", "♥"]);
+    burst(x, y, 10, ["💋", "♥", "🔥"]);
     $("bail").disabled = true;
     $("tellme").hidden = false;
+    heat("kiss");
     hit("ban-list-bail");
   });
   $("tellme").addEventListener("click", () => {
-    const msg = `Bail paid 💋 Kiss goes on the: ${spot.toLowerCase()}`;
+    const msg = `Bail paid 💋 The kiss goes ${say}`;
     const ok = () => { $("reply").textContent = "Copied! Paste it in our chat 😘"; };
     const show = () => { $("reply").textContent = msg; };
     try { navigator.clipboard.writeText(msg).then(ok, show); } catch (e) { show(); }
   });
 
   const appeals = [
-    "Appeal received. Reviewing… denied.",
-    "Denied. Have you seen yourself? The evidence is too strong.",
-    "The judge is also the arresting officer. And he has a crush. Denied.",
-    "Bribing the judge might work though 😏",
-    "Appeal button has left the chat."
+    "Appeal received. Reviewing… denied. Too hot to be released.",
+    "Denied. The evidence made the judge blush.",
+    "The judge is also the arresting officer. And he's obsessed with you. Denied.",
+    "Bribing the judge might work though. He takes kisses 😏",
+    "Appeal button melted. It's too hot in here 🔥"
   ];
   let tries = 0;
   const appeal = $("appeal"), accept = $("accept");
@@ -501,23 +798,29 @@
     appeal.style.transform = `scale(${Math.max(.6, 1 - tries * .09)})`;
     accept.style.transform = `scale(${1 + tries * .04})`;
     if (tries >= appeals.length) appeal.hidden = true;
+    heat("resist");
   });
 
   const lawyer = [
     "Calling your lawyer… 📞",
     "Your lawyer is also me. Hi 😏",
-    "Your lawyer advises: accept the date."
+    "Your lawyer advises: stop resisting and accept the date 😘"
   ];
   let calls = 0;
   $("lawyer").addEventListener("click", () => {
     $("reply").textContent = lawyer[Math.min(calls++, lawyer.length - 1)];
     if (calls >= lawyer.length) $("lawyer").hidden = true;
+    heat("resist");
   });
 
-  // finger signature after accepting
+  // finger signature after accepting, in glowing ink
   function setupPad() {
     const c = $("pad"), g = c.getContext("2d");
-    const fit = () => { const r = c.getBoundingClientRect(), d = devicePixelRatio || 1; c.width = r.width * d; c.height = r.height * d; g.setTransform(d, 0, 0, d, 0, 0); g.lineWidth = 3; g.lineCap = "round"; g.strokeStyle = "#D7143F"; };
+    const fit = () => {
+      const r = c.getBoundingClientRect(), d = devicePixelRatio || 1;
+      c.width = r.width * d; c.height = r.height * d; g.setTransform(d, 0, 0, d, 0, 0);
+      g.lineWidth = 3; g.lineCap = "round"; g.lineJoin = "round"; g.strokeStyle = "#FF6FA0"; g.shadowColor = "rgba(255,61,127,.9)"; g.shadowBlur = 8;
+    };
     fit();
     let down = false, last = null, len = 0, done = false;
     const pos = (e) => { const r = c.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
@@ -526,7 +829,7 @@
       if (!down) return;
       const p = pos(e); g.beginPath(); g.moveTo(...last); g.lineTo(...p); g.stroke();
       len += Math.hypot(p[0] - last[0], p[1] - last[1]); last = p;
-      if (!done && len > 180) { done = true; $("signed").textContent = "Signed. No take-backs 💋"; const [x, y] = center(c); burst(x, y, 16); hit("ban-list-signed"); }
+      if (!done && len > 180) { done = true; $("signed").textContent = "Signed. No take-backs. You're mine now 💋"; const [x, y] = center(c); burst(x, y, 16); hit("ban-list-signed"); }
     });
     ["pointerup", "pointercancel"].forEach((t) => c.addEventListener(t, () => { down = false; }));
   }
@@ -535,17 +838,19 @@
     if (accept.disabled) return;
     accept.disabled = true; appeal.hidden = true;
     if (!$("bail").disabled) $("bail").hidden = true;
-    accept.textContent = "Sentence accepted ♥";
-    $("cuffs").hidden = false;
-    $("note").textContent = "Cuffed. To me. Get well soon ;)";
+    accept.textContent = "Sentence accepted 🔥";
+    $("cuffs").removeAttribute("hidden"); // .hidden only exists on HTML elements, not <svg>
+    $("note").textContent = "Cuffed. To me. No key. Get well soon, I have plans for you ;)";
     $("reply").textContent = tries
-      ? `Smart, after ${tries} failed appeal${tries > 1 ? "s" : ""}. Sentence starts the day you're better. I'll be waiting 😏`
-      : "No appeal? You wanted this date, admit it 😏 Sentence starts the day you're better.";
+      ? `Smart, after ${tries} failed appeal${tries > 1 ? "s" : ""}. Resisting only made it hotter 😏 Sentence starts the day you're better.`
+      : "No appeal? You wanted this, admit it 😏 Sentence starts the day you're better.";
     const [x, y] = center(accept);
     burst(x, y, 26); smooch(x, y - 120);
     setTimeout(() => burst(rand(40, innerWidth - 40), innerHeight - 40, 14), 400);
     hit("ban-list-accepted");
-    toast("end", "You made it to the end. I knew you couldn't resist me 😘", 600);
+    said.add("almost");
+    setHeat(5);
+    toast("end", "You made it to the end. Knew you couldn't resist me 😘 Now rest, you'll need your energy.", 5600);
     $("lawyer").hidden = true;
     $("sign").hidden = false; setupPad();
   });
