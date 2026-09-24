@@ -49,6 +49,13 @@
   tr.her { background: rgba(255,84,112,.12); cursor: pointer; animation: glow 1.6s ease-in-out infinite; }
   tr.her td { font-weight: 800; }
   tr.her td:first-child { color: #fff; }
+  .pl { display: flex; align-items: center; gap: 8px; }
+  .ava { width: 40px; height: 40px; flex: none; filter: drop-shadow(0 2px 3px rgba(0,0,0,.4)); }
+  .ava.big { width: 72px; height: 72px; }
+  tr.her .uname { white-space: nowrap; }
+  .uname { font-family: "Segoe UI", "Noto Sans", "Nunito Sans", system-ui, sans-serif; font-weight: 700; letter-spacing: .01em; }
+  .who-row { display: flex; align-items: center; gap: 12px; }
+  .who-row .who { margin: 0; }
   .flag { display: inline-block; width: 16px; height: 11px; vertical-align: -1px; margin-right: 6px; border-radius: 2px;
     background: linear-gradient(90deg, #002B7F 0 33.3%, #FCD116 33.3% 66.6%, #CE1126 66.6%); }
   .tap { color: var(--gold); font-size: 12px; font-weight: 800; display: block; margin-top: 2px; }
@@ -105,7 +112,18 @@
         <tbody>
           <tr><td>xX_M1dG0d_Xx</td><td>Map hack</td><td>Banned 30 days</td></tr>
           <tr><td>NoobDestroyer99</td><td>Speed script</td><td>Banned 7 days</td></tr>
-          <tr class="her" id="her" tabindex="0" role="button" aria-label="Open case details"><td><span class="flag" aria-hidden="true"></span><span id="hername">Turn it oFf!!</span><span class="tap">Tap to see case</span></td><td>Illegal script (see details)</td><td>Special penalty</td></tr>
+          <tr class="her" id="her" tabindex="0" role="button" aria-label="Open case details"><td><span class="pl"><svg class="ava" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE9A0"/><stop offset=".5" stop-color="#E0A93A"/><stop offset="1" stop-color="#9C6A12"/></linearGradient></defs>
+<path d="M32 2l7 6 9-2 3 9 9 4-3 9 5 8-8 5 1 9-9 2-4 8-8-3-8 3-4-8-9-2 1-9-8-5 5-8-3-9 9-4 3-9 9 2z" fill="url(#gold)" stroke="#6B4508" stroke-width="1.2"/>
+<rect x="12" y="12" width="40" height="40" rx="8" fill="#C9D3E0"/>
+<path d="M17 50V26l6-9 6 7h6l6-7 6 9v24z" fill="#8F8F8F"/>
+<path d="M22 50c0-9 4-15 10-15s10 6 10 15z" fill="#F4F1EC"/>
+<path d="M26 24l6 4 6-4v8H26z" fill="#F4F1EC"/>
+<circle cx="25.5" cy="33" r="3.2" fill="#1C1C1C"/><circle cx="38.5" cy="33" r="3.2" fill="#1C1C1C"/>
+<circle cx="26.4" cy="32" r="1" fill="#fff"/><circle cx="39.4" cy="32" r="1" fill="#fff"/>
+<path d="M30 38h4l-2 2.4z" fill="#FF8FAB"/>
+<path d="M29 42q3 2 6 0" fill="none" stroke="#FF6F91" stroke-width="1.6" stroke-linecap="round"/>
+<path d="M29.5 43q2.5 4 5 0" fill="#FF6F91"/>
+<path d="M18 25l3-7 4 5zM46 25l-3-7-4 5z" fill="#FFB3C6"/></svg><span><span class="flag" aria-hidden="true"></span><span id="hername" class="uname">Tսrŋ iŧ σғғ!!</span><span class="tap">Tap to see case</span></span></span></td><td>Illegal script (see details)</td><td>Special penalty</td></tr>
           <tr><td>LordStealer_07</td><td>Auto-retribution</td><td>Banned 14 days</td></tr>
           <tr><td>AFK_King</td><td>Went AFK 12 times</td><td>Credit score −30</td></tr>
         </tbody>
@@ -116,7 +134,18 @@
   <div class="case" id="case" hidden>
     <span class="stamp">GUILTY ♥</span>
     <h2>Case details</h2>
-    <p class="who">Player: <span id="hername2">Turn it oFf!!</span><br>Reported by: Doci ★</p>
+    <div class="who-row"><svg class="ava big" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="gold2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE9A0"/><stop offset=".5" stop-color="#E0A93A"/><stop offset="1" stop-color="#9C6A12"/></linearGradient></defs>
+<path d="M32 2l7 6 9-2 3 9 9 4-3 9 5 8-8 5 1 9-9 2-4 8-8-3-8 3-4-8-9-2 1-9-8-5 5-8-3-9 9-4 3-9 9 2z" fill="url(#gold2)" stroke="#6B4508" stroke-width="1.2"/>
+<rect x="12" y="12" width="40" height="40" rx="8" fill="#C9D3E0"/>
+<path d="M17 50V26l6-9 6 7h6l6-7 6 9v24z" fill="#8F8F8F"/>
+<path d="M22 50c0-9 4-15 10-15s10 6 10 15z" fill="#F4F1EC"/>
+<path d="M26 24l6 4 6-4v8H26z" fill="#F4F1EC"/>
+<circle cx="25.5" cy="33" r="3.2" fill="#1C1C1C"/><circle cx="38.5" cy="33" r="3.2" fill="#1C1C1C"/>
+<circle cx="26.4" cy="32" r="1" fill="#fff"/><circle cx="39.4" cy="32" r="1" fill="#fff"/>
+<path d="M30 38h4l-2 2.4z" fill="#FF8FAB"/>
+<path d="M29 42q3 2 6 0" fill="none" stroke="#FF6F91" stroke-width="1.6" stroke-linecap="round"/>
+<path d="M29.5 43q2.5 4 5 0" fill="#FF6F91"/>
+<path d="M18 25l3-7 4 5zM46 25l-3-7-4 5z" fill="#FFB3C6"/></svg><p class="who">Player: <span id="hername2" class="uname">Tսrŋ iŧ σғғ!!</span> <span class="flag" aria-hidden="true"></span><br>Reported by: Doci ★</p></div>
     <dl>
       <dt>Violation</dt>
       <dd>
