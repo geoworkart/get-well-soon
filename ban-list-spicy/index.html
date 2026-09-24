@@ -23,9 +23,9 @@
     --rose-soft: #FF9EBF;
     --blush: #FFE3EC;
     --lip: #D7143F;
-    --ember: #FF7A2E;
+    --red: #FF2A4A;
     --flame: #FFB02E;
-    --chili: #FF2A2A;
+    --line: rgba(255,61,127,.42);
     --display: "Yeseva One", Georgia, "Times New Roman", serif;
     --body: "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
     --hand: "Caveat", "Segoe Print", cursive;
@@ -43,7 +43,7 @@
   }
   body.hot {
     padding-top: calc(64px + env(safe-area-inset-top, 0px));
-    background: radial-gradient(90% 45% at 50% 0%, #4A0A1E 0, transparent 70%), var(--char);
+    background: radial-gradient(90% 45% at 50% 0%, #4A0A24 0, transparent 70%), var(--char);
     color: var(--blush);
   }
   html:has(body.hot) { background: var(--char); }
@@ -91,11 +91,11 @@
     position: fixed; left: 50%; top: 42%; z-index: 51; opacity: 0; pointer-events: none;
     transform: translate(-50%, -50%) rotate(-8deg) scale(3);
     font-family: var(--display); font-size: clamp(56px, 18vw, 96px); color: #fff; letter-spacing: .04em;
-    text-shadow: 0 0 22px var(--ember), 0 6px 0 var(--lip);
+    text-shadow: 0 0 22px var(--rose), 0 6px 0 var(--lip);
   }
   .busted.on { animation: bust 1.8s cubic-bezier(.2,1.4,.4,1) forwards; }
   .flash { position: fixed; inset: 0; z-index: 52; background: #fff; pointer-events: none; opacity: 0; }
-  .flash.fire { background: radial-gradient(circle at 50% 85%, #FFE08A, var(--ember) 45%, var(--lip) 85%); }
+  .flash.fire { background: radial-gradient(circle at 50% 85%, #FFE08A, #FF5A1F 45%, var(--lip) 85%); }
   .flash.on { animation: flash .5s ease-out forwards; }
 
   .firewall { position: fixed; left: 0; right: 0; bottom: 0; height: 115vh; z-index: 53; pointer-events: none; overflow: hidden; display: none; transform: translateY(102%); }
@@ -110,48 +110,67 @@
     animation: lick var(--t) ease-in-out var(--dl) infinite alternate;
   }
 
-  /* ===== stage 2: the hot file ===== */
+  /* ===== 18+ gate ===== */
+  .gate {
+    margin-top: 6vh; display: grid; gap: 12px; justify-items: center; text-align: center; padding: 28px 20px 22px; border-radius: 22px;
+    background: linear-gradient(165deg, #2E0914 0%, #1D040D 55%, #270712 100%); border: 1px solid var(--line);
+    box-shadow: 0 20px 44px rgba(0,0,0,.5), 0 0 40px rgba(255,61,127,.15);
+    animation: gateIn .6s cubic-bezier(.2,1.4,.4,1) .2s both;
+  }
+  .badge {
+    width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center;
+    border: 4px solid var(--red); color: #fff; font-weight: 900; font-size: 26px; letter-spacing: -.02em;
+    background: radial-gradient(circle, #3A0A18, #16030A); box-shadow: 0 0 26px rgba(255,42,74,.55);
+    animation: throb 1.2s ease-in-out infinite;
+  }
+  .gate h2 { margin: 4px 0 0; font-family: var(--display); font-weight: 400; font-size: 34px; line-height: 1; color: #fff; }
+  .gate p { margin: 0; color: #F5B7CB; font-weight: 700; }
+  .gate .small { font-size: 14px; color: var(--rose-soft); }
+  .gate .actions { width: 100%; margin-top: 6px; }
+
+  /* ===== stage 2: the uncensored file ===== */
   .heat {
     position: fixed; top: calc(10px + env(safe-area-inset-top, 0px)); left: 0; right: 0; z-index: 65;
     width: max-content; margin-inline: auto; display: flex; align-items: center; gap: 8px; white-space: nowrap;
     padding: 6px 14px 6px 12px; border-radius: 999px;
-    background: rgba(18,3,10,.84); border: 1px solid rgba(255,122,46,.45);
+    background: rgba(18,3,10,.84); border: 1px solid var(--line);
     -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-    box-shadow: 0 8px 24px rgba(0,0,0,.45), 0 0 18px rgba(255,90,40,.2);
+    box-shadow: 0 8px 24px rgba(0,0,0,.45), 0 0 18px rgba(255,61,127,.22);
     font-size: 11px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; color: var(--rose-soft);
     animation: heatIn .6s cubic-bezier(.2,1.4,.4,1) both;
     transition: border-color .4s, box-shadow .4s;
   }
-  .heat b { min-width: 7.4em; color: #fff; letter-spacing: .08em; font-size: 12px; transition: color .3s; }
+  .heat b { min-width: 5.8em; color: #fff; letter-spacing: .08em; font-size: 12px; transition: color .3s; }
   .heat.bump { animation: heatBump .5s ease; }
-  .heat.max { border-color: var(--flame); box-shadow: 0 8px 24px rgba(0,0,0,.45), 0 0 28px rgba(255,120,30,.65); }
+  .heat.max { border-color: var(--flame); box-shadow: 0 8px 24px rgba(0,0,0,.45), 0 0 28px rgba(255,120,30,.6); }
   .heat.max b { color: var(--flame); }
-  .peps { display: flex; gap: 2px; }
-  .pep { width: 20px; height: 20px; display: block; --body: rgba(255,255,255,.13); --leaf: rgba(255,255,255,.2); }
-  .pep.lit { --body: var(--chili); --leaf: #35C46A; filter: drop-shadow(0 0 4px rgba(255,80,30,.85)); animation: pepPop .55s cubic-bezier(.2,1.8,.4,1); }
-  .heat.max .pep.lit { animation: pepHot .45s ease-in-out infinite alternate; }
+  .marks { display: flex; gap: 3px; }
+  .mark { width: 24px; height: 15px; display: block; opacity: .22; filter: grayscale(1); }
+  .mark.lit { opacity: 1; filter: drop-shadow(0 0 4px rgba(255,61,127,.9)); animation: markPop .55s cubic-bezier(.2,1.8,.4,1); }
+  .heat.max .mark.lit { animation: markHot .45s ease-in-out infinite alternate; }
 
   .floor {
     position: fixed; left: 0; right: 0; bottom: -30px; height: 210px; z-index: 0; pointer-events: none;
-    background: radial-gradient(75% 100% at 50% 100%, rgba(255,130,40,.5), rgba(215,20,63,.22) 55%, transparent 78%);
+    background: radial-gradient(75% 100% at 50% 100%, rgba(255,61,127,.42), rgba(215,20,63,.22) 55%, transparent 78%);
     transform-origin: 50% 100%; animation: flicker 2.6s ease-in-out infinite alternate;
   }
   body:not(.hot) .floor { display: none; }
 
   .file { display: grid; gap: 18px; }
-  .kicker { margin: 0; text-align: center; font-size: 12px; font-weight: 900; letter-spacing: .24em; text-transform: uppercase; color: var(--ember); }
-  .title { margin: 0; text-align: center; font-family: var(--display); font-weight: 400; font-size: clamp(40px, 12vw, 62px); line-height: .95; color: #fff; text-shadow: 0 0 24px rgba(255,90,40,.45); }
+  .kicker { margin: 0; text-align: center; font-size: 12px; font-weight: 900; letter-spacing: .24em; text-transform: uppercase; color: var(--rose); }
+  .title { margin: 0; text-align: center; font-family: var(--display); font-weight: 400; font-size: clamp(40px, 12vw, 62px); line-height: .95; color: #fff; text-shadow: 0 0 24px rgba(255,61,127,.45); }
   .title em {
     font-style: normal; display: block; padding-bottom: .08em; text-shadow: none;
-    background: linear-gradient(90deg, #FFC94A, #FF6A1F 45%, #FF2E63 90%); -webkit-background-clip: text; background-clip: text; color: transparent;
-    filter: drop-shadow(0 0 12px rgba(255,90,30,.5)); animation: glow 2.4s ease-in-out infinite alternate;
+    background: linear-gradient(90deg, #FFB3CB, var(--rose) 45%, var(--red) 90%); -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 0 12px rgba(255,61,127,.5)); animation: glow 2.4s ease-in-out infinite alternate;
   }
+  .sub { margin: -8px 0 0; text-align: center; font-family: var(--hand); font-size: 30px; line-height: 1; color: var(--rose-soft); transform: rotate(-3deg); text-shadow: 0 0 14px rgba(255,61,127,.5); }
 
   .mug {
     justify-self: center; width: min(300px, 100%); aspect-ratio: 4 / 4.6; border-radius: 18px; position: relative; overflow: hidden;
     background: repeating-linear-gradient(180deg, transparent 0 27px, rgba(255,255,255,.12) 27px 28px), linear-gradient(180deg, #3E0F1C, #1E050E);
-    border: 2px solid rgba(255,122,46,.45);
-    box-shadow: 0 24px 50px rgba(0,0,0,.5), 0 0 44px rgba(255,80,30,.3);
+    border: 2px solid var(--line);
+    box-shadow: 0 24px 50px rgba(0,0,0,.5), 0 0 44px rgba(255,61,127,.28);
     transform-origin: 50% -40px; animation: drop .9s cubic-bezier(.2,1.5,.4,1) .5s both, swing 4s ease-in-out 1.5s infinite;
   }
   .mug.held { animation-play-state: paused; }
@@ -169,45 +188,45 @@
   .kissmark { position: absolute; z-index: 3; width: 74px; right: 12px; top: 18px; transform: rotate(18deg) scale(0); opacity: 0; }
   .kissmark.on { animation: kissOn .5s cubic-bezier(.2,1.6,.4,1) forwards; }
   .steam-hint { margin: -6px 0 4px; text-align: center; font-weight: 800; font-size: 14px; color: var(--rose-soft); animation: bob 1.6s ease-in-out infinite; }
-  .steam-hint.done { animation: none; color: var(--flame); }
+  .steam-hint.done { animation: none; color: #FFC2D6; }
 
   .sheet {
     position: relative; border-radius: 22px; padding: 20px 18px; display: grid; gap: 16px; color: var(--blush);
     background: linear-gradient(165deg, #2E0914 0%, #1D040D 55%, #270712 100%);
-    border: 1px solid rgba(255,122,46,.28);
-    box-shadow: 0 20px 44px rgba(0,0,0,.5), 0 0 40px rgba(255,60,30,.12);
+    border: 1px solid rgba(255,61,127,.28);
+    box-shadow: 0 20px 44px rgba(0,0,0,.5), 0 0 40px rgba(255,61,127,.12);
   }
   .stamp {
     position: absolute; top: -4px; right: 12px; z-index: 2; pointer-events: none;
-    padding: 5px 10px; border: 3px double var(--chili); border-radius: 7px; background: rgba(24,3,10,.94);
-    color: var(--chili); font-size: 12px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase;
-    box-shadow: 0 0 16px rgba(255,42,42,.35); opacity: 0; transform: rotate(7deg) scale(2.4);
+    padding: 5px 10px; border: 3px double var(--red); border-radius: 7px; background: rgba(24,3,10,.94);
+    color: var(--red); font-size: 12px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase;
+    box-shadow: 0 0 16px rgba(255,42,74,.35); opacity: 0; transform: rotate(7deg) scale(2.4);
     transform-origin: 100% 50%; /* grow leftwards so the slam never pokes past the screen edge */
   }
   .stamp.on { animation: stampIn .4s cubic-bezier(.3,1.6,.5,1) forwards; }
-  .label { margin: 0 0 6px; font-size: 11px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; color: var(--ember); }
+  .label { margin: 0 0 6px; font-size: 11px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; color: var(--rose); }
   .charges { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
   .charges li { display: grid; grid-template-columns: 22px 1fr; gap: 8px; font-weight: 800; opacity: 0; transform: translateX(-10px); }
   .charges li.in { animation: slideIn .45s ease forwards; }
-  .charges li::before { content: "♥"; color: var(--rose); font-size: 16px; line-height: 1.4; }
-  #charges li::before { content: "🌶️"; font-size: 14px; line-height: 1.7; }
+  .charges li::before { content: "💋"; font-size: 13px; line-height: 1.8; }
+  #charges li::before { content: "😈"; font-size: 14px; line-height: 1.7; }
   .rights { margin: 0; font-weight: 700; font-style: italic; color: #F5B7CB; }
   .by { margin: 0; font-weight: 800; font-size: 14px; color: #C98AA5; }
   .by b { color: #fff; }
 
   .censor {
     display: block; width: 100%; text-align: left; font-weight: 800; border-radius: 12px; padding: 12px 14px; min-height: 52px;
-    background: linear-gradient(135deg, #FF5A1F, var(--lip) 55%, #8E0B32); color: #fff; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, var(--rose), var(--lip) 55%, #6E0620); color: #fff; position: relative; overflow: hidden;
   }
   .censor span { display: block; filter: blur(6px); transition: filter .6s ease; }
-  .censor::before { content: "🌶️ TOO HOT · TAP TO PEEK"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 13px; letter-spacing: .14em; font-weight: 900; background: rgba(0,0,0,.28); transition: opacity .4s; }
+  .censor::before { content: "🔞 TOO DIRTY · TAP TO PEEK"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 13px; letter-spacing: .14em; font-weight: 900; background: rgba(0,0,0,.28); transition: opacity .4s; }
   .censor.open span { filter: blur(0); }
   .censor.open::before { opacity: 0; }
 
   .note { font-family: var(--hand); font-size: 30px; line-height: 1.1; color: #FF5C8A; margin: 0; text-align: center; text-shadow: 0 0 16px rgba(255,61,127,.45); }
   .actions { display: grid; gap: 10px; }
   .btn { min-height: 52px; font-weight: 900; font-size: 17px; padding: 14px 18px; border-radius: 999px; transition: transform .2s ease; }
-  .btn.main { background: linear-gradient(135deg, var(--flame), #FF4D1F 45%, var(--lip)); color: #fff; box-shadow: 0 6px 22px rgba(255,77,31,.45); position: relative; overflow: hidden; }
+  .btn.main { background: linear-gradient(135deg, #FF6A9A, var(--red) 50%, #B3124F); color: #fff; box-shadow: 0 6px 22px rgba(255,42,74,.45); position: relative; overflow: hidden; }
   .btn.main::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.3) 50%, transparent 70%); transform: translateX(-100%); animation: shine 2.8s ease-in-out 1s infinite; pointer-events: none; }
   .btn.main[disabled]::after { display: none; }
   .btn.soft { background: rgba(255,255,255,.06); color: var(--blush); border: 1px solid rgba(255,158,191,.22); }
@@ -220,17 +239,17 @@
   .cuffs .lock { animation: lockOn .5s cubic-bezier(.2,1.6,.4,1) .6s both; }
 
   .sign { display: grid; gap: 6px; }
-  #pad { width: 100%; height: 140px; background: #16030A; border: 2px dashed rgba(255,122,46,.5); border-radius: 14px; touch-action: none; }
+  #pad { width: 100%; height: 140px; background: #16030A; border: 2px dashed rgba(255,61,127,.5); border-radius: 14px; touch-action: none; }
   .spots { display: grid; gap: 8px; }
   .spot-row { display: flex; flex-wrap: wrap; gap: 8px; }
-  .spot { min-height: 44px; padding: 8px 16px; border-radius: 999px; background: rgba(255,255,255,.05); border: 2px solid rgba(255,122,46,.45); color: var(--blush); font-weight: 900; }
-  .spot[aria-pressed="true"] { background: linear-gradient(135deg, #FF4D1F, var(--lip)); border-color: transparent; color: #fff; }
+  .spot { min-height: 44px; padding: 8px 16px; border-radius: 999px; background: rgba(255,255,255,.05); border: 2px solid var(--line); color: var(--blush); font-weight: 900; }
+  .spot[aria-pressed="true"] { background: linear-gradient(135deg, var(--rose), var(--lip)); border-color: transparent; color: #fff; }
   .toast {
     position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 70;
     width: min(92vw, 420px); transform: translate(-50%, 140%); opacity: 0;
-    background: rgba(18,3,10,.94); color: #fff; border: 1.5px solid rgba(255,122,46,.6);
+    background: rgba(18,3,10,.94); color: #fff; border: 1.5px solid rgba(255,61,127,.6);
     border-radius: 18px; padding: 10px 14px; display: grid; gap: 2px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.45), 0 0 20px rgba(255,90,40,.25);
+    box-shadow: 0 10px 30px rgba(0,0,0,.45), 0 0 20px rgba(255,61,127,.25);
     transition: transform .45s cubic-bezier(.2,1.3,.4,1), opacity .3s;
     pointer-events: none;
   }
@@ -244,8 +263,8 @@
   .bg-heart { position: fixed; bottom: -40px; z-index: 0; pointer-events: none; color: rgba(255,61,127,.22); animation: drift linear forwards; }
   .ember {
     position: fixed; bottom: -12px; z-index: 0; pointer-events: none; width: var(--s); height: var(--s); border-radius: 50%;
-    background: radial-gradient(circle, #FFF4C8 0 18%, var(--flame) 42%, rgba(255,90,30,0) 72%);
-    box-shadow: 0 0 10px 2px rgba(255,110,40,.5);
+    background: radial-gradient(circle, #FFF0F5 0 18%, #FF7AA8 42%, rgba(255,61,127,0) 72%);
+    box-shadow: 0 0 10px 2px rgba(255,61,127,.5);
     animation: ember var(--d) linear forwards;
   }
 
@@ -266,12 +285,13 @@
   @keyframes fwRise { 0% { transform: translateY(102%) } 35%, 55% { transform: translateY(0) } 100% { transform: translateY(102%) } }
   @keyframes fwLick { 0% { transform: translateY(102%) } 35%, 60% { transform: translateY(45%) } 100% { transform: translateY(102%) } }
   @keyframes lick { 0% { transform: scale(1, 1) skewX(0deg) } 100% { transform: scale(.82, 1.18) skewX(var(--sk)) } }
+  @keyframes gateIn { 0% { opacity: 0; transform: translateY(20px) scale(.96) } 100% { opacity: 1; transform: none } }
   @keyframes heatIn { 0% { opacity: 0; transform: translateY(-24px) } 100% { opacity: 1; transform: none } }
   @keyframes heatBump { 40% { transform: scale(1.1) } }
-  @keyframes pepPop { 0% { transform: scale(.3) rotate(-35deg) } 70% { transform: scale(1.35) rotate(8deg) } 100% { transform: none } }
-  @keyframes pepHot { 0% { transform: rotate(-7deg) } 100% { transform: rotate(7deg) scale(1.12) } }
+  @keyframes markPop { 0% { transform: scale(.3) rotate(-30deg) } 70% { transform: scale(1.4) rotate(8deg) } 100% { transform: none } }
+  @keyframes markHot { 0% { transform: rotate(-8deg) } 100% { transform: rotate(8deg) scale(1.12) } }
   @keyframes flicker { 0% { transform: scaleY(1); opacity: .8 } 35% { transform: scaleY(1.15); opacity: 1 } 70% { transform: scaleY(.92); opacity: .75 } 100% { transform: scaleY(1.06); opacity: .95 } }
-  @keyframes glow { to { filter: drop-shadow(0 0 22px rgba(255,60,30,.85)) } }
+  @keyframes glow { to { filter: drop-shadow(0 0 22px rgba(255,61,127,.85)) } }
   @keyframes drop { 0% { transform: translateY(-60px) rotate(-6deg); opacity: 0 } 100% { transform: none; opacity: 1 } }
   @keyframes swing { 0%, 100% { transform: rotate(-1.2deg) } 50% { transform: rotate(1.2deg) } }
   @keyframes bob { 50% { transform: translateY(-3px) } }
@@ -344,13 +364,6 @@
       <path d="M8 29c14 4 28 3 42-5 14 8 28 9 42 5" fill="none" stroke="#6E0620" stroke-width="2" stroke-linecap="round"/>
       <path d="M30 40c6 4 14 6 20 6" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="3" stroke-linecap="round"/>
     </symbol>
-    <!-- chili for the spice meter; colors come from --body / --leaf on each .pep -->
-    <symbol id="chili" viewBox="0 0 24 24">
-      <path d="M16.2 8.6c.6 5-4.1 11.2-13.2 12.9 3.7-3.1 5.5-7.4 6.1-11.8 2.2-2.2 5-2.4 7.1-1.1z" style="fill:var(--body)"/>
-      <path d="M8.6 10c1.2-2.9 5.4-3.6 8-1.2-2.5-.6-5.4-.3-8 1.2z" style="fill:var(--leaf)"/>
-      <path d="M12.9 7.6c-.3-2.3.9-4.2 3.3-4.9" fill="none" stroke-width="1.7" stroke-linecap="round" style="stroke:var(--leaf)"/>
-      <path d="M13.8 10.9c-.4 2.9-2.4 5.5-5.4 7.3" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.1" stroke-linecap="round"/>
-    </symbol>
   </defs>
 </svg>
 
@@ -380,9 +393,22 @@
     </div>
   </section>
 
+  <section class="gate" id="gate" hidden>
+    <div class="badge" aria-hidden="true">18+</div>
+    <h2>Uncensored file</h2>
+    <p>This case contains explicit evidence, handcuffs, and zero self-control.</p>
+    <p class="small">For your eyes only. Read it somewhere private 😈</p>
+    <div class="actions">
+      <button class="btn main" id="enter">I'm 18+, show me 😈</button>
+      <button class="btn soft" id="shy">I'm too shy 🙈</button>
+    </div>
+    <p class="reply" id="gate-reply" aria-live="polite"></p>
+  </section>
+
   <section class="file" id="file" hidden>
-    <p class="kicker">Case #143 · For your eyes only</p>
+    <p class="kicker">Case #143 · 🔞 Uncensored</p>
     <h2 class="title">You're under<em>arrest, officer</em></h2>
+    <p class="sub">Assume the position 😈</p>
 
     <div class="mug" id="mug">
       <div class="ruler" aria-hidden="true"><span>180</span><span>170</span><span>160</span><span>150</span></div>
@@ -394,46 +420,47 @@
     <p class="steam-hint" id="steam-hint">It got steamy in here… wipe the glass 👆</p>
 
     <div class="sheet">
-      <span class="stamp" id="stamp" aria-hidden="true">Extra spicy</span>
+      <span class="stamp" id="stamp" aria-hidden="true">X-rated</span>
       <div>
         <p class="label">Charges</p>
         <ul class="charges" id="charges">
-          <li>Being illegally hot in every single match</li>
-          <li>Stealing my heart without permission. And my sleep</li>
-          <li>Raising my temperature higher than your fever</li>
-          <li>Resisting a rest. Get in bed. Now</li>
+          <li>Possession of a body that should be illegal</li>
+          <li>Making me think very un-PG thoughts during ranked</li>
+          <li>Wearing clothes in my daydreams. Charge dropped. So were the clothes 😈</li>
+          <li>Being in bed without me. Unacceptable</li>
         </ul>
       </div>
       <div>
         <p class="label">Evidence</p>
-        <button class="censor" id="censor"><span id="censor-text">Exhibit A: your profile picture. Illegally hot.</span></button>
+        <button class="censor" id="censor"><span id="censor-text">Exhibit A: your profile picture. I stared. For way too long.</span></button>
       </div>
       <div>
         <p class="label">Sentence</p>
         <ul class="charges" id="sentence">
-          <li>Strict bed rest until 100% HP. Supervised. Closely</li>
-          <li>One date with the reporter. Zero personal space. Anti-cheat rules</li>
-          <li>Early release for good behaviour. Bad behaviour… also considered 😏</li>
+          <li>Bed rest until 100% HP. Then bed. Zero resting</li>
+          <li>Conjugal visits. Daily. Uniform optional</li>
+          <li>Full body search by the arresting officer. Every. Single. Inch</li>
+          <li>Good behaviour gets you early release. Bad behaviour gets you cuffed to the bed 😈</li>
         </ul>
       </div>
       <div>
         <p class="label">Your rights</p>
-        <p class="rights">You have the right to remain silent. But I'd rather hear you say my name 😏</p>
+        <p class="rights">You have the right to remain silent. You won't manage it 😈 Anything you moan can and will be used against you.</p>
       </div>
       <p class="by">Arresting officer: <b>Doci ★</b></p>
-      <p class="note" id="note">Funny how the officer is the one getting cuffed ;)</p>
+      <p class="note" id="note">Funny how the officer is the one getting cuffed. To the bed ;)</p>
       <div class="actions">
         <button class="btn main" id="accept">Accept sentence</button>
         <button class="btn soft" id="bail">Pay bail</button>
         <div class="spots" id="spots" hidden>
           <p class="label">Where does the kiss go?</p>
           <div class="spot-row">
-            <button class="spot" data-say="on the cheek" data-line="Cheek? Playing it safe. Cute. That's just the starter 😘">Cheek</button>
-            <button class="spot" data-say="on the forehead" data-line="Forehead first. Then we'll see where it goes 😏">Forehead</button>
-            <button class="spot" data-say="on the lips" data-line="On the lips?? Ok the officer needs a cold shower 🥵">Lips</button>
-            <button class="spot" data-say="on the neck 🔥" data-line="The neck?? Who gave you permission to be this dangerous 🔥">Neck</button>
-            <button class="spot" data-say="everywhere 🔥" data-line="Everywhere. Noted. Bail just became a very long payment plan 😏">Everywhere</button>
-            <button class="spot" data-say="wherever you want 😏" data-line="Surprise me? Dangerous answer. I like it 😏">Surprise me</button>
+            <button class="spot" data-say="on the cheek (coward)" data-line="Cheek?? Coward 😂 Fine. I'll start there and work my way down.">Cheek (coward)</button>
+            <button class="spot" data-say="on the lips" data-line="Lips. Slowly. With zero plans of stopping there 😮‍💨">Lips</button>
+            <button class="spot" data-say="on the neck 😈" data-line="The neck. You know exactly what that does to people 😈">Neck</button>
+            <button class="spot" data-say="lower 😈" data-fx="🍑 😈 💋" data-line="Lower?? Officer, this was a family-friendly server 😳 …Not anymore. Noted.">Lower 😈</button>
+            <button class="spot" data-say="everywhere 😈" data-line="Everywhere. Clear your whole weekend 😈">Everywhere</button>
+            <button class="spot" data-say="wherever you want 😈" data-line="Surprise me? Bold. Hope you've got nothing planned for the next day 😈">Surprise me</button>
           </div>
           <button class="btn soft" id="tellme" hidden>Tell him my answer</button>
         </div>
@@ -463,24 +490,24 @@
       </svg>
       <p class="reply" id="reply" aria-live="polite"></p>
       <div class="sign" id="sign" hidden>
-        <p class="label">Sign here to confirm you're mine</p>
+        <p class="label">Sign here to confirm you're mine 😈</p>
         <canvas id="pad" aria-label="Signature pad"></canvas>
         <p class="reply" id="signed"></p>
       </div>
     </div>
 
-    <p class="fine">Not a real notice. Your account is fine, it's just me ♥</p>
+    <p class="fine">Not a real notice. Your account is fine. Your innocence, not so much 😈</p>
   </section>
 </main>
 
 <div class="heat" id="heat" hidden>
-  <span>Spice</span>
-  <span class="peps" aria-hidden="true">
-    <svg class="pep" viewBox="0 0 24 24"><use href="#chili"/></svg>
-    <svg class="pep" viewBox="0 0 24 24"><use href="#chili"/></svg>
-    <svg class="pep" viewBox="0 0 24 24"><use href="#chili"/></svg>
-    <svg class="pep" viewBox="0 0 24 24"><use href="#chili"/></svg>
-    <svg class="pep" viewBox="0 0 24 24"><use href="#chili"/></svg>
+  <span>Naughty</span>
+  <span class="marks" aria-hidden="true">
+    <svg class="mark" viewBox="0 0 100 60"><use href="#lips"/></svg>
+    <svg class="mark" viewBox="0 0 100 60"><use href="#lips"/></svg>
+    <svg class="mark" viewBox="0 0 100 60"><use href="#lips"/></svg>
+    <svg class="mark" viewBox="0 0 100 60"><use href="#lips"/></svg>
+    <svg class="mark" viewBox="0 0 100 60"><use href="#lips"/></svg>
   </span>
   <b id="heat-word" aria-live="polite"></b>
 </div>
@@ -516,12 +543,12 @@
   // the message written in the steam uses the handwriting font, so start loading it now
   const handReady = document.fonts ? document.fonts.load('700 40px "Caveat"').catch(() => {}) : Promise.resolve();
 
-  function burst(x, y, n = 14, chars = ["🔥", "♥", "💋", "🌶️"]) {
+  function burst(x, y, n = 14, chars = ["🔥", "💋", "😈", "♥"]) {
     if (reduce) n = Math.min(n, 4);
     for (let i = 0; i < n; i++) {
       const h = document.createElement("div");
       h.className = "fx"; h.textContent = chars[i % chars.length];
-      h.style.cssText = `left:${x}px;top:${y}px;font-size:${rand(16, 30)}px;color:${["#FF3D7F", "#FFB02E", "#D7143F"][i % 3]};--x:${rand(-150, 150)}px;--r:${rand(-40, 40)}deg;--d:${rand(1.8, 2.8)}s;animation-delay:${rand(0, .25)}s`;
+      h.style.cssText = `left:${x}px;top:${y}px;font-size:${rand(16, 30)}px;color:${["#FF3D7F", "#FF9EBF", "#D7143F"][i % 3]};--x:${rand(-150, 150)}px;--r:${rand(-40, 40)}deg;--d:${rand(1.8, 2.8)}s;animation-delay:${rand(0, .25)}s`;
       document.body.appendChild(h); setTimeout(() => h.remove(), 3300);
     }
   }
@@ -533,7 +560,7 @@
     document.body.appendChild(s); setTimeout(() => s.remove(), 1700);
   }
 
-  // embers (and the odd heart) floating up from the fire
+  // sparks (and the odd heart) floating up
   let bgTimer = null;
   function floatEmbers() {
     if (reduce || bgTimer) return;
@@ -576,8 +603,8 @@
     }, delay);
   }
 
-  // spice meter: every new naughty thing turns it up a notch, accepting the sentence maxes it out
-  const WORDS = ["", "Warm", "Hot", "Spicy", "Extra spicy", "Illegal"];
+  // naughty meter: every new naughty thing stamps another kiss, accepting the sentence maxes it out
+  const WORDS = ["", "Flirty", "Frisky", "Dirty", "Filthy", "Illegal"];
   let level = 0;
   const heated = new Set();
   function setHeat(n) {
@@ -585,7 +612,7 @@
     if (n <= level) return;
     const first = level === 0;
     level = n;
-    document.querySelectorAll(".pep").forEach((p, i) => p.classList.toggle("lit", i < level));
+    document.querySelectorAll(".mark").forEach((m, i) => m.classList.toggle("lit", i < level));
     $("heat-word").textContent = WORDS[level];
     if (!first) replay($("heat"), "bump");
     if (level === 5) overheat();
@@ -597,9 +624,9 @@
       fire("lick");
       const f = $("flash"); f.classList.add("fire"); replay(f, "on");
       if (!reduce) replay(document.querySelector(".wrap"), "shake");
-      for (let i = 0; i < 5; i++) setTimeout(() => burst(rand(30, innerWidth - 30), innerHeight - 40, 7, ["🔥", "🌶️", "🔥", "♥"]), 150 + i * 110);
+      for (let i = 0; i < 5; i++) setTimeout(() => burst(rand(30, innerWidth - 30), innerHeight - 40, 7, ["🔥", "💦", "😈", "💋"]), 150 + i * 110);
     }, 650);
-    toast("max", "Spice level: ILLEGAL 🥵 You did this, officer.", 1100);
+    toast("max", "Naughty level: ILLEGAL 😈 You did this, officer.", 1100);
   }
 
   setTimeout(() => { $("loading").hidden = true; $("list").hidden = false; toast("list", "Don't stop now, the best part is coming 😏", 1400); }, 1500);
@@ -636,28 +663,21 @@
     g.globalCompositeOperation = "source-over";
 
     let wiping = false, done = false, last = null;
-    // someone wrote on the steamy glass
+    // someone wrote on the steamy glass: u + me + bed
     handReady.then(() => {
       if (done) return;
       g.save();
       g.lineJoin = g.lineCap = "round";
-      g.translate(w / 2, h * .38); g.rotate(-.07);
+      g.translate(w / 2, h * .33); g.rotate(-.07);
       g.font = `700 ${Math.round(w * .19)}px Caveat, "Segoe Print", cursive`;
       g.textAlign = "center"; g.textBaseline = "middle";
-      const s = w * .065, dy = h * .19;
-      const heart = () => {
-        g.beginPath(); g.moveTo(0, dy + s * .95);
-        g.bezierCurveTo(-s * 1.7, dy - s * .1, -s * .75, dy - s * 1.3, 0, dy - s * .35);
-        g.bezierCurveTo(s * .75, dy - s * 1.3, s * 1.7, dy - s * .1, 0, dy + s * .95);
-      };
+      const lines = [["u + me", 0], ["+ bed", h * .18]];
       // water beads along the edges of the finger trail (keeps it readable over the white cat), then the trail itself is clear
-      g.strokeStyle = "rgba(150,50,80,.55)";
-      g.lineWidth = 6; g.strokeText("u + me", 0, 0);
-      g.lineWidth = 9; heart(); g.stroke();
+      g.strokeStyle = "rgba(150,50,80,.55)"; g.lineWidth = 6;
+      lines.forEach(([t, y]) => g.strokeText(t, 0, y));
       g.globalCompositeOperation = "destination-out";
-      g.fillStyle = g.strokeStyle = "rgba(0,0,0,.92)";
-      g.lineWidth = 2.5; g.fillText("u + me", 0, 0); g.strokeText("u + me", 0, 0);
-      g.lineWidth = 5.5; heart(); g.stroke();
+      g.fillStyle = g.strokeStyle = "rgba(0,0,0,.92)"; g.lineWidth = 2.5;
+      lines.forEach(([t, y]) => { g.fillText(t, 0, y); g.strokeText(t, 0, y); });
       g.restore();
     });
 
@@ -686,9 +706,9 @@
       done = true; wiping = false;
       c.classList.add("gone"); mug.classList.remove("held");
       setTimeout(() => c.remove(), 1000);
-      const hint = $("steam-hint"); hint.textContent = "Much better. Now I can see you 😏"; hint.classList.add("done");
+      const hint = $("steam-hint"); hint.textContent = "Much better. Now I can see all of you 😏"; hint.classList.add("done");
       const [x, y] = center(mug); burst(x, y, 10, ["💨", "🔥", "♥"]);
-      toast("steam", "You wiped it with your finger? Bold. I like it 😳");
+      toast("steam", "Careful with that finger, officer 😈");
       heat("steam");
     }
     c.addEventListener("pointerdown", (e) => {
@@ -701,7 +721,7 @@
     ["pointerup", "pointercancel", "lostpointercapture"].forEach((t) => c.addEventListener(t, () => { wiping = false; last = null; mug.classList.remove("held"); }));
   }
 
-  // sirens → BUSTED → flames → camera flash → the hot file
+  // sirens → BUSTED → flames → camera flash → 18+ gate
   let opened = false;
   function openCase() {
     if (opened) return; opened = true;
@@ -713,45 +733,67 @@
       $("sys").hidden = true;
       document.body.classList.add("hot");
       document.querySelector('meta[name="theme-color"]').setAttribute("content", "#12030A");
+      $("gate").hidden = false;
+      window.scrollTo({ top: 0 });
+      floatEmbers();
+      toast("gate", "Last chance to stay innocent 😇", 900);
+    }, reduce ? 50 : 1400);
+  }
+  $("her").addEventListener("click", openCase);
+  $("her").addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openCase(); } });
+
+  // she chose uncensored: open the file
+  let entered = false;
+  $("enter").addEventListener("click", () => {
+    if (entered) return; entered = true;
+    hit("ban-list-uncensored");
+    const [bx, by] = center($("enter")); burst(bx, by, 12, ["😈", "🔥", "💋"]);
+    setTimeout(() => {
+      $("gate").hidden = true;
       $("file").hidden = false;
       $("heat").hidden = false;
       setHeat(1);
       window.scrollTo({ top: 0 });
-      floatEmbers();
       steamUp();
       const t0 = reduce ? 0 : 1000;
       document.querySelectorAll("#charges li").forEach((li, i) => setTimeout(() => li.classList.add("in"), t0 + i * 380));
       setTimeout(() => { $("stamp").classList.add("on"); heat("charges"); }, t0 + 1700);
       document.querySelectorAll("#sentence li").forEach((li, i) => setTimeout(() => li.classList.add("in"), t0 + 1900 + i * 380));
       setTimeout(() => { const [x, y] = center($("mug")); burst(x, y, 16); }, reduce ? 0 : 1200);
-      toast("charges", "Is it hot in here, or is it just you? 🔥", t0 + 2200);
-      toast("almost", "Careful… this page might raise your fever 🥵", t0 + 7500);
-    }, reduce ? 50 : 1400);
-  }
-  $("her").addEventListener("click", openCase);
-  $("her").addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openCase(); } });
+      toast("charges", "Is it hot in here, or are you thinking what I'm thinking? 😏", t0 + 2200);
+      toast("almost", "Careful… this might raise your fever. And other things 😈", t0 + 7500);
+    }, reduce ? 0 : 350);
+  });
+  // too shy is a real way out: off to the PG version
+  $("shy").addEventListener("click", () => {
+    if (entered) return; entered = true;
+    $("enter").disabled = $("shy").disabled = true;
+    $("gate-reply").textContent = "Aww, cute 🙈 Taking you to the PG version…";
+    hit("ban-list-shy");
+    setTimeout(() => { location.href = "../ban-list/" + location.hash; }, 1600);
+  });
 
   const peek = [
-    "Exhibit A: your profile picture. Illegally hot.",
-    "Exhibit B: you in the lobby looking this good. Censored for everyone's safety.",
-    "Exhibit C: the screenshot I kept. For evidence. Obviously 😏",
-    "Exhibit D: my heart rate every time you text me. Classified."
+    "Exhibit A: your profile picture. I stared. For way too long.",
+    "Exhibit B: what I thought about in the shower last night. Classified 😈",
+    "Exhibit C: a list of everywhere I want to kiss you. It's long. Very long.",
+    "Exhibit D: cold showers taken because of you this week: 7."
   ];
   let peeks = 0;
   $("censor").addEventListener("click", () => {
     const c = $("censor");
     if (c.classList.contains("open")) $("censor-text").textContent = peek[Math.min(peeks, peek.length - 1)];
     c.classList.add("open"); peeks++;
-    toast("peek", "Caught you peeking 👀 Naughty.");
+    toast("peek", "Caught you peeking 👀 Dirty.");
     heat("peek");
-    const [x, y] = center(c); burst(x, y, 6, ["🔥", "♥"]);
+    const [x, y] = center(c); burst(x, y, 6, ["🔥", "👀", "😈"]);
   });
 
   let bail = 0;
   $("bail").addEventListener("click", () => {
     bail++;
     if (bail === 1) {
-      $("reply").textContent = "Bail is set at 1 kiss. Payable in person. I decide how long it lasts 😏";
+      $("reply").textContent = "Bail is set at 1 kiss. Payable in person. You pick where… and it won't stop at one 😈";
       $("bail").textContent = "Pay the kiss 💋";
     } else if (!$("bail").disabled) {
       $("bail").hidden = true;
@@ -770,7 +812,7 @@
     smooch(x, y - 70);
     $("kissmark").classList.add("on");
     $("reply").textContent = b.dataset.line + " Collecting in person when you're better.";
-    burst(x, y, 10, ["💋", "♥", "🔥"]);
+    burst(x, y, 10, b.dataset.fx ? b.dataset.fx.split(" ") : ["💋", "♥", "🔥"]);
     $("bail").disabled = true;
     $("tellme").hidden = false;
     heat("kiss");
@@ -783,12 +825,13 @@
     try { navigator.clipboard.writeText(msg).then(ok, show); } catch (e) { show(); }
   });
 
+  // appeals get denied as a joke, but the last one really goes through
   const appeals = [
-    "Appeal received. Reviewing… denied. Too hot to be released.",
-    "Denied. The evidence made the judge blush.",
-    "The judge is also the arresting officer. And he's obsessed with you. Denied.",
-    "Bribing the judge might work though. He takes kisses 😏",
-    "Appeal button melted. It's too hot in here 🔥"
+    "Appeal received. Reviewing the evidence… slowly… again… Guilty.",
+    "Denied. The judge looked at Exhibit B and forgot what the appeal was about.",
+    "The judge is also the arresting officer. And he's very, very biased. Denied.",
+    "You could try bribing the judge. He takes kisses… and other favours 😈",
+    "Fine, appeal granted: sentence reduced to cuddles and soup until you're better. The rest stays on the table whenever you want it 😏"
   ];
   let tries = 0;
   const appeal = $("appeal"), accept = $("accept");
@@ -803,8 +846,8 @@
 
   const lawyer = [
     "Calling your lawyer… 📞",
-    "Your lawyer is also me. Hi 😏",
-    "Your lawyer advises: stop resisting and accept the date 😘"
+    "Your lawyer is also me. And I'm not wearing pants 😏",
+    "Your lawyer advises: plead guilty and get in my bed 😈"
   ];
   let calls = 0;
   $("lawyer").addEventListener("click", () => {
@@ -829,7 +872,7 @@
       if (!down) return;
       const p = pos(e); g.beginPath(); g.moveTo(...last); g.lineTo(...p); g.stroke();
       len += Math.hypot(p[0] - last[0], p[1] - last[1]); last = p;
-      if (!done && len > 180) { done = true; $("signed").textContent = "Signed. No take-backs. You're mine now 💋"; const [x, y] = center(c); burst(x, y, 16); hit("ban-list-signed"); }
+      if (!done && len > 180) { done = true; $("signed").textContent = "Signed. No take-backs. You're all mine now 😈"; const [x, y] = center(c); burst(x, y, 16); hit("ban-list-signed"); }
     });
     ["pointerup", "pointercancel"].forEach((t) => c.addEventListener(t, () => { down = false; }));
   }
@@ -838,19 +881,21 @@
     if (accept.disabled) return;
     accept.disabled = true; appeal.hidden = true;
     if (!$("bail").disabled) $("bail").hidden = true;
-    accept.textContent = "Sentence accepted 🔥";
+    accept.textContent = "Sentence accepted 😈";
     $("cuffs").removeAttribute("hidden"); // .hidden only exists on HTML elements, not <svg>
-    $("note").textContent = "Cuffed. To me. No key. Get well soon, I have plans for you ;)";
-    $("reply").textContent = tries
-      ? `Smart, after ${tries} failed appeal${tries > 1 ? "s" : ""}. Resisting only made it hotter 😏 Sentence starts the day you're better.`
-      : "No appeal? You wanted this, admit it 😏 Sentence starts the day you're better.";
+    $("note").textContent = "Cuffed. To me. To the bed. Get well soon, you'll need the stamina ;)";
+    $("reply").textContent = tries >= appeals.length
+      ? "Got it reduced and still hit accept? Greedy. I love it 😈 Sentence starts the day you're better."
+      : tries
+        ? `${tries} appeal${tries > 1 ? "s" : ""} and you still hit accept? Playing hard to get. Cute 😏 Sentence starts the day you're better.`
+        : "Straight to accept? Someone's eager 😈 Sentence starts the day you're better.";
     const [x, y] = center(accept);
     burst(x, y, 26); smooch(x, y - 120);
     setTimeout(() => burst(rand(40, innerWidth - 40), innerHeight - 40, 14), 400);
     hit("ban-list-accepted");
     said.add("almost");
     setHeat(5);
-    toast("end", "You made it to the end. Knew you couldn't resist me 😘 Now rest, you'll need your energy.", 5600);
+    toast("end", "You made it to the end. Now rest… you'll need your energy 😈", 5600);
     $("lawyer").hidden = true;
     $("sign").hidden = false; setupPad();
   });
