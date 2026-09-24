@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E1729">
 <title>Punishment list (2026-09-24)</title>
 <meta name="description" content="Some penalized players are publicly listed. Tap to view the list.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,8 +32,9 @@
   [hidden] { display: none !important; }
   html { background: var(--navy); }
   body {
-    margin: 0; min-height: 100vh; color: var(--ice); font-family: var(--body); font-size: 16px; line-height: 1.5;
-    padding-inline: 16px; padding-block: 22px 60px;
+    margin: 0; min-height: 100vh; min-height: 100dvh; overscroll-behavior-y: none; color: var(--ice); font-family: var(--body); font-size: 16px; line-height: 1.5;
+    padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px));
+    padding-block: calc(18px + env(safe-area-inset-top, 0px)) calc(48px + env(safe-area-inset-bottom, 0px));
     background: radial-gradient(120% 60% at 50% 0%, #1C2D52 0, transparent 70%), var(--navy);
     -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
     overflow-x: hidden;
@@ -43,6 +45,7 @@
     color: var(--blush);
   }
   html:has(body.hot) { background: var(--wine); }
+  .wrap > * { min-width: 0; }
   .wrap { max-width: 520px; margin: 0 auto; display: grid; gap: 18px; position: relative; z-index: 1; }
   button { font: inherit; border: 0; cursor: pointer; color: inherit; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
   button:focus-visible, [role="button"]:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
@@ -61,7 +64,9 @@
     opacity: 0; transform: translateY(8px); animation: rowIn .45s ease forwards;
   }
   .row .pic { width: 40px; height: 40px; border-radius: 10px; background: #22375E; display: grid; place-items: center; font-weight: 900; color: var(--ice-soft); font-size: 14px; }
-  .row b { display: block; font-size: 15px; line-height: 1.2; }
+  .row > span:nth-child(2) { min-width: 0; }
+  .row b { display: block; font-size: 15px; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row.her { min-height: 60px; }
   .row small { color: var(--ice-soft); font-size: 13px; }
   .pill { font-size: 12px; font-weight: 900; padding: 4px 9px; border-radius: 999px; background: rgba(255,84,112,.15); color: #FF7A93; white-space: nowrap; }
   .row.her { border-color: #FF5470; background: rgba(255,84,112,.12); cursor: pointer; position: relative; overflow: hidden; }
@@ -134,7 +139,7 @@
 
   .note { font-family: var(--hand); font-size: 30px; line-height: 1.1; color: var(--lip); margin: 0; text-align: center; }
   .actions { display: grid; gap: 10px; }
-  .btn { font-weight: 900; font-size: 17px; padding: 14px 18px; border-radius: 999px; transition: transform .2s ease; }
+  .btn { min-height: 52px; font-weight: 900; font-size: 17px; padding: 14px 18px; border-radius: 999px; transition: transform .2s ease; }
   .btn.main { background: linear-gradient(135deg, #FF3D7F, #D7143F); color: #fff; box-shadow: 0 6px 18px rgba(215,20,63,.4); }
   .btn.soft { background: #FFE3EC; color: #7A1B45; }
   .btn[disabled] { opacity: .8; cursor: default; }
@@ -144,6 +149,8 @@
   .cuffs .l { animation: cuffL .8s cubic-bezier(.2,1.5,.4,1) both; }
   .cuffs .r { animation: cuffR .8s cubic-bezier(.2,1.5,.4,1) both; }
 
+  .sign { display: grid; gap: 6px; }
+  #pad { width: 100%; height: 140px; background: #fff; border: 2px dashed #F3A9C3; border-radius: 14px; touch-action: none; }
   .fine { text-align: center; font-size: 12px; color: rgba(255,227,236,.6); margin: 0; }
 
   .fx { position: fixed; z-index: 60; pointer-events: none; animation: rise var(--d, 2.6s) ease-out forwards; }
@@ -174,6 +181,11 @@
   @keyframes smooch { 0% { transform: scale(2.4) rotate(var(--r)); opacity: 0 } 30% { transform: scale(1) rotate(var(--r)); opacity: 1 } 80% { opacity: 1 } 100% { transform: scale(1) rotate(var(--r)); opacity: 0 } }
   @keyframes drift { to { transform: translateY(-115vh) rotate(25deg) } }
 
+  @media (max-width: 360px) {
+    .title { font-size: 36px; }
+    .row { grid-template-columns: 34px 1fr auto; gap: 8px; }
+    .ava, .row .pic { width: 34px; height: 34px; }
+  }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   }
@@ -269,12 +281,18 @@
         <button class="btn main" id="accept">Accept sentence</button>
         <button class="btn soft" id="bail">Pay bail</button>
         <button class="btn soft" id="appeal">Appeal</button>
+        <button class="btn soft" id="lawyer">Call my lawyer</button>
       </div>
       <svg class="cuffs" id="cuffs" viewBox="0 0 140 70" hidden aria-hidden="true">
         <g class="l"><path d="M40 60C18 46 10 36 10 25c0-9 7-15 15-15 7 0 11 4 15 9 4-5 8-9 15-9 8 0 15 6 15 15 0 11-8 21-30 35z" fill="none" stroke="#FF3D7F" stroke-width="6"/></g>
         <g class="r"><path d="M100 60C78 46 70 36 70 25c0-9 7-15 15-15 7 0 11 4 15 9 4-5 8-9 15-9 8 0 15 6 15 15 0 11-8 21-30 35z" fill="none" stroke="#D7143F" stroke-width="6"/></g>
       </svg>
       <p class="reply" id="reply" aria-live="polite"></p>
+      <div class="sign" id="sign" hidden>
+        <p class="label">Sign here to confirm</p>
+        <canvas id="pad" aria-label="Signature pad"></canvas>
+        <p class="reply" id="signed"></p>
+      </div>
     </div>
 
     <p class="fine">Not a real notice. Your account is fine, it's just me ♥</p>
@@ -405,6 +423,34 @@
     if (tries >= appeals.length) appeal.hidden = true;
   });
 
+  const lawyer = [
+    "Calling your lawyer… 📞",
+    "Your lawyer is also me. Hi 😏",
+    "Your lawyer advises: accept the date."
+  ];
+  let calls = 0;
+  $("lawyer").addEventListener("click", () => {
+    $("reply").textContent = lawyer[Math.min(calls++, lawyer.length - 1)];
+    if (calls >= lawyer.length) $("lawyer").hidden = true;
+  });
+
+  // finger signature after accepting
+  function setupPad() {
+    const c = $("pad"), g = c.getContext("2d");
+    const fit = () => { const r = c.getBoundingClientRect(), d = devicePixelRatio || 1; c.width = r.width * d; c.height = r.height * d; g.setTransform(d, 0, 0, d, 0, 0); g.lineWidth = 3; g.lineCap = "round"; g.strokeStyle = "#D7143F"; };
+    fit();
+    let down = false, last = null, len = 0, done = false;
+    const pos = (e) => { const r = c.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    c.addEventListener("pointerdown", (e) => { down = true; last = pos(e); c.setPointerCapture(e.pointerId); });
+    c.addEventListener("pointermove", (e) => {
+      if (!down) return;
+      const p = pos(e); g.beginPath(); g.moveTo(...last); g.lineTo(...p); g.stroke();
+      len += Math.hypot(p[0] - last[0], p[1] - last[1]); last = p;
+      if (!done && len > 180) { done = true; $("signed").textContent = "Signed. No take-backs 💋"; const [x, y] = center(c); burst(x, y, 16); hit("ban-list-signed"); }
+    });
+    ["pointerup", "pointercancel"].forEach((t) => c.addEventListener(t, () => { down = false; }));
+  }
+
   accept.addEventListener("click", () => {
     if (accept.disabled) return;
     accept.disabled = true; appeal.hidden = true;
@@ -419,6 +465,8 @@
     burst(x, y, 26); smooch(x, y - 120);
     setTimeout(() => burst(rand(40, innerWidth - 40), innerHeight - 40, 14), 400);
     hit("ban-list-accepted");
+    $("lawyer").hidden = true;
+    $("sign").hidden = false; setupPad();
   });
 })();
 </script>
